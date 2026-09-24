@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Class Folders/AU2026/Interactive Systems (3902)/MonoGame/Sprint0Game/Content/spritesheets/Custom _ Edited - Sonic the Hedgehog Customs - Sonic the Hedgehog - Sonic (Mario &amp; Wario-Style).png</File>
+    <File>C:/Class Folders/AU2026/Interactive Systems (3902)/Project/WindyDay/Sprint0Game/Content/spritesheets/Custom _ Edited - Sonic the Hedgehog Customs - Sonic the Hedgehog - Sonic (Mario &amp; Wario-Style).png</File>
   </SourceFiles>
   <DestFiles>
     <File>spritesheets/sonic.png</File>

@@ -38,3 +38,13 @@ C:\Class Folders\AU2026\Interactive Systems (3902)\MonoGame\Sprint0Game\obj\Debu
 C:\Class Folders\AU2026\Interactive Systems (3902)\MonoGame\Sprint0Game\obj\Debug\net9.0\Sprint0Game.genruntimeconfig.cache
 C:\Class Folders\AU2026\Interactive Systems (3902)\MonoGame\Sprint0Game\obj\Debug\net9.0\ref\Sprint0Game.dll
 C:\Class Folders\AU2026\Interactive Systems (3902)\MonoGame\Sprint0Game\obj\Debug\net9.0\Sprint0Game.sourcelink.json
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\mgcb.tool.restore
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.csproj.AssemblyReference.cache
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.AssemblyInfoInputs.cache
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.AssemblyInfo.cs
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.csproj.CoreCompileInputs.cache
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.sourcelink.json
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.dll
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\refint\Sprint0Game.dll
+C:\Class Folders\AU2026\Interactive Systems (3902)\Project\WindyDay\Sprint0Game\obj\Debug\net9.0\Sprint0Game.pdb
