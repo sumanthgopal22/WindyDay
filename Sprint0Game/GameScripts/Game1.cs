@@ -19,6 +19,7 @@ public class Game1 : Core
     protected override void Initialize()
     {
         player = new Player();
+        2player = new Player();
 
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Escape, new QuitGameCommand());
