@@ -1,0 +1,32 @@
+# .NET build output
+bin/
+obj/
+
+# MonoGame Content Pipeline output
+Content/bin/
+Content/obj/
+*.mgcontent
+*.mgstats
+*.xnb
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Rider
+.idea/
+
+# macOS
+.DS_Store
+
+# NuGet
+*.nupkg
+packages/
