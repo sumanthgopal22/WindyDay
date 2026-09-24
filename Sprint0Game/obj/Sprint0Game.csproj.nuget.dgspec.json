@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\Sprint0Game\\Sprint0Game.csproj": {}
+    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\Sprint0Game\\Sprint0Game.csproj": {}
   },
   "projects": {
-    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj": {
+    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj",
+        "projectUniqueName": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj",
         "projectName": "MonoGameLibrary",
-        "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj",
+        "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj",
         "packagesPath": "C:\\Users\\samva\\.nuget\\packages\\",
-        "outputPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\obj\\",
+        "outputPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\samva\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -86,14 +86,14 @@
         }
       }
     },
-    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\Sprint0Game\\Sprint0Game.csproj": {
+    "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\Sprint0Game\\Sprint0Game.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\Sprint0Game\\Sprint0Game.csproj",
+        "projectUniqueName": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\Sprint0Game\\Sprint0Game.csproj",
         "projectName": "Sprint0Game",
-        "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\Sprint0Game\\Sprint0Game.csproj",
+        "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\Sprint0Game\\Sprint0Game.csproj",
         "packagesPath": "C:\\Users\\samva\\.nuget\\packages\\",
-        "outputPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\Sprint0Game\\obj\\",
+        "outputPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\Sprint0Game\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\samva\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -109,8 +109,8 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj": {
-                "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj"
+              "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj": {
+                "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj"
               }
             }
           }

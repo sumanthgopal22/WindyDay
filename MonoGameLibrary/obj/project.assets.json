@@ -293,11 +293,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj",
+      "projectUniqueName": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj",
       "projectName": "MonoGameLibrary",
-      "projectPath": "c:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\MonoGameLibrary.csproj",
+      "projectPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\MonoGameLibrary.csproj",
       "packagesPath": "C:\\Users\\samva\\.nuget\\packages\\",
-      "outputPath": "c:\\Class Folders\\AU2026\\Interactive Systems (3902)\\MonoGame\\MonoGameLibrary\\obj\\",
+      "outputPath": "C:\\Class Folders\\AU2026\\Interactive Systems (3902)\\Project\\WindyDay\\MonoGameLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\samva\\AppData\\Roaming\\NuGet\\NuGet.Config"

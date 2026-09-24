@@ -12,22 +12,22 @@ public class Player : IPlayer
 
     public void MoveRight()
     {
-        movement = new Vector2(1f, 0f);
+        movement = new Vector2(5f, 0f);
     }
 
     public void MoveLeft()
     {
-        movement = new Vector2(-1f, 0f);
+        movement = new Vector2(-5f, 0f);
     }
 
     public void MoveUp()
     {
-        movement = new Vector2(0f, -1f);
+        movement = new Vector2(0f, -5f);
     }
 
     public void MoveDown()
     {
-        movement = new Vector2(0f, 1f);
+        movement = new Vector2(0f, 5f);
     }
 
     public void Teleport(Vector2 targetPosition)
