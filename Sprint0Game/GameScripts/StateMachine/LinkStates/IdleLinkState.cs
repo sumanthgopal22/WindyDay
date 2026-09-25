@@ -1,21 +1,24 @@
 ﻿using Sprint0Game.GameScripts.Interfaces;
+using Sprint0Game.GameScripts.Commands;
 
 namespace Sprint0Game.GameScripts.StateMachine.LinkStates
 {
     public class IdleLinkState : ILinkState
     {
+        private LinkStateMachine stateMachine;
         private IPlayer link;
         private ICommand command;
 
-        public IdleLinkState(IPlayer link)
+        public IdleLinkState(LinkStateMachine sm)
         {
-            this.link = link;
+            stateMachine = sm;
+            link = stateMachine.Link;
         }
 
         public void TakeDamage()
         {
-            // command = new LinkTakeDamageCommand();
-            // command.Execute();
+            command = new LinkTakeDamageCommand(stateMachine);
+            command.Execute();
         }
 
         public void Move()
