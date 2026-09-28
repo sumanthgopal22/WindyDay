@@ -17,6 +17,7 @@ public class Game1 : Core
     private List<IController> controllerList;
     private IPlayer player;
     private IEnemy gelEnemy;
+    private IEnemy keeseEnemy;
     private MainMenuScreen menu;
 
     // Current state of the game (set as main menu by default)
@@ -41,6 +42,7 @@ public class Game1 : Core
 
         player = new Player();
         gelEnemy = new GelEnemy();
+        keeseEnemy = new KeeseEnemy();
 
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
@@ -62,6 +64,7 @@ public class Game1 : Core
         menu.LoadContent(Content, GraphicsDevice);
         player.LoadContent();
         gelEnemy.LoadContent();
+        keeseEnemy.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
@@ -81,6 +84,7 @@ public class Game1 : Core
 
             player.Update(gameTime);
             gelEnemy.Update(gameTime);
+            keeseEnemy.Update(gameTime);
         }
 
         base.Update(gameTime);
@@ -102,6 +106,7 @@ public class Game1 : Core
             // Draw player and enemies when the game starts
             player.Draw(gameTime);
             gelEnemy.Draw(gameTime);
+            keeseEnemy.Draw(gameTime);
         }
 
         SpriteBatch.End();
