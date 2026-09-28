@@ -3,28 +3,28 @@ using Sprint0Game.GameScripts.Interfaces;
 
 namespace Sprint0Game.GameScripts.StateMachine.LinkStates
 {
-    public class IdleLinkState : IState
+    public class AttackingLinkState : IState
     {
         private readonly LinkStateMachine stateMachine;
 
-        public IdleLinkState(LinkStateMachine stateMachine)
+        public AttackingLinkState(LinkStateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
         }
 
         public void Enter()
         {
-            // Start idle animation
+            // Start attacking animation
         }
 
         public void Update(GameTime gameTime)
         {
-            // Update idle animation
+            // Update attacking animation
         }
 
         public void Exit()
         {
-            // Clean up idle state
+            // Clean up attacking state
         }
     }
 }
