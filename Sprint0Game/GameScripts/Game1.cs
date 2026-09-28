@@ -10,6 +10,7 @@ public class Game1 : Core
 {
     private List <IController> controllerList;
     private IPlayer player;
+    private IEnemy gelEnemy;
 
     public Game1() : base("Sprint 0 Game", 1280, 720, false)
     {
@@ -19,6 +20,7 @@ public class Game1 : Core
     protected override void Initialize()
     {
         player = new Player();
+        gelEnemy = new GelEnemy();
 
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Escape, new QuitGameCommand());
@@ -38,6 +40,7 @@ public class Game1 : Core
     protected override void LoadContent()
     {
         player.LoadContent();
+        gelEnemy.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
@@ -49,6 +52,8 @@ public class Game1 : Core
 
         player.Update(gameTime);
 
+        gelEnemy.Update(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -59,6 +64,8 @@ public class Game1 : Core
         SpriteBatch.Begin();
 
         player.Draw(gameTime);
+
+        gelEnemy.Draw(gameTime);
 
         SpriteBatch.End();
 
