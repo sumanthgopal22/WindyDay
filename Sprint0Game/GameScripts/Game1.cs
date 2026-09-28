@@ -43,7 +43,7 @@ public class Game1 : Core
         gelEnemy = new GelEnemy();
 
         KeyboardController keyboardController = new KeyboardController();
-        keyboardController.RegisterCommand(Keys.Escape, new QuitGameCommand());
+        keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
         keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
