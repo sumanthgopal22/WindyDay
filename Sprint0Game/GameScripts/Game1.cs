@@ -18,6 +18,7 @@ public class Game1 : Core
     private IPlayer player;
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
+    private CycleEnemy cycler;
     private MainMenuScreen menu;
 
     // Current state of the game (set as main menu by default)
@@ -44,15 +45,26 @@ public class Game1 : Core
         gelEnemy = new GelEnemy();
         keeseEnemy = new KeeseEnemy();
 
+        // Adding to enemyList to cycle through enemies being displayed for Sprint2
+        cycler = new CycleEnemy();
+        cycler.Add(gelEnemy);
+        cycler.Add(keeseEnemy);
+
+        //Keyboard controlls for Link
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
         keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterCommand(Keys.S, new MoveDownCommand(player));
-
+        
+        //Mouse controlls for Link
         MouseController mouseController = new MouseController();
         mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
+
+        //For cycling through enemies
+        keyboardController.RegisterCommand(Keys.P, new CycleEnemyRightCommand(cycler));
+        keyboardController.RegisterCommand(Keys.O, new CycleEnemyLeftCommand(cycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -83,8 +95,8 @@ public class Game1 : Core
             }
 
             player.Update(gameTime);
-            gelEnemy.Update(gameTime);
-            keeseEnemy.Update(gameTime);
+            cycler.Update(gameTime);
+            
         }
 
         base.Update(gameTime);
@@ -105,8 +117,7 @@ public class Game1 : Core
         {
             // Draw player and enemies when the game starts
             player.Draw(gameTime);
-            gelEnemy.Draw(gameTime);
-            keeseEnemy.Draw(gameTime);
+            cycler.Draw(gameTime);
         }
 
         SpriteBatch.End();
