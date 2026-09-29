@@ -6,29 +6,65 @@ using MonoGameLibrary;
 
 namespace Sprint0Game;
 
+public enum GameStatus
+{
+    MainMenu,
+    Playing
+}
+
 public class Game1 : Core
 {
-    private List <IController> controllerList;
+    private List<IController> controllerList;
     private IPlayer player;
+    private IEnemy gelEnemy;
+    private IEnemy keeseEnemy;
+    private CycleEnemy cycler;
+    private MainMenuScreen menu;
+
+    // Current state of the game (set as main menu by default)
+    public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
 
     public Game1() : base("Sprint 0 Game", 1280, 720, false)
     {
-        
+    }
+
+    public void StartGame()
+    {
+        CurrentState = GameStatus.Playing;
     }
 
     protected override void Initialize()
     {
-        player = new Player();
+        menu = new MainMenuScreen();
 
+        // Set up the main menu
+        menu.AddItem("Start Game", new StartGameCommand(this));
+        menu.AddItem("Exit", new ExitGameCommand(this));
+
+        player = new Player();
+        gelEnemy = new GelEnemy();
+        keeseEnemy = new KeeseEnemy();
+
+        // Adding to enemyList to cycle through enemies being displayed for Sprint2
+        cycler = new CycleEnemy();
+        cycler.Add(gelEnemy);
+        cycler.Add(keeseEnemy);
+
+        //Keyboard controlls for Link
         KeyboardController keyboardController = new KeyboardController();
-        keyboardController.RegisterCommand(Keys.Escape, new QuitGameCommand());
+        keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
         keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterCommand(Keys.S, new MoveDownCommand(player));
-
+        
+        //Mouse controlls for Link
         MouseController mouseController = new MouseController();
         mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
+
+        //For cycling through enemies
+        keyboardController.RegisterCommand(Keys.P, new CycleEnemyRightCommand(cycler));
+        keyboardController.RegisterCommand(Keys.O, new CycleEnemyLeftCommand(cycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -37,28 +73,52 @@ public class Game1 : Core
 
     protected override void LoadContent()
     {
+        menu.LoadContent(Content, GraphicsDevice);
         player.LoadContent();
+        gelEnemy.LoadContent();
+        keeseEnemy.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
     {
-        foreach (IController controller in controllerList)
+        if (CurrentState == GameStatus.MainMenu)
         {
-            controller.Update(gameTime);
+            // Update the main menu when main menu
+            menu.Update(gameTime);
         }
+        else if (CurrentState == GameStatus.Playing)
+        {
+            // Update controllers and player when playing 
+            foreach (IController controller in controllerList)
+            {
+                controller.Update(gameTime);
+            }
 
-        player.Update(gameTime);
+            player.Update(gameTime);
+            cycler.Update(gameTime);
+            
+        }
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(new Color(147,187,236));
+        GraphicsDevice.Clear(new Color(147, 187, 236));
 
         SpriteBatch.Begin();
 
-        player.Draw(gameTime);
+        if (CurrentState == GameStatus.MainMenu)
+        {
+            // Draw menu when the game still hasen't started
+            menu.Draw(SpriteBatch);
+        }
+        else if (CurrentState == GameStatus.Playing)
+        {
+            // Draw player and enemies when the game starts
+            player.Draw(gameTime);
+            cycler.Draw(gameTime);
+        }
 
         SpriteBatch.End();
 
