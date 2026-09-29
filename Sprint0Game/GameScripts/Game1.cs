@@ -50,7 +50,7 @@ public class Game1 : Core
         cycler.Add(gelEnemy);
         cycler.Add(keeseEnemy);
 
-        //Keyboard controlls for Link
+        //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
@@ -58,7 +58,7 @@ public class Game1 : Core
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterCommand(Keys.S, new MoveDownCommand(player));
         
-        //Mouse controlls for Link
+        //Mouse controls for Link
         MouseController mouseController = new MouseController();
         mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
 

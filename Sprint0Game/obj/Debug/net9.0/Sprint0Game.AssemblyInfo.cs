@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sprint0Game")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+075eb0e18d9fdf8599e6d198dff75e424a7ec5d5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+476991fa82f6774203a0abffadc07e88c34bc120")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sprint0Game")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sprint0Game")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
