@@ -41,7 +41,9 @@ public class Sprite : ISprite
         else
             sourceRectangle = new Rectangle(1, 34, 24, 32);
 
-        Core.SpriteBatch.Draw(spriteTexture, position, sourceRectangle, Color.White);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 240,320);
+
+        Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
     }
 
     public void Update(GameTime gameTime)
