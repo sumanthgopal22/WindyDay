@@ -1,9 +1,9 @@
 namespace Sprint0Game;
 
-public class CycleEnemyRightCommand : ICommand
+public class CycleRightCommand : ICommand
 {
-    private CycleEnemy cycler;
-    public CycleEnemyRightCommand(CycleEnemy cycler)
+    private Cycler cycler;
+    public CycleRightCommand(Cycler cycler)
     {
         this.cycler = cycler;
     }

@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework;
 
 namespace Sprint0Game;
 
-public class CycleEnemy
+public class Cycler
 {
     private int currentIndex = 0;
     private List<IEnemy> enemiesList;    
-    public CycleEnemy()
+    public Cycler()
     {
         enemiesList = [];
     }

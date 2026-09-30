@@ -18,7 +18,7 @@ public class Game1 : Core
     private IPlayer player;
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
-    private CycleEnemy cycler;
+    private Cycler enemyCycler;
     private MainMenuScreen menu;
 
     // Current state of the game (set as main menu by default)
@@ -46,9 +46,9 @@ public class Game1 : Core
         keeseEnemy = new KeeseEnemy();
 
         // Adding to enemyList to cycle through enemies being displayed for Sprint2
-        cycler = new CycleEnemy();
-        cycler.Add(gelEnemy);
-        cycler.Add(keeseEnemy);
+        enemyCycler = new Cycler();
+        enemyCycler.Add(gelEnemy);
+        enemyCycler.Add(keeseEnemy);
 
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
@@ -63,8 +63,8 @@ public class Game1 : Core
         mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
 
         //For cycling through enemies
-        keyboardController.RegisterCommand(Keys.P, new CycleEnemyRightCommand(cycler));
-        keyboardController.RegisterCommand(Keys.O, new CycleEnemyLeftCommand(cycler));
+        keyboardController.RegisterCommand(Keys.P, new CycleRightCommand(enemyCycler));
+        keyboardController.RegisterCommand(Keys.O, new CycleLeftCommand(enemyCycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -95,7 +95,7 @@ public class Game1 : Core
             }
 
             player.Update(gameTime);
-            cycler.Update(gameTime);
+            enemyCycler.Update(gameTime);
             
         }
 
@@ -117,7 +117,7 @@ public class Game1 : Core
         {
             // Draw player and enemies when the game starts
             player.Draw(gameTime);
-            cycler.Draw(gameTime);
+            enemyCycler.Draw(gameTime);
         }
 
         SpriteBatch.End();
