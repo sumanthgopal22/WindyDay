@@ -20,6 +20,7 @@ public class Game1 : Core
     private IEnemy keeseEnemy;
     private Cycler enemyCycler;
     private MainMenuScreen menu;
+    private Block block;
 
     // Current state of the game (set as main menu by default)
     public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
@@ -44,6 +45,7 @@ public class Game1 : Core
         player = new Player();
         gelEnemy = new GelEnemy();
         keeseEnemy = new KeeseEnemy();
+        block = new Block();
 
         // Adding to enemyList to cycle through enemies being displayed for Sprint2
         enemyCycler = new Cycler();
@@ -77,6 +79,7 @@ public class Game1 : Core
         player.LoadContent();
         gelEnemy.LoadContent();
         keeseEnemy.LoadContent();
+        block.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
@@ -96,6 +99,7 @@ public class Game1 : Core
 
             player.Update(gameTime);
             enemyCycler.Update(gameTime);
+            block.Update(gameTime);
             
         }
 
@@ -118,6 +122,7 @@ public class Game1 : Core
             // Draw player and enemies when the game starts
             player.Draw(gameTime);
             enemyCycler.Draw(gameTime);
+            block.Draw(gameTime);
         }
 
         SpriteBatch.End();

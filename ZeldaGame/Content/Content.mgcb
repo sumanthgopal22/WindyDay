@@ -43,6 +43,19 @@
 /processorParam:Version=3.8.5.1
 /build:MIDELTANK_Demo.otf
 
+#begin spritesheets/BlocksSheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:spritesheets/BlocksSheet.png
+
 #begin spritesheets/Custom _ Edited - Sonic the Hedgehog Customs - Sonic the Hedgehog - Sonic (Mario & Wario-Style).png
 /importer:TextureImporter
 /processor:TextureProcessor
