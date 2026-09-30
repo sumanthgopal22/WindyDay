@@ -82,6 +82,19 @@
 /processorParam:Version=3.8.5.1
 /build:spritesheets/Dungeon_Enemies.png
 
+#begin spritesheets/Link.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:spritesheets/Link.png
+
 #begin spritesheets/Overworld_Enemies.png
 /importer:TextureImporter
 /processor:TextureProcessor

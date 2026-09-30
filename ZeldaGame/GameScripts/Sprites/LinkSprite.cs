@@ -41,7 +41,7 @@ public class Sprite : ISprite
         else
             sourceRectangle = new Rectangle(1, 34, 24, 32);
 
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 240,320);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 120,160);
 
         Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
     }
