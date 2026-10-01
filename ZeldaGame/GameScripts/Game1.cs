@@ -20,6 +20,7 @@ public class Game1 : Core
     private IEnemy keeseEnemy;
     private IEnemy goriyaEnemy;
     private IEnemy wallMasterEnemy;
+    private IEnemy aquamentusEnemy;
     private Cycler enemyCycler;
     private MainMenuScreen menu;
 
@@ -48,6 +49,7 @@ public class Game1 : Core
         keeseEnemy = new KeeseEnemy();
         goriyaEnemy = new GoriyaEnemy();
         wallMasterEnemy = new WallMasterEnemy();
+        aquamentusEnemy = new AquamentusEnemy();
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
         enemyCycler = new Cycler();
@@ -55,6 +57,7 @@ public class Game1 : Core
         enemyCycler.Add(keeseEnemy);
         enemyCycler.Add(goriyaEnemy);
         enemyCycler.Add(wallMasterEnemy);
+        enemyCycler.Add(aquamentusEnemy);
 
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
@@ -85,6 +88,7 @@ public class Game1 : Core
         keeseEnemy.LoadContent();
         goriyaEnemy.LoadContent();
         wallMasterEnemy.LoadContent();
+        aquamentusEnemy.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
