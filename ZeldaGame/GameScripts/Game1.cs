@@ -18,6 +18,8 @@ public class Game1 : Core
     private IPlayer player;
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
+    private IEnemy goriyaEnemy;
+    private IEnemy wallMasterEnemy;
     private Cycler enemyCycler;
     private MainMenuScreen menu;
 
@@ -44,15 +46,19 @@ public class Game1 : Core
         player = new Player();
         gelEnemy = new GelEnemy();
         keeseEnemy = new KeeseEnemy();
+        goriyaEnemy = new GoriyaEnemy();
+        wallMasterEnemy = new WallMasterEnemy();
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
         enemyCycler = new Cycler();
         enemyCycler.Add(gelEnemy);
         enemyCycler.Add(keeseEnemy);
+        enemyCycler.Add(goriyaEnemy);
+        enemyCycler.Add(wallMasterEnemy);
 
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
-        keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
+        keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
         keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
@@ -63,8 +69,8 @@ public class Game1 : Core
         mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
 
         //For cycling through enemies
-        keyboardController.RegisterCommand(Keys.P, new CycleRightCommand(enemyCycler));
-        keyboardController.RegisterCommand(Keys.O, new CycleLeftCommand(enemyCycler));
+        keyboardController.RegisterPressCommand(Keys.P, new CycleRightCommand(enemyCycler));
+        keyboardController.RegisterPressCommand(Keys.O, new CycleLeftCommand(enemyCycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -77,6 +83,8 @@ public class Game1 : Core
         player.LoadContent();
         gelEnemy.LoadContent();
         keeseEnemy.LoadContent();
+        goriyaEnemy.LoadContent();
+        wallMasterEnemy.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)

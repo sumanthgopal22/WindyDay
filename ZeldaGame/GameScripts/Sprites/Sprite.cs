@@ -17,7 +17,6 @@ public class Sprite : ISprite
         this.spriteTexture = spriteTexture;
         elapsedTime = 0;
         currentFrame = 0;
-        Size = new Vector2(24f, 32f);
     }
 
     public void Reset()

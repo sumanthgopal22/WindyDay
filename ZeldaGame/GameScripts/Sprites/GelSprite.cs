@@ -17,7 +17,6 @@ public class GelSprite : ISprite
         this.spriteTexture = spriteTexture;
         elapsedTime = 0;
         currentFrame = 0;
-        Size = new Vector2(8f, 16f);
     }
 
     public void Reset()
