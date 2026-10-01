@@ -45,7 +45,7 @@ public class Game1 : Core
         gelEnemy = new GelEnemy();
         keeseEnemy = new KeeseEnemy();
 
-        // Adding to enemyList to cycle through enemies being displayed for Sprint2
+        // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
         enemyCycler = new Cycler();
         enemyCycler.Add(gelEnemy);
         enemyCycler.Add(keeseEnemy);
