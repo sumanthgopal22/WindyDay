@@ -18,6 +18,11 @@ public class BlockSprite : ISprite
         Size = new Vector2(80f, 80f);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // BlockSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Reset()
     {
         currentFrame = 0;
@@ -30,7 +35,7 @@ public class BlockSprite : ISprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        int x = (currentFrame % 9) * 16;
+        int x = (currentFrame % 9) * 16 - 1;
         int y = (currentFrame / 9) * 16;
         Rectangle sourceRectangle = new Rectangle(x,y,16,16);
 

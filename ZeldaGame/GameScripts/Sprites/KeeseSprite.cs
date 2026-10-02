@@ -20,6 +20,11 @@ public class KeeseSprite : ISprite
         Size = new Vector2(16f, 16f);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // KeeseSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Reset()
     {
         currentFrame = 0;
