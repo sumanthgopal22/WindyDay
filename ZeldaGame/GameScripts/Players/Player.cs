@@ -13,21 +13,25 @@ public class Player : IPlayer
     public void MoveRight()
     {
         movement = new Vector2(5f, 0f);
+        sprite.SetDirection(spriteDirection.Right);
     }
 
     public void MoveLeft()
     {
         movement = new Vector2(-5f, 0f);
+        sprite.SetDirection(spriteDirection.Left);
     }
 
     public void MoveUp()
     {
         movement = new Vector2(0f, -5f);
+        sprite.SetDirection(spriteDirection.Up);
     }
 
     public void MoveDown()
     {
         movement = new Vector2(0f, 5f);
+        sprite.SetDirection(spriteDirection.Down);
     }
 
     public void Teleport(Vector2 targetPosition)
@@ -44,7 +48,7 @@ public class Player : IPlayer
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.5f;
-        spriteTexture = Core.Content.Load<Texture2D>("spritesheets/sonic");
+        spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Link");
         sprite = new Sprite(spriteTexture);
     }
 

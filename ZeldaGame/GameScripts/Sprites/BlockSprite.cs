@@ -18,6 +18,11 @@ public class BlockSprite : ISprite
         Size = new Vector2(80f, 80f);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // BlockSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Reset()
     {
         currentFrame = 0;

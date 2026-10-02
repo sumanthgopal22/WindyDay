@@ -20,6 +20,11 @@ public class GelSprite : ISprite
         Size = new Vector2(8f, 16f);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // GelSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Reset()
     {
         currentFrame = 0;
