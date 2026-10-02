@@ -2,8 +2,8 @@ namespace ZeldaGame;
 
 public class CycleLeftCommand : ICommand
 {
-    private Cycler cycler;
-    public CycleLeftCommand(Cycler cycler)
+    private ICycler cycler;
+    public CycleLeftCommand(ICycler cycler)
     {
         this.cycler = cycler;
     }

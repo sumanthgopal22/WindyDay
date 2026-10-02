@@ -18,9 +18,11 @@ public class Game1 : Core
     private IPlayer player;
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
-    private Cycler enemyCycler;
+    private Cycler<IEnemy> enemyCycler;
     private MainMenuScreen menu;
     private Block block;
+    private Cycler<IItem> itemCycler;
+    private IItem fairyItem;
 
     // Current state of the game (set as main menu by default)
     public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
@@ -48,11 +50,13 @@ public class Game1 : Core
         block = new Block();
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
-        enemyCycler = new Cycler();
+        enemyCycler = new Cycler<IEnemy>();
         enemyCycler.Add(gelEnemy);
         enemyCycler.Add(keeseEnemy);
-        
 
+        // Initialize itemCycler to cycle through items
+        itemCycler = new Cycler<IItem>();
+        
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterCommand(Keys.Q, new QuitGameCommand());
@@ -69,8 +73,13 @@ public class Game1 : Core
         keyboardController.RegisterCommand(Keys.P, new CycleRightCommand(enemyCycler));
         keyboardController.RegisterCommand(Keys.O, new CycleLeftCommand(enemyCycler));
 
+        // Cycling through blocks
         keyboardController.RegisterCommand(Keys.T, new PreviousBlockCommand(block));
         keyboardController.RegisterCommand(Keys.Y, new NextBlockCommand(block));
+
+        // Cycling through items
+        keyboardController.RegisterCommand(Keys.I, new CycleRightCommand(itemCycler));
+        keyboardController.RegisterCommand(Keys.U, new CycleLeftCommand(itemCycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -103,8 +112,8 @@ public class Game1 : Core
 
             player.Update(gameTime);
             enemyCycler.Update(gameTime);
+            itemCycler.Update(gameTime);
             block.Update(gameTime);
-            
         }
 
         base.Update(gameTime);
@@ -126,6 +135,7 @@ public class Game1 : Core
             // Draw player and enemies when the game starts
             player.Draw(gameTime);
             enemyCycler.Draw(gameTime);
+            itemCycler.Draw(gameTime);
             block.Draw(gameTime);
         }
 
