@@ -26,6 +26,10 @@ public class AnimatedSprite : ISprite
         Size = new Vector2(sourceRectangles[0].Width, sourceRectangles[0].Height);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+    }
+
     public void Reset()
     {
         currentFrame = 0;

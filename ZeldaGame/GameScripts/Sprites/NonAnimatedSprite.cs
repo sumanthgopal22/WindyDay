@@ -18,6 +18,10 @@ public class NonAnimatedSprite : ISprite
         Size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+    }
+
     public void Reset()
     {
     }

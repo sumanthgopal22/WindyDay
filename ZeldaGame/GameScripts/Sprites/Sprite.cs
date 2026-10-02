@@ -10,9 +10,7 @@ public class Sprite : ISprite
     private Texture2D spriteTexture;
     private double elapsedTime;
     private int currentFrame;
-    private spriteDirection currentDirection;  
-    
-
+    private spriteDirection currentDirection;
 
     public Vector2 Size { get; }
 
