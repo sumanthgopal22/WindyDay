@@ -3,38 +3,50 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame;
 
-public class Cycler
+public class Cycler<T> : ICycler where T : IGameObject
 {
     private int currentIndex = 0;
-    private List<IEnemy> enemiesList;    
+    private List<T> list;
+
     public Cycler()
     {
-        enemiesList = [];
+        list = [];
     }
+
     public void Next()
     {
-        currentIndex = (currentIndex + 1) % enemiesList.Count;
-
+        if (list.Count == 0)
+            return;
+        
+        currentIndex = (currentIndex + 1) % list.Count;
     }
+
     public void Previous()
     {
-        currentIndex = (currentIndex - 1 + enemiesList.Count) % enemiesList.Count;
+        if (list.Count == 0)
+            return;
+
+        currentIndex = (currentIndex - 1 + list.Count) % list.Count;
     }
 
-    public void Add(IEnemy enemy)
+    public void Add(T entity)
     {
-        enemiesList.Add(enemy);
+        list.Add(entity);
     }
 
     public void Draw(GameTime gameTime)
     {
-       enemiesList[currentIndex].Draw(gameTime);
+        if (list.Count == 0)
+            return;
+        
+        list[currentIndex].Draw(gameTime);
     }
 
     public void Update(GameTime gameTime)
     {
-        enemiesList[currentIndex].Update(gameTime);
+        if (list.Count == 0)
+            return;
 
+        list[currentIndex].Update(gameTime);
     }
-
 }

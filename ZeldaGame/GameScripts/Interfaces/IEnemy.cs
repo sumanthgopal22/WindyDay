@@ -3,9 +3,8 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame;
 
-public interface IEnemy
+public interface IEnemy : IGameObject
 {
-
     void MoveRight();
 
     void MoveLeft();
@@ -15,9 +14,4 @@ public interface IEnemy
     void MoveDown();
 
     void LoadContent();
-
-    void Draw(GameTime gameTime);
-
-    void Update(GameTime gameTime);
-
 }
