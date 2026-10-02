@@ -11,4 +11,8 @@ public interface IBlock
 
     void Update(GameTime gameTime);
 
+    void NextBlock();
+
+    void PreviousBlock();
+
 }

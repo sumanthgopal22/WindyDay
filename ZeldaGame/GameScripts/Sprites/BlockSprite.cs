@@ -7,7 +7,6 @@ namespace ZeldaGame;
 public class BlockSprite : ISprite
 {
     private Texture2D spriteTexture;
-    private double elapsedTime;
     private int currentFrame; 
 
     public Vector2 Size { get; }
@@ -15,9 +14,8 @@ public class BlockSprite : ISprite
     public BlockSprite(Texture2D spriteTexture)
     {
         this.spriteTexture = spriteTexture;
-        elapsedTime = 0;
         currentFrame = 0;
-        Size = new Vector2(24f, 32f);
+        Size = new Vector2(80f, 80f);
     }
 
     public void Reset()
@@ -25,37 +23,23 @@ public class BlockSprite : ISprite
         currentFrame = 0;
     }
 
+    public void SetFrame(int frame)
+    {
+        currentFrame = frame;
+    }
+
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle sourceRectangle;
+        int x = (currentFrame % 9) * 16;
+        int y = (currentFrame / 9) * 16;
+        Rectangle sourceRectangle = new Rectangle(x,y,16,16);
 
-        if (currentFrame == 0)
-            sourceRectangle = new Rectangle(1, 1, 24, 32);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 80,80);
 
-        else if (currentFrame == 1)
-            sourceRectangle = new Rectangle(26, 1, 24, 32);
-
-        else if (currentFrame == 2)
-            sourceRectangle = new Rectangle(51, 1, 24, 32);
-
-        else
-            sourceRectangle = new Rectangle(1, 34, 24, 32);
-
-        Core.SpriteBatch.Draw(spriteTexture, position, sourceRectangle, Color.White);
+        Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
     }
 
     public void Update(GameTime gameTime)
     {
-        double frameDuration = 0.1;
-        elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
-
-        if (elapsedTime > frameDuration)
-        {
-            elapsedTime -= frameDuration;
-            currentFrame++;
-        }
-
-        if (currentFrame > 2)
-            currentFrame = 0;
     }
 }

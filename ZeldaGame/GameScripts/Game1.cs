@@ -51,6 +51,7 @@ public class Game1 : Core
         enemyCycler = new Cycler();
         enemyCycler.Add(gelEnemy);
         enemyCycler.Add(keeseEnemy);
+        
 
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
@@ -67,6 +68,9 @@ public class Game1 : Core
         //For cycling through enemies
         keyboardController.RegisterCommand(Keys.P, new CycleRightCommand(enemyCycler));
         keyboardController.RegisterCommand(Keys.O, new CycleLeftCommand(enemyCycler));
+
+        keyboardController.RegisterCommand(Keys.T, new PreviousBlockCommand(block));
+        keyboardController.RegisterCommand(Keys.Y, new NextBlockCommand(block));
 
         controllerList = [keyboardController, mouseController];
 
