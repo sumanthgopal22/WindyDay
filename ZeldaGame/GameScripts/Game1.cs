@@ -21,6 +21,7 @@ public class Game1 : Core
     private Cycler<IEnemy> enemyCycler;
     private MainMenuScreen menu;
     private Block block;
+    private Vector2 itemSpawn;
     private Cycler<IItem> itemCycler;
     private IItem fairyItem;
 
@@ -93,6 +94,13 @@ public class Game1 : Core
         gelEnemy.LoadContent();
         keeseEnemy.LoadContent();
         block.LoadContent();
+        
+        // Load items
+        ItemSpriteFactory.Instance.LoadTextures();
+        itemSpawn = new Vector2(Instance.Window.ClientBounds.Width * 0.5f, Instance.Window.ClientBounds.Height * 0.25f);
+
+        fairyItem = new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), itemSpawn);
+        itemCycler.Add(fairyItem);
     }
 
     protected override void Update(GameTime gameTime)

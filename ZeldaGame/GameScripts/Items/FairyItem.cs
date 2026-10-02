@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ZeldaGame;
 
@@ -18,7 +17,7 @@ public class FairyItem : IItem
     public void Update(GameTime gameTime)
     {
         // Autonomous item movement
-        Position += new Vector2(0.5f, -0.5f);
+        // Position += new Vector2(0.5f, -0.5f);
 
         // Update item animation
         sprite.Update(gameTime);
