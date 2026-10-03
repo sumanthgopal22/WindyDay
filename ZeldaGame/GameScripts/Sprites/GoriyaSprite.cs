@@ -24,6 +24,11 @@ public class GoriyaSprite : ISprite
         currentFrame = 0;
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // GoriyaSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Draw(GameTime gameTime, Vector2 position)
     {
         Rectangle sourceRectangle;

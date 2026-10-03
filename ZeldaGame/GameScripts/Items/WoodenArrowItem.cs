@@ -2,13 +2,13 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame;
 
-public class CompassItem : IItem
+public class WoodenArrowItem : IItem
 {
     private readonly ISprite sprite;
     public Vector2 Position { get; set; }
     public Vector2 Size => sprite.Size;
 
-    public CompassItem(ISprite sprite, Vector2 initialPosition)
+    public WoodenArrowItem(ISprite sprite, Vector2 initialPosition)
     {
         this.sprite = sprite;
         Position = initialPosition;

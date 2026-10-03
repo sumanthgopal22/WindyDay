@@ -24,6 +24,11 @@ public class AquamentusSprite : ISprite
         currentFrame = 0;
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // AquamentusSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Draw(GameTime gameTime, Vector2 position)
     {
         Rectangle sourceRectangle;

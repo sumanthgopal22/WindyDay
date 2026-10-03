@@ -19,6 +19,11 @@ public class KeeseSprite : ISprite
         currentFrame = 0;
     }
 
+    public void SetDirection(spriteDirection direction)
+    {
+        // KeeseSprite does not have directional animations, so this method is not needed.
+    }
+
     public void Reset()
     {
         currentFrame = 0;

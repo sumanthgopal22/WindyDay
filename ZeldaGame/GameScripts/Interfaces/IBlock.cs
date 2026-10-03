@@ -5,11 +5,14 @@ namespace ZeldaGame;
 
 public interface IBlock
 {
-
     void LoadContent();
 
     void Draw(GameTime gameTime);
 
     void Update(GameTime gameTime);
+
+    void NextBlock();
+
+    void PreviousBlock();
 
 }
