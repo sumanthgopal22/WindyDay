@@ -144,6 +144,7 @@ namespace ZeldaGame
             return currentState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
         }
 
+        // Draw all parts of the menu
         public void Draw(SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
