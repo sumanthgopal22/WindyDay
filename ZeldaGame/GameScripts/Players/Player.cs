@@ -6,7 +6,7 @@ namespace ZeldaGame;
 
 public class Player : IPlayer
 {
-    private ISprite sprite;
+    private IActionSprite sprite;
     private Texture2D spriteTexture;
     private Vector2 position, movement;
 
@@ -32,6 +32,16 @@ public class Player : IPlayer
     {
         movement = new Vector2(0f, 5f);
         sprite.SetDirection(spriteDirection.Down);
+    }
+
+    public void UseItem()
+    {
+        sprite.PlayAction(SpriteAction.UseItem);
+    }
+
+    public void SwingSword()
+    {
+        sprite.PlayAction(SpriteAction.SwingSword);
     }
 
     public void Teleport(Vector2 targetPosition)
@@ -69,7 +79,7 @@ public class Player : IPlayer
 
         position = nextPosition;
 
-        if (movement != Vector2.Zero)
+        if (movement != Vector2.Zero || sprite.IsActionPlaying)
             sprite.Update(gameTime);
         else
             sprite.Reset();
