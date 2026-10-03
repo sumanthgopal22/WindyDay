@@ -8,25 +8,29 @@ public class AquamentusEnemy : IEnemy
 {
     private ISprite aquamentusSprite;
     private Texture2D spriteTexture;
-    private Vector2 position;
+    private Vector2 position, movement;
     public void MoveRight()
     {
-        
+        movement = new Vector2(5f, 0f);
+
     }
 
     public void MoveLeft()
     {
-        
+        movement = new Vector2(-5f, 0f);
+
     }
 
     public void MoveUp()
     {
-        
+        movement = new Vector2(0f, 5f);
+
     }
 
     public void MoveDown()
     {
-        
+        movement = new Vector2(0f, -5f);
+
     }
     
     public void LoadContent()

@@ -8,25 +8,26 @@ public class GelEnemy : IEnemy
 {
     private ISprite gelSprite;
     private Texture2D spriteTexture;
-    private Vector2 position;
+    private Vector2 position, direction = Vector2.Zero;
+
     public void MoveRight()
     {
-        
+        direction.X += 1;
     }
 
     public void MoveLeft()
     {
-        
+        direction.X -= 1;
     }
 
     public void MoveUp()
     {
-        
+        direction.Y += 1;
     }
 
     public void MoveDown()
     {
-        
+        direction.Y -= 1;
     }
     
     public void LoadContent()
@@ -36,13 +37,14 @@ public class GelEnemy : IEnemy
         gelSprite = new GelSprite(spriteTexture);
     }
 
-    public void Draw(GameTime gameTime)
-    {
-        gelSprite.Draw(gameTime, position);
-    }
-
     public void Update(GameTime gameTime)
     {
         gelSprite.Update(gameTime);
     }
+
+    public void Draw(GameTime gameTime)
+    {
+        gelSprite.Draw(gameTime, position);
+    }
+    
 }
