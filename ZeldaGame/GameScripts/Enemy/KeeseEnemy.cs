@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 
 namespace ZeldaGame;
@@ -7,7 +6,6 @@ namespace ZeldaGame;
 public class KeeseEnemy : IEnemy
 {
     private ISprite gelSprite;
-    private Texture2D spriteTexture;
     private Vector2 position;
     public void MoveRight()
     {
@@ -32,8 +30,7 @@ public class KeeseEnemy : IEnemy
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.75f;
-        spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Dungeon_Enemies");
-        gelSprite = new KeeseSprite(spriteTexture);
+        gelSprite = EnemySpriteFactory.Instance.CreateKeeseSprite();
     }
 
     public void Draw(GameTime gameTime)

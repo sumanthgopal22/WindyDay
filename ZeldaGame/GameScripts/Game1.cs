@@ -62,7 +62,10 @@ public class Game1 : Core
         menu.AddItem("Start Game", new StartGameCommand(this));
         menu.AddItem("Exit", new ExitGameCommand(this));
 
+        // Initialize player //
         player = new Player();
+
+        // Initialize enemies // 
         gelEnemy = new GelEnemy();
         keeseEnemy = new KeeseEnemy();
         goriyaEnemy = new GoriyaEnemy();
@@ -72,11 +75,6 @@ public class Game1 : Core
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
         enemyCycler = new Cycler<IEnemy>();
-        enemyCycler.Add(gelEnemy);
-        enemyCycler.Add(keeseEnemy);
-        enemyCycler.Add(goriyaEnemy);
-        enemyCycler.Add(wallMasterEnemy);
-        enemyCycler.Add(aquamentusEnemy);
 
         // Initialize itemCycler to cycle through items
         itemCycler = new Cycler<IItem>();
@@ -98,12 +96,12 @@ public class Game1 : Core
         keyboardController.RegisterPressCommand(Keys.O, new CycleLeftCommand(enemyCycler));
 
         // Cycling through blocks
-        keyboardController.RegisterCommand(Keys.T, new PreviousBlockCommand(block));
-        keyboardController.RegisterCommand(Keys.Y, new NextBlockCommand(block));
+        keyboardController.RegisterPressCommand(Keys.T, new PreviousBlockCommand(block));
+        keyboardController.RegisterPressCommand(Keys.Y, new NextBlockCommand(block));
 
         // Cycling through items
-        keyboardController.RegisterCommand(Keys.I, new CycleRightCommand(itemCycler));
-        keyboardController.RegisterCommand(Keys.U, new CycleLeftCommand(itemCycler));
+        keyboardController.RegisterPressCommand(Keys.I, new CycleRightCommand(itemCycler));
+        keyboardController.RegisterPressCommand(Keys.U, new CycleLeftCommand(itemCycler));
 
         controllerList = [keyboardController, mouseController];
 
@@ -114,12 +112,22 @@ public class Game1 : Core
     {
         menu.LoadContent(Content, GraphicsDevice);
         player.LoadContent();
+
+        // Load Enemies //
+        EnemySpriteFactory.Instance.LoadTextures();
         gelEnemy.LoadContent();
         keeseEnemy.LoadContent();
         goriyaEnemy.LoadContent();
         wallMasterEnemy.LoadContent();
         aquamentusEnemy.LoadContent();
         block.LoadContent();
+
+        // Add enemies to enemyCycler //
+        enemyCycler.Add(gelEnemy);
+        enemyCycler.Add(keeseEnemy);
+        enemyCycler.Add(goriyaEnemy);
+        enemyCycler.Add(wallMasterEnemy);
+        enemyCycler.Add(aquamentusEnemy);
         
         /* Load Items */
         ItemSpriteFactory.Instance.LoadTextures();
