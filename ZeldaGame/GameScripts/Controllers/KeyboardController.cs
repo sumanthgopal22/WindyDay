@@ -7,25 +7,42 @@ namespace ZeldaGame;
 public class KeyboardController : IController
 {
     private Dictionary<Keys, ICommand> controllerMappings;
+    private HashSet<Keys> keyDownOnlyCommands;
+    private KeyboardState previousKeyboardState;
 
     public KeyboardController()
     {
-        controllerMappings = new Dictionary<Keys, ICommand>();    
+        controllerMappings = new Dictionary<Keys, ICommand>();
+        keyDownOnlyCommands = new HashSet<Keys>();
     }
 
     public void RegisterCommand(Keys key, ICommand command)
     {
         controllerMappings[key] = command;
+        keyDownOnlyCommands.Remove(key);
+    }
+
+    public void RegisterCommandOnKeyDown(Keys key, ICommand command)
+    {
+        controllerMappings[key] = command;
+        keyDownOnlyCommands.Add(key);
     }
     
     public void Update(GameTime gameTime)
     {
-        Keys[] pressedKeys = Keyboard.GetState().GetPressedKeys();
+        KeyboardState keyboardState = Keyboard.GetState();
+        Keys[] pressedKeys = keyboardState.GetPressedKeys();
 
         foreach (Keys key in pressedKeys)
         {
-            if (controllerMappings.TryGetValue(key, out ICommand command))
+            bool isNewlyPressed = !previousKeyboardState.IsKeyDown(key);
+            if (controllerMappings.TryGetValue(key, out ICommand command)
+                && (!keyDownOnlyCommands.Contains(key) || isNewlyPressed))
+            {
                 command.Execute();
+            }
         }
+
+        previousKeyboardState = keyboardState;
     }
 }

@@ -79,6 +79,8 @@ public class Game1 : Core
         keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterCommand(Keys.S, new MoveDownCommand(player));
+        keyboardController.RegisterCommandOnKeyDown(Keys.K, new UseItemCommand(player));
+        keyboardController.RegisterCommandOnKeyDown(Keys.L, new SwingSwordCommand(player));
         
         //Mouse controls for Link
         MouseController mouseController = new MouseController();
