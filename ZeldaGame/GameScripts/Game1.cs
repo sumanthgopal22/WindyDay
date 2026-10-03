@@ -125,6 +125,24 @@ public class Game1 : Core
         itemCycler.Add(heartContainerItem);
         clockItem = new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), itemSpawn);
         itemCycler.Add(clockItem);
+        woodenBoomerangItem = new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), itemSpawn);
+        itemCycler.Add(woodenBoomerangItem);
+        bombItem = new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), itemSpawn);
+        itemCycler.Add(bombItem);
+        compassItem = new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), itemSpawn);
+        itemCycler.Add(compassItem);
+        bowItem = new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), itemSpawn);
+        itemCycler.Add(bowItem);
+        woodenArrowItem = new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), itemSpawn);
+        itemCycler.Add(woodenArrowItem);
+        blueCandleItem = new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), itemSpawn);
+        itemCycler.Add(blueCandleItem);
+        bluePotionItem = new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), itemSpawn);
+        itemCycler.Add(bluePotionItem);
+        normalKeyItem = new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), itemSpawn);
+        itemCycler.Add(normalKeyItem);
+        mapItem = new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), itemSpawn);
+        itemCycler.Add(mapItem);
     }
 
     protected override void Update(GameTime gameTime)

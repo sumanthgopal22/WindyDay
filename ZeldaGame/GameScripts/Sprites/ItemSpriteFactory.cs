@@ -78,4 +78,85 @@ public class ItemSpriteFactory
         // Return the clock sprite
         return new NonAnimatedSprite(items, clockSourceRectangle);
     }
+
+    public ISprite CreateWoodenBoomerangSprite()
+    {
+        // Extract the wooden boomerang frame from the spritesheet
+        Rectangle woodenBoomerangSourceRectangle = new Rectangle(129, 0, 5, 12);
+
+        // Return the wooden boomerang sprite
+        return new NonAnimatedSprite(items, woodenBoomerangSourceRectangle);
+    }
+
+    public ISprite CreateBombSprite()
+    {
+        // Extract the bomb frame from the spritesheet
+        Rectangle bombSourceRectangle = new Rectangle(136, 0, 8, 16);
+
+        // Return the bomb sprite
+        return new NonAnimatedSprite(items, bombSourceRectangle);
+    }
+
+    public ISprite CreateCompassSprite()
+    {
+        // Extract the compass frame from the spritesheet
+        Rectangle compassSourceRectangle = new Rectangle(258, 0, 16, 16);
+
+        // Return the compass sprite
+        return new NonAnimatedSprite(items, compassSourceRectangle);
+    }
+
+    public ISprite CreateBowSprite()
+    {
+        // Extract the bow frame from the spritesheet
+        Rectangle bowSourceRectangle = new Rectangle(144, 0, 8, 16);
+
+        // Return the bow sprite
+        return new NonAnimatedSprite(items, bowSourceRectangle);
+    }
+
+    public ISprite CreateWoodenArrowSprite()
+    {
+        // Extract the wooden arrow frame from the spritesheet
+        Rectangle woodenArrowSourceRectangle = new Rectangle(154, 0, 5, 16);
+
+        // Return the wooden arrow sprite
+        return new NonAnimatedSprite(items, woodenArrowSourceRectangle);
+    }
+
+    public ISprite CreateBlueCandleSprite()
+    {
+        // Extract the blue candle frame from the spritesheet
+        Rectangle blueCandleSourceRectangle = new Rectangle(160, 16, 8, 16);
+
+        // Return the blue candle sprite
+        return new NonAnimatedSprite(items, blueCandleSourceRectangle);
+    }
+
+    public ISprite CreateBluePotionSprite()
+    {
+        // Extract the blue potion frame from the spritesheet
+        Rectangle blueCandleSourceRectangle = new Rectangle(80, 16, 8, 16);
+
+        // Return the blue potion sprite
+        return new NonAnimatedSprite(items, blueCandleSourceRectangle);
+    }
+
+    public ISprite CreateNormalKeySprite()
+    {
+        // Extract the normal key frame from the spritesheet
+        Rectangle normalKeySourceRectangle = new Rectangle(240, 0, 8, 16);
+
+        // Return the normal key sprite
+        return new NonAnimatedSprite(items, normalKeySourceRectangle);
+    }
+
+    public ISprite CreateMapSprite()
+    {
+        // Extract the normal key frame from the spritesheet
+        Rectangle mapSourceRectangle = new Rectangle(184, 0, 8, 16);
+
+        // Return the normal key sprite
+        return new NonAnimatedSprite(items, mapSourceRectangle);
+    }
 }
