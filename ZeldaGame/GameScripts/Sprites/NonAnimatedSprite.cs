@@ -28,7 +28,7 @@ public class NonAnimatedSprite : ISprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangle.Width * 5, sourceRectangle.Height * 5);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangle.Width * 3, sourceRectangle.Height * 3);
 
         Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
     }

@@ -24,6 +24,20 @@ public class Game1 : Core
     private Vector2 itemSpawn;
     private Cycler<IItem> itemCycler;
     private IItem fairyItem;
+    private IItem heartItem;
+    private IItem rupeeItem;
+    private IItem triforceShardItem;
+    private IItem heartContainerItem;
+    private IItem clockItem;
+    private IItem woodenBoomerangItem;
+    private IItem bombItem;
+    private IItem compassItem;
+    private IItem bowItem;
+    private IItem woodenArrowItem;
+    private IItem blueCandleItem;
+    private IItem bluePotionItem;
+    private IItem normalKeyItem;
+    private IItem mapItem;
 
     // Current state of the game (set as main menu by default)
     public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
@@ -95,12 +109,40 @@ public class Game1 : Core
         keeseEnemy.LoadContent();
         block.LoadContent();
         
-        // Load items
+        /* Load Items */
         ItemSpriteFactory.Instance.LoadTextures();
         itemSpawn = new Vector2(Instance.Window.ClientBounds.Width * 0.5f, Instance.Window.ClientBounds.Height * 0.25f);
 
         fairyItem = new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), itemSpawn);
         itemCycler.Add(fairyItem);
+        heartItem = new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), itemSpawn);
+        itemCycler.Add(heartItem);
+        rupeeItem = new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), itemSpawn);
+        itemCycler.Add(rupeeItem);
+        triforceShardItem = new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), itemSpawn);
+        itemCycler.Add(triforceShardItem);
+        heartContainerItem = new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), itemSpawn);
+        itemCycler.Add(heartContainerItem);
+        clockItem = new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), itemSpawn);
+        itemCycler.Add(clockItem);
+        woodenBoomerangItem = new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), itemSpawn);
+        itemCycler.Add(woodenBoomerangItem);
+        bombItem = new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), itemSpawn);
+        itemCycler.Add(bombItem);
+        compassItem = new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), itemSpawn);
+        itemCycler.Add(compassItem);
+        bowItem = new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), itemSpawn);
+        itemCycler.Add(bowItem);
+        woodenArrowItem = new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), itemSpawn);
+        itemCycler.Add(woodenArrowItem);
+        blueCandleItem = new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), itemSpawn);
+        itemCycler.Add(blueCandleItem);
+        bluePotionItem = new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), itemSpawn);
+        itemCycler.Add(bluePotionItem);
+        normalKeyItem = new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), itemSpawn);
+        itemCycler.Add(normalKeyItem);
+        mapItem = new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), itemSpawn);
+        itemCycler.Add(mapItem);
     }
 
     protected override void Update(GameTime gameTime)
