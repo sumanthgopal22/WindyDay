@@ -7,6 +7,10 @@ public class AquamentusEnemy : IEnemy
 {
     private ISprite aquamentusSprite;
     private Vector2 position, movement;
+
+    public AquamentusEnemy()
+    {
+    }
     public void MoveRight()
     {
         movement = new Vector2(5f, 0f);

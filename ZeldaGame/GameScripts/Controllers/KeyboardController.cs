@@ -6,50 +6,36 @@ namespace ZeldaGame;
 
 public class KeyboardController : IController
 {
-    private Dictionary<Keys, ICommand> controllerMappings;
-    private HashSet<Keys> keyDownOnlyCommands;
+    private Dictionary<Keys, ICommand> heldMappings = new();
+    private Dictionary<Keys, ICommand> pressedMappings = new();
     private KeyboardState previousKeyboardState;
 
-    public KeyboardController()
+    // For when using movement, held keys
+    public void RegisterHeldCommand(Keys key, ICommand command)
     {
-        controllerMappings = new Dictionary<Keys, ICommand>();
-        keyDownOnlyCommands = new HashSet<Keys>();
+        heldMappings[key] = command;
     }
 
-    // for when using movement, held keys
-    public void RegisterCommand(Keys key, ICommand command)
-    {
-        controllerMappings[key] = command;
-        keyDownOnlyCommands.Remove(key);
-    }
-
-    // for when single press commands
-    public void RegisterCommandOnKeyDown(Keys key, ICommand command)
-    {
-        controllerMappings[key] = command;
-        keyDownOnlyCommands.Add(key);
-    }
-
+    // For when single press commands
     public void RegisterPressCommand(Keys key, ICommand command)
     {
-        RegisterCommandOnKeyDown(key, command);
+        pressedMappings[key] = command;
     }
 
     public void Update(GameTime gameTime)
     {
         KeyboardState keyboardState = Keyboard.GetState();
-        Keys[] pressedKeys = keyboardState.GetPressedKeys();
 
-        foreach (Keys key in pressedKeys)
+        foreach (Keys key in keyboardState.GetPressedKeys())
         {
-            bool isNewlyPressed = !previousKeyboardState.IsKeyDown(key);
-            if (controllerMappings.TryGetValue(key, out ICommand command)
-                && (!keyDownOnlyCommands.Contains(key) || isNewlyPressed))
-            {
-                command.Execute();
-            }
+            if (heldMappings.TryGetValue(key, out ICommand held))
+            held.Execute();
+
+            if (previousKeyboardState.IsKeyUp(key) && pressedMappings.TryGetValue(key, out ICommand pressed))
+            pressed.Execute();
         }
 
         previousKeyboardState = keyboardState;
     }
+
 }

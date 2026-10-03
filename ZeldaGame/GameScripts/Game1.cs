@@ -82,12 +82,12 @@ public class Game1 : Core
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
         keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
-        keyboardController.RegisterCommand(Keys.D, new MoveRightCommand(player));
-        keyboardController.RegisterCommand(Keys.A, new MoveLeftCommand(player));
-        keyboardController.RegisterCommand(Keys.W, new MoveUpCommand(player));
-        keyboardController.RegisterCommand(Keys.S, new MoveDownCommand(player));
-        keyboardController.RegisterCommandOnKeyDown(Keys.K, new UseItemCommand(player));
-        keyboardController.RegisterCommandOnKeyDown(Keys.L, new SwingSwordCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.D, new MoveRightCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.A, new MoveLeftCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.W, new MoveUpCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
+        keyboardController.RegisterPressCommand(Keys.K, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.L, new SwingSwordCommand(player));
         
         //Mouse controls for Link
         MouseController mouseController = new MouseController();

@@ -27,7 +27,7 @@ public class GelEnemy : IEnemy
     {
         direction.Y -= 1;
     }
-    
+
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.75f;
@@ -43,5 +43,5 @@ public class GelEnemy : IEnemy
     {
         gelSprite.Draw(gameTime, position);
     }
-    
+
 }
