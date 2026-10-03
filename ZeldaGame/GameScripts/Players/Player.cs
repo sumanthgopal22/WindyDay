@@ -62,11 +62,6 @@ public class Player : IPlayer
         sprite = new Sprite(spriteTexture);
     }
 
-    public void Draw(GameTime gameTime)
-    {
-        sprite.Draw(gameTime, position);
-    }
-
     public void Update(GameTime gameTime)
     {
         Vector2 nextPosition = position + movement;
@@ -85,5 +80,10 @@ public class Player : IPlayer
             sprite.Reset();
         
         movement = new Vector2(0f, 0f);
+    }
+
+    public void Draw(GameTime gameTime)
+    {
+        sprite.Draw(gameTime, position);
     }
 }

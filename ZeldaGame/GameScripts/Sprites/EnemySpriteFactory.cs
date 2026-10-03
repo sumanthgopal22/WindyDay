@@ -8,8 +8,6 @@ public class EnemySpriteFactory
 {
     private Texture2D dungeonEnemies;
     private Texture2D bossEnemies;
-
-
     public static EnemySpriteFactory Instance { get; } = new EnemySpriteFactory();
 
     private EnemySpriteFactory() { }
@@ -22,7 +20,7 @@ public class EnemySpriteFactory
     }
 
     // Dungeon Enemies //
-
+    
     public ISprite CreateGelSprite()
     {
         // Extract gel frames from spritesheet and set a frame duration
@@ -43,14 +41,51 @@ public class EnemySpriteFactory
         return new AnimatedSprite(dungeonEnemies, keeseSourceRectangles, keeseFrameDuration);
     }
 
-    public ISprite CreateGoriyaSprite()
+    public ISprite CreateGoriyaSprite(spriteDirection direction)
     {
         // Extract goriya frames from spritesheet and set a frame duration
-        Rectangle[] goriyaSourceRectangles = [new Rectangle(224, 11, 13, 16), new Rectangle(241, 11, 13, 16), new Rectangle(257, 11, 13, 16), new Rectangle(275, 12, 14, 16)];
+        // Up and down only have one frame each, so animate by alternating between the original and a flipped copy
+        Rectangle[] goriyaDownSourceRectangles = [new Rectangle(224, 11, 13, 16), new Rectangle(224, 11, 13, 16)];
+        Rectangle[] goriyaUpSourceRectangles = [new Rectangle(241, 11, 13, 16), new Rectangle(241, 11, 13, 16)];
+        SpriteEffects[] goriyaFlipEffects = [SpriteEffects.None, SpriteEffects.FlipHorizontally];
+        Rectangle[] goriyaSideSourceRectangles = [new Rectangle(257, 11, 13, 16), new Rectangle(275, 12, 14, 16)];
         double goriyaFrameDuration = 0.1;
 
-        // Return the animated goriya sprite
-        return new AnimatedSprite(dungeonEnemies, goriyaSourceRectangles, goriyaFrameDuration);
+        // Return the animated goriya sprite for the direction it is facing
+        if (direction == spriteDirection.Down)
+        {
+            return new AnimatedSprite(dungeonEnemies, goriyaDownSourceRectangles, goriyaFrameDuration, goriyaFlipEffects);
+        }
+        else if (direction == spriteDirection.Up)
+        {
+            return new AnimatedSprite(dungeonEnemies, goriyaUpSourceRectangles, goriyaFrameDuration, goriyaFlipEffects);
+        }
+        else if (direction == spriteDirection.Left)
+        {
+            // The spritesheet only has right-facing frames, so flip them to face left
+            return new AnimatedSprite(dungeonEnemies, goriyaSideSourceRectangles, goriyaFrameDuration, SpriteEffects.FlipHorizontally);
+        }
+        else
+        {
+            return new AnimatedSprite(dungeonEnemies, goriyaSideSourceRectangles, goriyaFrameDuration);
+        }
+    }
+
+    public ISprite CreateBoomerangSprite()
+    {
+        // Extract boomerang frames from spritesheet and set a frame duration
+        // The spritesheet has upright, diagonal, and flat boomerangs. Flipping the diagonal one makes the opposite diagonal,
+        // so these four frames together make the boomerang look like it is spinning
+        Rectangle uprightBoomerang = new Rectangle(291, 15, 8, 8);
+        Rectangle diagonalBoomerang = new Rectangle(299, 15, 8, 8);
+        Rectangle flatBoomerang = new Rectangle(308, 15, 8, 8);
+
+        Rectangle[] boomerangSourceRectangles = [uprightBoomerang, diagonalBoomerang, flatBoomerang, diagonalBoomerang];
+        SpriteEffects[] boomerangEffects = [SpriteEffects.None, SpriteEffects.None, SpriteEffects.None, SpriteEffects.FlipVertically];
+        double boomerangFrameDuration = 0.05;
+
+        // Return the animated boomerang sprite
+        return new AnimatedSprite(dungeonEnemies, boomerangSourceRectangles, boomerangFrameDuration, boomerangEffects);
     }
 
     public ISprite CreateWallMasterSprite()
@@ -63,6 +98,18 @@ public class EnemySpriteFactory
         return new AnimatedSprite(dungeonEnemies, wallMasterSourceRectangles, wallMasterFrameDuration);
     }
 
+    public ISprite CreateStalfosSprite()
+    {
+        // Extract stalfos frames from spritesheet and set a frame duration
+        // Stalfos only has one frame, so animate by alternating between the original and a flipped copy
+        Rectangle[] stalfosSourceRectangles = [new Rectangle(2, 59, 15, 16), new Rectangle(2, 59, 15, 16)];
+        SpriteEffects[] stalfosFlipEffects = [SpriteEffects.None, SpriteEffects.FlipHorizontally];
+        double stalfosFrameDuration = 0.2;
+
+        // Return the animated stalfos sprite
+        return new AnimatedSprite(dungeonEnemies, stalfosSourceRectangles, stalfosFrameDuration, stalfosFlipEffects);
+    }
+
     // Boss Enemies //
 
     public ISprite CreateAquamentusSprite()
@@ -73,5 +120,15 @@ public class EnemySpriteFactory
 
         // Return the animated aquamentus sprite
         return new AnimatedSprite(bossEnemies, aquamentusSourceRectangles, aquamentusFrameDuration);
+    }
+
+    public ISprite CreateFireballSprite()
+    {
+        // Extract fireball frames from spritesheet and set a frame duration
+        Rectangle[] fireballSourceRectangles = [new Rectangle(101, 14, 8, 10), new Rectangle(110, 14, 8, 10), new Rectangle(119, 14, 8, 10), new Rectangle(128, 14, 8, 10)];
+        double fireballFrameDuration = 0.05;
+
+        // Return the animated fireball sprite
+        return new AnimatedSprite(bossEnemies, fireballSourceRectangles, fireballFrameDuration);
     }
 }

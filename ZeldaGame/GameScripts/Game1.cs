@@ -20,6 +20,7 @@ public class Game1 : Core
     private IEnemy keeseEnemy;
     private IEnemy goriyaEnemy;
     private IEnemy wallMasterEnemy;
+    private IEnemy stalfosEnemy;
     private IEnemy aquamentusEnemy;
     private Cycler<IEnemy> enemyCycler;
     private MainMenuScreen menu;
@@ -66,11 +67,14 @@ public class Game1 : Core
         player = new Player();
 
         // Initialize enemies // 
-        gelEnemy = new GelEnemy();
-        keeseEnemy = new KeeseEnemy();
-        goriyaEnemy = new GoriyaEnemy();
-        wallMasterEnemy = new WallMasterEnemy();
-        aquamentusEnemy = new AquamentusEnemy();
+        gelEnemy = new GelEnemy(Vector2.Zero);
+        keeseEnemy = new KeeseEnemy(Vector2.Zero);
+        goriyaEnemy = new GoriyaEnemy(Vector2.Zero);
+        wallMasterEnemy = new WallMasterEnemy(Vector2.Zero);
+        stalfosEnemy = new StalfosEnemy(Vector2.Zero);
+        aquamentusEnemy = new AquamentusEnemy(Vector2.Zero);
+
+        // Intialize blocks//
         block = new Block();
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
@@ -121,7 +125,10 @@ public class Game1 : Core
         keeseEnemy.LoadContent();
         goriyaEnemy.LoadContent();
         wallMasterEnemy.LoadContent();
+        stalfosEnemy.LoadContent();
         aquamentusEnemy.LoadContent();
+
+        // Load blocks //
         block.LoadContent();
 
         // Add enemies to enemyCycler //
@@ -129,6 +136,7 @@ public class Game1 : Core
         enemyCycler.Add(keeseEnemy);
         enemyCycler.Add(goriyaEnemy);
         enemyCycler.Add(wallMasterEnemy);
+        enemyCycler.Add(stalfosEnemy);
         enemyCycler.Add(aquamentusEnemy);
         
         /* Load Items */
