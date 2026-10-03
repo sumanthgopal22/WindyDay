@@ -12,6 +12,10 @@ public interface IPlayer
 
     void MoveDown();
 
+    void UseItem();
+
+    void SwingSword();
+
     void Teleport(Vector2 targetPosition);
 
     void LoadContent();

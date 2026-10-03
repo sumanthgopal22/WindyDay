@@ -22,3 +22,10 @@ public interface ISprite
 
     void Update(GameTime gameTime);
 }
+
+public interface IActionSprite : ISprite
+{
+    void PlayAction(SpriteAction action);
+
+    bool IsActionPlaying { get; }
+}
