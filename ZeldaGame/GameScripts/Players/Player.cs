@@ -95,11 +95,6 @@ public class Player : IPlayer
         stateMachine = new LinkStateMachine(this);
     }
 
-    public void Draw(GameTime gameTime)
-    {
-        sprite.Draw(gameTime, position);
-    }
-
     public void Update(GameTime gameTime)
     {
         Vector2 nextPosition = position + movement;
@@ -121,5 +116,10 @@ public class Player : IPlayer
         }
 
         movement = Vector2.Zero;
+    }
+
+    public void Draw(GameTime gameTime)
+    {
+        sprite.Draw(gameTime, position);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -10,17 +11,14 @@ namespace ZeldaGame
 {
     public class ExitGameCommand : ICommand
     {
-        private readonly Game1 _game;
+        private readonly Game _game;
 
-        public ExitGameCommand(Game1 game)
+        public ExitGameCommand(Game game)
         {
-            _game = game;
+            _game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
-        public void Execute()
-        {
-            _game.Exit();
-        }
+        public void Execute() => _game.Exit();
     }
 
     public class StartGameCommand : ICommand
@@ -29,72 +27,76 @@ namespace ZeldaGame
 
         public StartGameCommand(Game1 game)
         {
-            _game = game;
+            _game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
-        public void Execute()
-        {
-            _game.StartGame();
-        }
+        public void Execute() => _game.StartGame();
     }
+
+    // Store menu items
+    public record MenuItem(string Label, ICommand Command);
 
     public class MainMenuScreen
     {
-        private readonly List<(string Label, ICommand Command)> _items = new();
-        private int _selectedIndex = 0;
+        private readonly List<MenuItem> _items = new();
+        private int _selectedIndex;
 
         private KeyboardState _previousKeyboardState;
 
-        private SpriteFont _font1;
-        private SpriteFont _font2;
+        private SpriteFont _titleFont;
+        private SpriteFont _itemFont;
         private Texture2D _background;
-        private SoundEffect _soundEffect;
-        private Song _music;
+        private SoundEffect _navigateSound;
+        private Song _backgroundMusic;
         private Texture2D _pixel;
 
-        private Vector2 _menuPosition = new Vector2(100, 100);
-        private Vector2 _titlePosition = new Vector2(100, 50);
+        // Position and layout consts
+        private static readonly Vector2 TitlePosition = new(100, 50);
+        private static readonly Vector2 MenuPosition = new(100, 150);
+        private const float ItemSpacing = 40f;
+        private const float MarkerOffset = 24f;
 
         public MainMenuScreen() { }
 
         public void AddItem(string label, ICommand command)
         {
-            _items.Add((label, command));
+            if (string.IsNullOrWhiteSpace(label))
+                throw new ArgumentException("Label cannot be empty.", nameof(label));
+
+            _items.Add(new MenuItem(label, command ?? throw new ArgumentNullException(nameof(command))));
         }
 
         public void SelectNext()
         {
-            if (_items.Count > 0)
-            {
-                _selectedIndex = (_selectedIndex + 1) % _items.Count;
-                _soundEffect?.Play();
-            }
+            if (_items.Count == 0) return;
+
+            _selectedIndex = (_selectedIndex + 1) % _items.Count;
+            _navigateSound?.Play();
         }
 
         public void SelectPrevious()
         {
-            if (_items.Count > 0)
-            {
-                _selectedIndex = (_selectedIndex - 1 + _items.Count) % _items.Count;
-                _soundEffect?.Play();
-            }
+            if (_items.Count == 0) return;
+
+            _selectedIndex = (_selectedIndex - 1 + _items.Count) % _items.Count;
+            _navigateSound?.Play();
         }
 
         public void ExecuteSelected()
         {
-            if (_items.Count > 0 && _selectedIndex < _items.Count)
+            if (_items.Count > 0 && _selectedIndex >= 0 && _selectedIndex < _items.Count)
             {
                 _items[_selectedIndex].Command.Execute();
             }
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice device)
+        public void LoadContent(ContentManager content, GraphicsDevice device = null)
         {
-            _font1 = content.Load<SpriteFont>("MIDELTANK_Demo");
-            _font2 = content.Load<SpriteFont>("AppleGaramond");
+            _titleFont = content.Load<SpriteFont>("MIDELTANK_Demo");
+            _itemFont = content.Load<SpriteFont>("AppleGaramond");
             _background = content.Load<Texture2D>("zelda_bg");
-            _soundEffect = content.Load<SoundEffect>("Blip7");
-            _music = content.Load<Song>("MainMenuMusic");
+            _navigateSound = content.Load<SoundEffect>("Blip7");
+            _backgroundMusic = content.Load<Song>("MainMenuMusic");
 
             GraphicsDevice targetDevice = device ?? ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService)))?.GraphicsDevice;
 
@@ -104,37 +106,32 @@ namespace ZeldaGame
                 _pixel.SetData(new[] { Color.White });
             }
 
+            PlayMusic();
+            _previousKeyboardState = Keyboard.GetState();
+        }
+
+        public void PlayMusic()
+        {
+            if (_backgroundMusic == null) return;
+
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.4f;
-            MediaPlayer.Play(_music);
-
-            _previousKeyboardState = Keyboard.GetState();
+            MediaPlayer.Play(_backgroundMusic);
         }
 
         public void Update(GameTime gameTime)
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
-            // Detect down
-            bool downPressed = (currentKeyboardState.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down)) ||
-                                 (currentKeyboardState.IsKeyDown(Keys.S) && _previousKeyboardState.IsKeyUp(Keys.S));
-
-            // Detect up
-            bool upPressed = (currentKeyboardState.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up)) ||
-                               (currentKeyboardState.IsKeyDown(Keys.W) && _previousKeyboardState.IsKeyUp(Keys.W));
-
-            // Detect enter
-            bool enterPressed = currentKeyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter);
-
-            if (downPressed)
+            if (IsKeyPressed(currentKeyboardState, Keys.Down) || IsKeyPressed(currentKeyboardState, Keys.S))
             {
                 SelectNext();
             }
-            else if (upPressed)
+            else if (IsKeyPressed(currentKeyboardState, Keys.Up) || IsKeyPressed(currentKeyboardState, Keys.W))
             {
                 SelectPrevious();
             }
-            else if (enterPressed)
+            else if (IsKeyPressed(currentKeyboardState, Keys.Enter) || IsKeyPressed(currentKeyboardState, Keys.Space))
             {
                 ExecuteSelected();
             }
@@ -142,66 +139,64 @@ namespace ZeldaGame
             _previousKeyboardState = currentKeyboardState;
         }
 
+        private bool IsKeyPressed(KeyboardState currentState, Keys key)
+        {
+            return currentState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
+        }
+
+        // Draw all parts of the menu
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (_background != null)
-            {
-                spriteBatch.Draw(
-                    _background,
-                    new Rectangle(0, 0, spriteBatch.GraphicsDevice.Viewport.Width, spriteBatch.GraphicsDevice.Viewport.Height),
-                    Color.White
-                );
-            }
+            DrawBackground(spriteBatch);
+            DrawTitle(spriteBatch);
+            DrawItems(spriteBatch);
+        }
 
-            if (_font1 != null)
-            {
-                spriteBatch.DrawString(
-                    _font1,
-                    "Welcome",
-                    _titlePosition,
-                    Color.Black,
-                    0f,
-                    Vector2.Zero,
-                    2f,
-                    SpriteEffects.None,
-                    0f
-                );
-            }
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            if (_background == null) return;
 
+            spriteBatch.Draw(
+                _background,
+                spriteBatch.GraphicsDevice.Viewport.Bounds,
+                Color.White
+            );
+        }
+
+        private void DrawTitle(SpriteBatch spriteBatch)
+        {
+            if (_titleFont == null) return;
+
+            spriteBatch.DrawString(
+                _titleFont,
+                "Welcome",
+                TitlePosition,
+                Color.Black,
+                0f,
+                Vector2.Zero,
+                2f,
+                SpriteEffects.None,
+                0f
+            );
+        }
+
+        private void DrawItems(SpriteBatch spriteBatch)
+        {
             for (int i = 0; i < _items.Count; i++)
             {
-                Vector2 pos = new Vector2(_menuPosition.X, _menuPosition.Y + i * 40f);
-                bool selected = i == _selectedIndex;
+                Vector2 itemPos = new(MenuPosition.X, MenuPosition.Y + (i * ItemSpacing));
+                bool isSelected = (i == _selectedIndex);
+                Color textColor = isSelected ? Color.BlueViolet : Color.Black;
 
-                if (selected && _font2 != null)
+                if (isSelected && _itemFont != null)
                 {
-                    Vector2 markerPos = new Vector2(pos.X - 24f, pos.Y);
-                    spriteBatch.DrawString(
-                        _font2,
-                        ">",
-                        markerPos,
-                        Color.BlueViolet,
-                        0f,
-                        Vector2.Zero,
-                        1.5f,
-                        SpriteEffects.None,
-                        0f
-                    );
+                    Vector2 markerPos = new(itemPos.X - MarkerOffset, itemPos.Y);
+                    spriteBatch.DrawString(_itemFont, ">", markerPos, Color.BlueViolet, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
                 }
 
-                if (_font1 != null)
+                if (_titleFont != null)
                 {
-                    spriteBatch.DrawString(
-                        _font1,
-                        _items[i].Label,
-                        pos,
-                        selected ? Color.BlueViolet : Color.Black,
-                        0f,
-                        Vector2.Zero,
-                        1.5f,
-                        SpriteEffects.None,
-                        0f
-                    );
+                    spriteBatch.DrawString(_titleFont, _items[i].Label, itemPos, textColor, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
                 }
             }
         }
