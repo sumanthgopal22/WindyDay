@@ -29,7 +29,4 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoGameLibrary\MonoGameLibrary.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameScripts\StateMachine\GameStates\" />
-  </ItemGroup>
 </Project>

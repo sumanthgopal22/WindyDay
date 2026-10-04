@@ -15,50 +15,53 @@ public class Player : IPlayer
 
     public bool IsActionPlaying => sprite.IsActionPlaying;
 
-    private void StartWalkingIfNotAlready()
+    public void MoveRight()
     {
+        movement = new Vector2(5f, 0f);
+        sprite.SetDirection(spriteDirection.Right);
+
         if (!stateMachine.IsWalking)
         {
             stateMachine.ChangeState(new WalkingLinkState(stateMachine));
         }
     }
 
-    public void MoveRight()
-    {
-        movement = new Vector2(5f, 0f);
-        sprite.SetDirection(spriteDirection.Right);
-        StartWalkingIfNotAlready();
-    }
-
     public void MoveLeft()
     {
         movement = new Vector2(-5f, 0f);
         sprite.SetDirection(spriteDirection.Left);
-        StartWalkingIfNotAlready();
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void MoveUp()
     {
         movement = new Vector2(0f, -5f);
         sprite.SetDirection(spriteDirection.Up);
-        StartWalkingIfNotAlready();
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void MoveDown()
     {
         movement = new Vector2(0f, 5f);
         sprite.SetDirection(spriteDirection.Down);
-        StartWalkingIfNotAlready();
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void UseItem()
     {
         sprite.PlayAction(SpriteAction.UseItem);
-    }
-
-    public void StartAttacking()
-    {
-        stateMachine.ChangeState(new AttackingLinkState(stateMachine));
     }
 
     public void SwingSword()
@@ -97,6 +100,8 @@ public class Player : IPlayer
 
     public void Update(GameTime gameTime)
     {
+        stateMachine.Update(gameTime);
+
         Vector2 nextPosition = position + movement;
         
         int windowWidth = Core.Instance.Window.ClientBounds.Width;
@@ -106,8 +111,6 @@ public class Player : IPlayer
         nextPosition.Y = MathHelper.Clamp(nextPosition.Y, 0, windowHeight - sprite.Size.Y);
 
         position = nextPosition;
-
-        stateMachine.Update(gameTime);
 
         // If idle, change to idle state
         if (movement == Vector2.Zero && !stateMachine.IsIdle)
