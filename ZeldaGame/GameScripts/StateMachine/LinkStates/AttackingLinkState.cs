@@ -14,17 +14,22 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 
         public void Enter()
         {
-            // Start attacking animation
+            stateMachine.Link.SwingSword();
         }
 
         public void Update(GameTime gameTime)
         {
-            // Update attacking animation
+            stateMachine.Link.UpdateSprite(gameTime);
+
+            if (!stateMachine.Link.IsActionPlaying)
+            {
+                stateMachine.ChangeState(new IdleLinkState(stateMachine));
+            }
         }
 
         public void Exit()
         {
-            // Clean up attacking state
+            
         }
     }
 }

@@ -1,25 +1,24 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ZeldaGame.GameScripts.Interfaces;
 
 namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
-    public class IdleLinkState : IState
+    public class WalkingLinkState : IState
     {
         private readonly LinkStateMachine stateMachine;
 
-        public IdleLinkState(LinkStateMachine stateMachine)
+        public WalkingLinkState(LinkStateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
         }
 
         public void Enter()
         {
-            stateMachine.Link.ResetSprite();
         }
 
         public void Update(GameTime gameTime)
         {
-            // Link is idle, do nothing
+            stateMachine.Link.UpdateSprite(gameTime);
         }
 
         public void Exit()

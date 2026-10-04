@@ -7,17 +7,18 @@ namespace ZeldaGame.GameScripts.StateMachine
 {
     public class LinkStateMachine : IStateMachine
     {
-        private IState state;
+        private IState currentState;
+        public IPlayer Link { get; }    // Property for simplicity: Player talks to StateMachine, not State, but State needs to know Player
 
-        public IPlayer Link { get; }
-        public IState CurrentState => state;
+        public bool IsIdle => currentState is IdleLinkState;
+        public bool IsWalking => currentState is WalkingLinkState;
 
         public LinkStateMachine(IPlayer link)
         {
             Link = link;
 
-            state = new IdleLinkState(this);
-            state.Enter();
+            currentState = new IdleLinkState(this);
+            currentState.Enter();
         }
 
         public void ChangeState(IState newState)
@@ -25,14 +26,14 @@ namespace ZeldaGame.GameScripts.StateMachine
             // null check
             ArgumentNullException.ThrowIfNull(newState);
 
-            state.Exit();
-            state = newState;
-            state.Enter();
+            currentState.Exit();
+            currentState = newState;
+            currentState.Enter();
         }
 
         public void Update(GameTime gameTime)
         {
-            state.Update(gameTime);
+            currentState.Update(gameTime);
         }
     }
 }
