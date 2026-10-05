@@ -53,13 +53,19 @@ public class StalfosEnemy : IEnemy
     {
         switch (direction)
         {
-            case 0: MoveRight(); break;
-            case 1: MoveDown(); break;
-            case 2: MoveLeft(); break;
-            case 3: MoveUp(); break;
+            case 0: 
+                MoveRight(); 
+                break;
+            case 1: 
+                MoveDown(); 
+                break;
+            case 2: 
+                MoveLeft(); 
+                break;
+            case 3: 
+                MoveUp(); 
+                break;
         }
-
-        KeepInsideWindow();
 
         // Like the original game, Stalfos wanders by picking a random direction every so often
         stepsTaken++;
@@ -70,43 +76,6 @@ public class StalfosEnemy : IEnemy
         }
 
         stalfosSprite.Update(gameTime);
-    }
-
-    // If Stalfos walks into the edge of the window, stop it there and pick a new direction
-    private void KeepInsideWindow()
-    {
-        Rectangle window = Core.Instance.Window.ClientBounds;
-        float rightEdge = window.Width - stalfosSprite.Size.X * 3;
-        float bottomEdge = window.Height - stalfosSprite.Size.Y * 3;
-
-        bool hitEdge = false;
-
-        if (position.X < 0)
-        {
-            position.X = 0;
-            hitEdge = true;
-        }
-        if (position.X > rightEdge)
-        {
-            position.X = rightEdge;
-            hitEdge = true;
-        }
-        if (position.Y < 0)
-        {
-            position.Y = 0;
-            hitEdge = true;
-        }
-        if (position.Y > bottomEdge)
-        {
-            position.Y = bottomEdge;
-            hitEdge = true;
-        }
-
-        if (hitEdge)
-        {
-            stepsTaken = 0;
-            direction = random.Next(4);
-        }
     }
 
     public void Draw(GameTime gameTime)

@@ -53,10 +53,18 @@ public class WallMasterEnemy : IEnemy
     {
         switch (side)
         {
-            case 0: MoveRight(); break;
-            case 1: MoveDown(); break;
-            case 2: MoveLeft(); break;
-            case 3: MoveUp(); break;
+            case 0: 
+                MoveRight(); 
+                break;
+            case 1: 
+                MoveDown(); 
+                break;
+            case 2: 
+                MoveLeft(); 
+                break;
+            case 3: 
+                MoveUp(); 
+                break;
         }
 
         // Wall Master crawls around by picking a random direction every so often

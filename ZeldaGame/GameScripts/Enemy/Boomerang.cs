@@ -8,11 +8,9 @@ public class Boomerang : IGameObject
     private Vector2 position;
     private Vector2 startPosition;
     private Vector2 velocity; // how many pixels the boomerang moves each frame while flying out
-
     private const int StepsBeforeComingBack = 60; // how far the boomerang flies out before turning around
     private int stepsTaken = 0;
     private bool isComingBack = false;
-
     // True once the boomerang has made it back to where it was thrown from
     public bool HasReturned { get; private set; } = false;
 

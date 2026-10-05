@@ -53,14 +53,34 @@ public class KeeseEnemy : IEnemy
     {
         switch (side)
         {
-            case 0: MoveRight(); break;
-            case 1: MoveDown(); break;
-            case 2: MoveLeft(); break;
-            case 3: MoveUp(); break;
-            case 4: MoveUp(); MoveRight(); break;
-            case 5: MoveDown(); MoveRight(); break;
-            case 6: MoveDown(); MoveLeft(); break;
-            case 7: MoveUp(); MoveLeft(); break;
+            case 0: 
+                MoveRight(); 
+                break;
+            case 1: 
+                MoveDown(); 
+                break;
+            case 2: 
+                MoveLeft(); 
+                break;
+            case 3: 
+                MoveUp(); 
+                break;
+            case 4: 
+                MoveUp(); 
+                MoveRight(); 
+                break;
+            case 5: 
+                MoveDown(); 
+                MoveRight(); 
+                break;
+            case 6: 
+                MoveDown(); 
+                MoveLeft(); 
+                break;
+            case 7: 
+                MoveUp(); 
+                MoveLeft(); 
+                break;
         }
 
         // Like the original game, Keese flutters around by picking a random direction every so often

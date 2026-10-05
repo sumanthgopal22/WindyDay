@@ -92,6 +92,8 @@ public class Game1 : Core
         keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
         keyboardController.RegisterPressCommand(Keys.K, new UseItemCommand(player));
         keyboardController.RegisterPressCommand(Keys.L, new SwingSwordCommand(player));
+
+        // For reseting game state
         keyboardController.RegisterPressCommand(Keys.R, new ResetGameCommand(this));
         
         //Mouse controls for Link
