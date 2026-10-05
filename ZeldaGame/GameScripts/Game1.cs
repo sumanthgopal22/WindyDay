@@ -92,6 +92,9 @@ public class Game1 : Core
         keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
         keyboardController.RegisterPressCommand(Keys.K, new UseItemCommand(player));
         keyboardController.RegisterPressCommand(Keys.L, new SwingSwordCommand(player));
+
+        // For reseting game state
+        keyboardController.RegisterPressCommand(Keys.R, new ResetGameCommand(this));
         
         //Mouse controls for Link
         MouseController mouseController = new MouseController();
@@ -195,7 +198,7 @@ public class Game1 : Core
             itemCycler.Update(gameTime);
             block.Update(gameTime);
         }
-
+        
         base.Update(gameTime);
     }
 
@@ -222,5 +225,9 @@ public class Game1 : Core
         SpriteBatch.End();
 
         base.Draw(gameTime);
+    }
+    public void returnToMain()
+    {
+        CurrentState = GameStatus.MainMenu;
     }
 }
