@@ -89,8 +89,12 @@ public class Game1 : Core
         keyboardController.RegisterHeldCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterHeldCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
-        keyboardController.RegisterPressCommand(Keys.Z, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.Z, new SwingSwordCommand(player));
         keyboardController.RegisterPressCommand(Keys.N, new SwingSwordCommand(player));
+        keyboardController.RegisterPressCommand(Keys.NumPad1, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.NumPad2, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.NumPad3, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.NumPad4, new UseItemCommand(player));
 
         // Arrow key controls
         keyboardController.RegisterHeldCommand(Keys.Up, new MoveUpCommand(player));
