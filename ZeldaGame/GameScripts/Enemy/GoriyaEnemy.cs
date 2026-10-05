@@ -53,10 +53,18 @@ public class GoriyaEnemy : IEnemy
         Vector2 velocity;
         switch (side)
         {
-            case 0: velocity = new Vector2(3, 0); break;  // right
-            case 1: velocity = new Vector2(0, 3); break;  // down
-            case 2: velocity = new Vector2(-3, 0); break; // left
-            default: velocity = new Vector2(0, -3); break; // up
+            case 0: 
+                velocity = new Vector2(3, 0); 
+                break;  // right
+            case 1: 
+                velocity = new Vector2(0, 3); 
+                break;  // down
+            case 2: 
+                velocity = new Vector2(-3, 0); 
+                break; // left
+            default: 
+                velocity = new Vector2(0, -3); 
+                break; // up
         }
 
         // Start the boomerang roughly in the middle of Goriya
@@ -93,10 +101,18 @@ public class GoriyaEnemy : IEnemy
 
         switch (side)
         {
-            case 0: MoveRight(); break;
-            case 1: MoveDown(); break;
-            case 2: MoveLeft(); break;
-            case 3: MoveUp(); break;
+            case 0: 
+                MoveRight(); 
+                break;
+            case 1: 
+                MoveDown(); 
+                break;
+            case 2: 
+                MoveLeft(); 
+                break;
+            case 3: 
+                MoveUp(); 
+                break;
         }
 
         stepsTaken++;
