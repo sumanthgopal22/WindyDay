@@ -1,0 +1,44 @@
+Sumanth Gopal
+9/30/2026
+Sprint 2
+Screens.cs
+Yaswanth Ruddarraju
+MainMenuScreen mixes state storage, input handling, audio playback, rendering into a single class. Font and asset fields use vague names, they should be changed to describe what they are used for. AddItem adds items directly with checking if the labels are null. Potential changes can include separating the rendering into into DrawBackground, DrawTitle, and DrawItems instead of putting all the code in Draw and changing the screen and marker offset values into named constants.
+
+Yaswanth Ruddarraju
+10/01/2026
+Sprint 2
+Cycler.cs
+Sam Van Oss
+Lines 24 to 26 handle only IEnemy types and the enemiesList directly and makes the file need duplicate code when items need to be cycled. You need to decouple the cycling logic from enemies and make it reusable across any entity type; refactor the class into a generic type like Cycler<T>.
+
+Sam Van Oss
+10/01/2026
+Sprint 2
+Sprite.cs
+Max Nabring 
+Switch(currentDirection) statement with if-else creates high complexity in Draw. However, SetDirection(spriteDirection direction) and storing currentDirection allow for clean and efficient lookup for the sprite to pivot based on character orientation. Some changes the could be added are animations for damage and more use of state patterns for character states.
+
+Matthias Hamm
+10/02/2026
+Sprint 2
+BlockSprite.cs
+Andrew Dome
+Size = new Vector2(24f, 32f) is immediately overwritten by Size = new Vector2(80f, 80f). Uses position in Draw even though hardcoded destination logic is still also included in the code.
+
+Max Nabring 
+10/03/2026
+Sprint 2
+EnemySpriteFactory.cs
+Sumanth Gopal
+The code does a good job at centralized point of access for instantiating enemy sprites while hiding spritesheet coordinates from rest of the codebase. BossEnemies is loaded in LoadTextures(), but only used in CreateAquamentusSprite().Spritesheet coordinates are hardcoded inline inside method bodies. There are few load state guard clauses to check if LoadTextures() has already been called. A change could be to move the Rectangle arrays and frame durations out of method bodies and into private static readonly.
+
+Andrew Dome
+10/03/2026
+Sprint 2
+AnimatedSprite.cs
+Sumanth Gopal
+DestinationRectangle calculates width and height strictly using sourceRectangles[0] so if some frames have different source dimensions they might look off. Providing multiple constructors like no effects, uniform effect, and per-frame effects array gives the caller a lot of flexibility and also centralizes the state assignment into a single Initialize method. A change could be to update the width and height dynamically based on the frame being rendered instead of using sourceRectangles[0].
+
+
+

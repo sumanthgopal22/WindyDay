@@ -85,20 +85,22 @@ public class Game1 : Core
         
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
-        keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
         keyboardController.RegisterHeldCommand(Keys.D, new MoveRightCommand(player));
         keyboardController.RegisterHeldCommand(Keys.A, new MoveLeftCommand(player));
         keyboardController.RegisterHeldCommand(Keys.W, new MoveUpCommand(player));
         keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
-        keyboardController.RegisterPressCommand(Keys.K, new UseItemCommand(player));
-        keyboardController.RegisterPressCommand(Keys.L, new SwingSwordCommand(player));
+        keyboardController.RegisterPressCommand(Keys.Z, new UseItemCommand(player));
+        keyboardController.RegisterPressCommand(Keys.N, new SwingSwordCommand(player));
 
-        // For reseting game state
+        // Arrow key controls
+        keyboardController.RegisterHeldCommand(Keys.Up, new MoveUpCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.Down, new MoveDownCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.Right, new MoveRightCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.Left, new MoveLeftCommand(player));
+
+        // For reseting game state and quitting the game
         keyboardController.RegisterPressCommand(Keys.R, new ResetGameCommand(this));
-        
-        //Mouse controls for Link
-        MouseController mouseController = new MouseController();
-        mouseController.RegisterCommand(new TeleportCommand(player, mouseController));
+        keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
 
         //For cycling through enemies
         keyboardController.RegisterPressCommand(Keys.P, new CycleRightCommand(enemyCycler));
@@ -112,7 +114,7 @@ public class Game1 : Core
         keyboardController.RegisterPressCommand(Keys.I, new CycleRightCommand(itemCycler));
         keyboardController.RegisterPressCommand(Keys.U, new CycleLeftCommand(itemCycler));
 
-        controllerList = [keyboardController, mouseController];
+        controllerList = [keyboardController];
 
         base.Initialize();
     }
