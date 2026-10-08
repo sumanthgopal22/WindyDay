@@ -3,30 +3,26 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.StateMachine;
+using ZeldaGame.GameScripts.StateMachine.GameStates;
 
 namespace ZeldaGame;
 
-public enum GameStatus
-{
-    MainMenu,
-    Playing
-}
-
 public class Game1 : Core
 {
-    private List<IController> controllerList;
-    private IPlayer player;
+    public List<IController> ControllerList { get; private set; }
+    public IPlayer Player {  get; private set; }
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
     private IEnemy goriyaEnemy;
     private IEnemy wallMasterEnemy;
     private IEnemy stalfosEnemy;
     private IEnemy aquamentusEnemy;
-    private Cycler<IEnemy> enemyCycler;
-    private MainMenuScreen menu;
-    private Block block;
+    public Cycler<IEnemy> EnemyCycler { get; private set; }
+    public MainMenuScreen Menu { get; private set; }
+    public Block Block { get; private set; }
     private Vector2 itemSpawn;
-    private Cycler<IItem> itemCycler;
+    public Cycler<IItem> ItemCycler { get; private set; }
     private IItem fairyItem;
     private IItem heartItem;
     private IItem rupeeItem;
@@ -44,7 +40,8 @@ public class Game1 : Core
     private IItem mapItem;
 
     // Current state of the game (set as main menu by default)
-    public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
+    //public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
+    private GameStateMachine gameStateMachine;
 
     public Game1() : base("Sprint 0 Game", 1280, 720, false)
     {
@@ -52,19 +49,20 @@ public class Game1 : Core
 
     public void StartGame()
     {
-        CurrentState = GameStatus.Playing;
+        gameStateMachine.ChangeState(new GameplayState(gameStateMachine));
     }
 
     protected override void Initialize()
     {
-        menu = new MainMenuScreen();
+        gameStateMachine = new GameStateMachine(this);
+        Menu = new MainMenuScreen();
 
         // Set up the main menu
-        menu.AddItem("Start Game", new StartGameCommand(this));
-        menu.AddItem("Exit", new ExitGameCommand(this));
+        Menu.AddItem("Start Game", new StartGameCommand(this));
+        Menu.AddItem("Exit", new ExitGameCommand(this));
 
         // Initialize player //
-        player = new Player();
+        Player = new Player();
 
         // Initialize enemies // 
         gelEnemy = new GelEnemy(Vector2.Zero);
@@ -75,58 +73,58 @@ public class Game1 : Core
         aquamentusEnemy = new AquamentusEnemy(Vector2.Zero);
 
         // Intialize blocks//
-        block = new Block();
+        Block = new Block();
 
         // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
-        enemyCycler = new Cycler<IEnemy>();
+        EnemyCycler = new Cycler<IEnemy>();
 
         // Initialize itemCycler to cycle through items
-        itemCycler = new Cycler<IItem>();
+        ItemCycler = new Cycler<IItem>();
         
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
-        keyboardController.RegisterHeldCommand(Keys.D, new MoveRightCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.A, new MoveLeftCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.W, new MoveUpCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(player));
-        keyboardController.RegisterPressCommand(Keys.Z, new SwingSwordCommand(player));
-        keyboardController.RegisterPressCommand(Keys.N, new SwingSwordCommand(player));
-        keyboardController.RegisterPressCommand(Keys.NumPad1, new UseItemCommand(player));
-        keyboardController.RegisterPressCommand(Keys.NumPad2, new UseItemCommand(player));
-        keyboardController.RegisterPressCommand(Keys.NumPad3, new UseItemCommand(player));
-        keyboardController.RegisterPressCommand(Keys.NumPad4, new UseItemCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.D, new MoveRightCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.A, new MoveLeftCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.W, new MoveUpCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.S, new MoveDownCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.Z, new SwingSwordCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.N, new SwingSwordCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.NumPad1, new UseItemCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.NumPad2, new UseItemCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.NumPad3, new UseItemCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.NumPad4, new UseItemCommand(Player));
 
         // Arrow key controls
-        keyboardController.RegisterHeldCommand(Keys.Up, new MoveUpCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.Down, new MoveDownCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.Right, new MoveRightCommand(player));
-        keyboardController.RegisterHeldCommand(Keys.Left, new MoveLeftCommand(player));
+        keyboardController.RegisterHeldCommand(Keys.Up, new MoveUpCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.Down, new MoveDownCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.Right, new MoveRightCommand(Player));
+        keyboardController.RegisterHeldCommand(Keys.Left, new MoveLeftCommand(Player));
 
         // For reseting game state and quitting the game
         keyboardController.RegisterPressCommand(Keys.R, new ResetGameCommand(this));
         keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
 
         //For cycling through enemies
-        keyboardController.RegisterPressCommand(Keys.P, new CycleRightCommand(enemyCycler));
-        keyboardController.RegisterPressCommand(Keys.O, new CycleLeftCommand(enemyCycler));
+        keyboardController.RegisterPressCommand(Keys.P, new CycleRightCommand(EnemyCycler));
+        keyboardController.RegisterPressCommand(Keys.O, new CycleLeftCommand(EnemyCycler));
 
         // Cycling through blocks
-        keyboardController.RegisterPressCommand(Keys.T, new PreviousBlockCommand(block));
-        keyboardController.RegisterPressCommand(Keys.Y, new NextBlockCommand(block));
+        keyboardController.RegisterPressCommand(Keys.T, new PreviousBlockCommand(Block));
+        keyboardController.RegisterPressCommand(Keys.Y, new NextBlockCommand(Block));
 
         // Cycling through items
-        keyboardController.RegisterPressCommand(Keys.I, new CycleRightCommand(itemCycler));
-        keyboardController.RegisterPressCommand(Keys.U, new CycleLeftCommand(itemCycler));
+        keyboardController.RegisterPressCommand(Keys.I, new CycleRightCommand(ItemCycler));
+        keyboardController.RegisterPressCommand(Keys.U, new CycleLeftCommand(ItemCycler));
 
-        controllerList = [keyboardController];
+        ControllerList = [keyboardController];
 
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        menu.LoadContent(Content, GraphicsDevice);
-        player.LoadContent();
+        Menu.LoadContent(Content, GraphicsDevice);
+        Player.LoadContent();
 
         // Load Enemies //
         EnemySpriteFactory.Instance.LoadTextures();
@@ -138,73 +136,56 @@ public class Game1 : Core
         aquamentusEnemy.LoadContent();
 
         // Load blocks //
-        block.LoadContent();
+        Block.LoadContent();
 
         // Add enemies to enemyCycler //
-        enemyCycler.Add(gelEnemy);
-        enemyCycler.Add(keeseEnemy);
-        enemyCycler.Add(goriyaEnemy);
-        enemyCycler.Add(wallMasterEnemy);
-        enemyCycler.Add(stalfosEnemy);
-        enemyCycler.Add(aquamentusEnemy);
+        EnemyCycler.Add(gelEnemy);
+        EnemyCycler.Add(keeseEnemy);
+        EnemyCycler.Add(goriyaEnemy);
+        EnemyCycler.Add(wallMasterEnemy);
+        EnemyCycler.Add(stalfosEnemy);
+        EnemyCycler.Add(aquamentusEnemy);
         
         /* Load Items */
         ItemSpriteFactory.Instance.LoadTextures();
         itemSpawn = new Vector2(Instance.Window.ClientBounds.Width * 0.5f, Instance.Window.ClientBounds.Height * 0.25f);
 
         fairyItem = new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), itemSpawn);
-        itemCycler.Add(fairyItem);
+        ItemCycler.Add(fairyItem);
         heartItem = new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), itemSpawn);
-        itemCycler.Add(heartItem);
+        ItemCycler.Add(heartItem);
         rupeeItem = new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), itemSpawn);
-        itemCycler.Add(rupeeItem);
+        ItemCycler.Add(rupeeItem);
         triforceShardItem = new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), itemSpawn);
-        itemCycler.Add(triforceShardItem);
+        ItemCycler.Add(triforceShardItem);
         heartContainerItem = new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), itemSpawn);
-        itemCycler.Add(heartContainerItem);
+        ItemCycler.Add(heartContainerItem);
         clockItem = new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), itemSpawn);
-        itemCycler.Add(clockItem);
+        ItemCycler.Add(clockItem);
         woodenBoomerangItem = new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), itemSpawn);
-        itemCycler.Add(woodenBoomerangItem);
+        ItemCycler.Add(woodenBoomerangItem);
         bombItem = new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), itemSpawn);
-        itemCycler.Add(bombItem);
+        ItemCycler.Add(bombItem);
         compassItem = new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), itemSpawn);
-        itemCycler.Add(compassItem);
+        ItemCycler.Add(compassItem);
         bowItem = new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), itemSpawn);
-        itemCycler.Add(bowItem);
+        ItemCycler.Add(bowItem);
         woodenArrowItem = new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), itemSpawn);
-        itemCycler.Add(woodenArrowItem);
+        ItemCycler.Add(woodenArrowItem);
         blueCandleItem = new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), itemSpawn);
-        itemCycler.Add(blueCandleItem);
+        ItemCycler.Add(blueCandleItem);
         bluePotionItem = new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), itemSpawn);
-        itemCycler.Add(bluePotionItem);
+        ItemCycler.Add(bluePotionItem);
         normalKeyItem = new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), itemSpawn);
-        itemCycler.Add(normalKeyItem);
+        ItemCycler.Add(normalKeyItem);
         mapItem = new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), itemSpawn);
-        itemCycler.Add(mapItem);
+        ItemCycler.Add(mapItem);
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (CurrentState == GameStatus.MainMenu)
-        {
-            // Update the main menu when main menu
-            menu.Update(gameTime);
-        }
-        else if (CurrentState == GameStatus.Playing)
-        {
-            // Update controllers and player when playing 
-            foreach (IController controller in controllerList)
-            {
-                controller.Update(gameTime);
-            }
+        gameStateMachine.Update(gameTime);
 
-            player.Update(gameTime);
-            enemyCycler.Update(gameTime);
-            itemCycler.Update(gameTime);
-            block.Update(gameTime);
-        }
-        
         base.Update(gameTime);
     }
 
@@ -214,19 +195,12 @@ public class Game1 : Core
 
         SpriteBatch.Begin();
 
-        if (CurrentState == GameStatus.MainMenu)
-        {
-            // Draw menu when the game still hasen't started
-            menu.Draw(SpriteBatch);
-        }
-        else if (CurrentState == GameStatus.Playing)
-        {
-            // Draw player and enemies when the game starts
-            player.Draw(gameTime);
-            enemyCycler.Draw(gameTime);
-            itemCycler.Draw(gameTime);
-            block.Draw(gameTime);
-        }
+        Menu.Draw(SpriteBatch);
+
+        Player.Draw(gameTime);
+        EnemyCycler.Draw(gameTime);
+        ItemCycler.Draw(gameTime);
+        Block.Draw(gameTime);
 
         SpriteBatch.End();
 

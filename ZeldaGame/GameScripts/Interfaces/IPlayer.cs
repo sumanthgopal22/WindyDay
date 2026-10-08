@@ -4,6 +4,7 @@ namespace ZeldaGame;
 
 public interface IPlayer
 {
+    bool IsActionPlaying { get; }
     void MoveRight();
 
     void MoveLeft();
@@ -17,6 +18,9 @@ public interface IPlayer
     void SwingSword();
 
     void Teleport(Vector2 targetPosition);
+
+    void UpdateSprite(GameTime gameTime);
+    void ResetSprite();
 
     void LoadContent();
 

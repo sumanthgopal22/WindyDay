@@ -1,20 +1,19 @@
-using Microsoft.Xna.Framework;
-using ZeldaGame.GameScripts.Interfaces;
+﻿using Microsoft.Xna.Framework;
 
 namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
-    public class AttackingLinkState : IState
+    public class TakingDamageLinkState
     {
         private readonly LinkStateMachine stateMachine;
 
-        public AttackingLinkState(LinkStateMachine stateMachine)
+        public TakingDamageLinkState(LinkStateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
         }
 
         public void Enter()
         {
-            stateMachine.Link.SwingSword();
+            //TODO: Something like Link.TakeDamage();
         }
 
         public void Update(GameTime gameTime)
@@ -29,7 +28,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 
         public void Exit()
         {
-            
+
         }
     }
 }

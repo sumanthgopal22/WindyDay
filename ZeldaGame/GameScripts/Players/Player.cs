@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.StateMachine;
+using ZeldaGame.GameScripts.StateMachine.LinkStates;
 
 namespace ZeldaGame;
 
@@ -9,29 +11,52 @@ public class Player : IPlayer
     private IActionSprite sprite;
     private Texture2D spriteTexture;
     private Vector2 position, movement;
+    private LinkStateMachine stateMachine;
+
+    public bool IsActionPlaying => sprite.IsActionPlaying;
 
     public void MoveRight()
     {
         movement = new Vector2(5f, 0f);
         sprite.SetDirection(spriteDirection.Right);
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void MoveLeft()
     {
         movement = new Vector2(-5f, 0f);
         sprite.SetDirection(spriteDirection.Left);
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void MoveUp()
     {
         movement = new Vector2(0f, -5f);
         sprite.SetDirection(spriteDirection.Up);
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void MoveDown()
     {
         movement = new Vector2(0f, 5f);
         sprite.SetDirection(spriteDirection.Down);
+
+        if (!stateMachine.IsWalking)
+        {
+            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
+        }
     }
 
     public void UseItem()
@@ -55,15 +80,28 @@ public class Player : IPlayer
         position = targetPosition;
     }
 
+    public void UpdateSprite(GameTime gameTime)
+    {
+        sprite.Update(gameTime);
+    }
+
+    public void ResetSprite()
+    {
+        sprite.Reset();
+    }
+
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.5f;
         spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Link");
         sprite = new Sprite(spriteTexture);
+        stateMachine = new LinkStateMachine(this);
     }
 
     public void Update(GameTime gameTime)
     {
+        stateMachine.Update(gameTime);
+
         Vector2 nextPosition = position + movement;
         
         int windowWidth = Core.Instance.Window.ClientBounds.Width;
@@ -74,12 +112,13 @@ public class Player : IPlayer
 
         position = nextPosition;
 
-        if (movement != Vector2.Zero || sprite.IsActionPlaying)
-            sprite.Update(gameTime);
-        else
-            sprite.Reset();
-        
-        movement = new Vector2(0f, 0f);
+        // If idle, change to idle state
+        if (movement == Vector2.Zero && !stateMachine.IsIdle)
+        {
+            stateMachine.ChangeState(new IdleLinkState(stateMachine));
+        }
+
+        movement = Vector2.Zero;
     }
 
     public void Draw(GameTime gameTime)
