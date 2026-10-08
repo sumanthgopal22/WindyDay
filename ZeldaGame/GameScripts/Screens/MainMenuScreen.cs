@@ -9,35 +9,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace ZeldaGame
 {
-    public class ExitGameCommand : ICommand
-    {
-        private readonly Game _game;
-
-        public ExitGameCommand(Game game)
-        {
-            _game = game ?? throw new ArgumentNullException(nameof(game));
-        }
-
-        public void Execute() => _game.Exit();
-    }
-
-    public class StartGameCommand : ICommand
-    {
-        private readonly Game1 _game;
-
-        public StartGameCommand(Game1 game)
-        {
-            _game = game ?? throw new ArgumentNullException(nameof(game));
-        }
-
-        public void Execute() => _game.StartGame();
-    }
-
-    // Store menu items
-    public record MenuItem(string Label, ICommand Command);
-
     public class MainMenuScreen
     {
+        // Store menu items
+        private record MenuItem(string Label, ICommand Command);
+
         private readonly List<MenuItem> _items = new();
         private int _selectedIndex;
 

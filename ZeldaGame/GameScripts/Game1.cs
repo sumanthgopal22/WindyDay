@@ -39,22 +39,15 @@ public class Game1 : Core
     private IItem normalKeyItem;
     private IItem mapItem;
 
-    // Current state of the game (set as main menu by default)
-    //public GameStatus CurrentState { get; private set; } = GameStatus.MainMenu;
-    private GameStateMachine gameStateMachine;
+    public GameStateMachine GameStateMachine { get; set; }
 
     public Game1() : base("Sprint 0 Game", 1280, 720, false)
     {
     }
 
-    public void StartGame()
-    {
-        gameStateMachine.ChangeState(new GameplayState(gameStateMachine));
-    }
-
     protected override void Initialize()
     {
-        gameStateMachine = new GameStateMachine(this);
+        GameStateMachine = new GameStateMachine(this);
         Menu = new MainMenuScreen();
 
         // Set up the main menu
@@ -184,7 +177,7 @@ public class Game1 : Core
 
     protected override void Update(GameTime gameTime)
     {
-        gameStateMachine.Update(gameTime);
+        GameStateMachine.Update(gameTime);
 
         base.Update(gameTime);
     }

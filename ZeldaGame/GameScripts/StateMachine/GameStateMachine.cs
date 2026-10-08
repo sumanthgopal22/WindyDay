@@ -11,9 +11,6 @@ namespace ZeldaGame.GameScripts.StateMachine
 
         public Game1 Game { get; }
 
-        public bool IsInMainMenu => currentState is MainMenuState;
-        public bool IsInGameplay => currentState is GameplayState;
-
         public GameStateMachine(Game1 game)
         {
             Game = game;
