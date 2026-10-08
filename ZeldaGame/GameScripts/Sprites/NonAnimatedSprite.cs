@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;
 
@@ -18,7 +19,7 @@ public class NonAnimatedSprite : ISprite
         Size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
-    public void SetDirection(spriteDirection direction)
+    public void SetDirection(SpriteDirection direction)
     {
     }
 

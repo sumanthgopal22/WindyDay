@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;
 
@@ -75,10 +76,10 @@ public class GoriyaEnemy : IEnemy
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.75f;
-        goriyaUpSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(spriteDirection.Up);
-        goriyaDownSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(spriteDirection.Down);
-        goriyaLeftSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(spriteDirection.Left);
-        goriyaRightSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(spriteDirection.Right);
+        goriyaUpSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Up);
+        goriyaDownSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Down);
+        goriyaLeftSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Left);
+        goriyaRightSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Right);
         goriyaSprite = goriyaRightSprite;
     }
 

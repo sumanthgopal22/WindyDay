@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;
 
@@ -18,7 +19,7 @@ public class BlockSprite : ISprite
         Size = new Vector2(80f, 80f);
     }
 
-    public void SetDirection(spriteDirection direction)
+    public void SetDirection(SpriteDirection direction)
     {
         // BlockSprite does not have directional animations, so this method is not needed.
     }

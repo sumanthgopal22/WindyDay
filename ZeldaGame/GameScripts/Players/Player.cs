@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Interfaces;
+using ZeldaGame.GameScripts.Sprites;
 using ZeldaGame.GameScripts.StateMachine;
 using ZeldaGame.GameScripts.StateMachine.LinkStates;
 
@@ -18,7 +20,7 @@ public class Player : IPlayer
     public void MoveRight()
     {
         movement = new Vector2(5f, 0f);
-        sprite.SetDirection(spriteDirection.Right);
+        sprite.SetDirection(SpriteDirection.Right);
 
         if (!stateMachine.IsWalking)
         {
@@ -29,7 +31,7 @@ public class Player : IPlayer
     public void MoveLeft()
     {
         movement = new Vector2(-5f, 0f);
-        sprite.SetDirection(spriteDirection.Left);
+        sprite.SetDirection(SpriteDirection.Left);
 
         if (!stateMachine.IsWalking)
         {
@@ -40,7 +42,7 @@ public class Player : IPlayer
     public void MoveUp()
     {
         movement = new Vector2(0f, -5f);
-        sprite.SetDirection(spriteDirection.Up);
+        sprite.SetDirection(SpriteDirection.Up);
 
         if (!stateMachine.IsWalking)
         {
@@ -51,7 +53,7 @@ public class Player : IPlayer
     public void MoveDown()
     {
         movement = new Vector2(0f, 5f);
-        sprite.SetDirection(spriteDirection.Down);
+        sprite.SetDirection(SpriteDirection.Down);
 
         if (!stateMachine.IsWalking)
         {
@@ -61,12 +63,12 @@ public class Player : IPlayer
 
     public void UseItem()
     {
-        sprite.PlayAction(SpriteAction.UseItem);
+        sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     public void SwingSword()
     {
-        sprite.PlayAction(SpriteAction.SwingSword);
+        sprite.PlayAction(LinkSpriteAction.SwingSword);
     }
 
     public void Teleport(Vector2 targetPosition)
@@ -94,7 +96,7 @@ public class Player : IPlayer
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.5f;
         spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Link");
-        sprite = new Sprite(spriteTexture);
+        sprite = new LinkSprite(spriteTexture);
         stateMachine = new LinkStateMachine(this);
     }
 

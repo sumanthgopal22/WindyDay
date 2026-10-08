@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;
 
@@ -41,7 +42,7 @@ public class EnemySpriteFactory
         return new AnimatedSprite(dungeonEnemies, keeseSourceRectangles, keeseFrameDuration);
     }
 
-    public ISprite CreateGoriyaSprite(spriteDirection direction)
+    public ISprite CreateGoriyaSprite(SpriteDirection direction)
     {
         // Extract goriya frames from spritesheet and set a frame duration
         // Up and down only have one frame each, so animate by alternating between the original and a flipped copy
@@ -52,15 +53,15 @@ public class EnemySpriteFactory
         double goriyaFrameDuration = 0.1;
 
         // Return the animated goriya sprite for the direction it is facing
-        if (direction == spriteDirection.Down)
+        if (direction == SpriteDirection.Down)
         {
             return new AnimatedSprite(dungeonEnemies, goriyaDownSourceRectangles, goriyaFrameDuration, goriyaFlipEffects);
         }
-        else if (direction == spriteDirection.Up)
+        else if (direction == SpriteDirection.Up)
         {
             return new AnimatedSprite(dungeonEnemies, goriyaUpSourceRectangles, goriyaFrameDuration, goriyaFlipEffects);
         }
-        else if (direction == spriteDirection.Left)
+        else if (direction == SpriteDirection.Left)
         {
             // The spritesheet only has right-facing frames, so flip them to face left
             return new AnimatedSprite(dungeonEnemies, goriyaSideSourceRectangles, goriyaFrameDuration, SpriteEffects.FlipHorizontally);
