@@ -208,6 +208,6 @@ public class Game1 : Core
     }
     public void returnToMain()
     {
-        CurrentState = GameStatus.MainMenu;
+        //CurrentState = GameStatus.MainMenu;
     }
 }
