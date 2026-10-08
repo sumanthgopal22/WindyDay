@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.Commands;
 using ZeldaGame.GameScripts.StateMachine;
-using ZeldaGame.GameScripts.StateMachine.GameStates;
 
 namespace ZeldaGame;
 
