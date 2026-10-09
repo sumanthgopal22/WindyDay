@@ -15,6 +15,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering MainMenuState.");
+            stateMachine.Game.Screen = new MainMenuScreen(stateMachine.Game);
         }
 
         public void Update(GameTime gameTime)
@@ -25,6 +26,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting MainMenuState.");
+            stateMachine.Game.Screen = null;
         }
     }
 }

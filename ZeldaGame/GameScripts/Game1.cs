@@ -27,7 +27,7 @@ public class Game1 : Core
     public Cycler<IEnemy> EnemyCycler { get; private set; }
 
     // Screens
-    public IScreen Screen { get; private set; }
+    public IScreen Screen { get; set; }
 
     // Blocks
     public Block Block { get; private set; }
@@ -63,10 +63,8 @@ public class Game1 : Core
     protected override void Initialize()
     {
         // Initialize state machine
+        // Screen also gets init when entering state
         GameStateMachine = new GameStateMachine(this);
-
-        // Initialize screen
-        Screen = new MainMenuScreen(this);
 
         // Initialize player //
         Player = new Player();
