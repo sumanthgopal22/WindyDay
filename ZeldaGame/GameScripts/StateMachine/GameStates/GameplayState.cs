@@ -16,7 +16,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
 
         public void Enter()
         {
-
+            System.Diagnostics.Debug.WriteLine("Entering GameplayState.");
         }
 
         public void Update(GameTime gameTime)
@@ -36,7 +36,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
 
         public void Exit()
         {
-
+            System.Diagnostics.Debug.WriteLine("Exiting GameplayState.");
         }
     }
 }

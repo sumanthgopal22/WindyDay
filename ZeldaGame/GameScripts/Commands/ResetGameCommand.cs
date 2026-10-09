@@ -12,6 +12,6 @@ public class ResetGameCommand : ICommand
     }
     public void Execute()
     {
-        game.returnToMain();
+        //game.returnToMain();
     }
 }
