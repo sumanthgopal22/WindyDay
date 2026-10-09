@@ -130,7 +130,7 @@ namespace ZeldaGame
         }
 
         // Draw all parts of the menu
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             DrawBackground(spriteBatch);
             DrawTitle(spriteBatch);

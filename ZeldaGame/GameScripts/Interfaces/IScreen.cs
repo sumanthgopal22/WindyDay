@@ -8,6 +8,6 @@ namespace ZeldaGame.GameScripts.Interfaces
     {
         void LoadContent(ContentManager content, GraphicsDevice device);
         void Update(GameTime gameTime);
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, GameTime gameTime);
     }
 }

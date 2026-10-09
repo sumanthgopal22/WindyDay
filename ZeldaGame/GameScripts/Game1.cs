@@ -203,12 +203,7 @@ public class Game1 : Core
 
         SpriteBatch.Begin();
 
-        Screen.Draw(SpriteBatch);
-
-        Player.Draw(gameTime);
-        EnemyCycler.Draw(gameTime);
-        ItemCycler.Draw(gameTime);
-        Block.Draw(gameTime);
+        Screen.Draw(SpriteBatch, gameTime);
 
         SpriteBatch.End();
 

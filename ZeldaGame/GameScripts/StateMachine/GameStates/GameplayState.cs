@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Threading;
 using ZeldaGame.GameScripts.Interfaces;
+using ZeldaGame.GameScripts.Screens;
 
 namespace ZeldaGame.GameScripts.StateMachine.GameStates
 {
@@ -17,6 +18,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering GameplayState.");
+            stateMachine.Game.Screen = new GameplayScreen(stateMachine.Game);
         }
 
         public void Update(GameTime gameTime)
@@ -37,6 +39,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting GameplayState.");
+            stateMachine.Game.Screen = null;
         }
     }
 }
