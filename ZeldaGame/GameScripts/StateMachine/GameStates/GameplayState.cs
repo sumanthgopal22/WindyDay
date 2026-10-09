@@ -31,7 +31,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
             stateMachine.Game.EnemyCycler.Update(gameTime);
             stateMachine.Game.ItemCycler.Update(gameTime);
             stateMachine.Game.Block.Update(gameTime);
-            stateMachine.Game.MainMenu.Update(gameTime);
+            stateMachine.Game.Screen.Update(gameTime);
         }
 
         public void Exit()

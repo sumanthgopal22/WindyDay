@@ -1,17 +1,20 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
+using ZeldaGame.GameScripts.Commands;
 using ZeldaGame.GameScripts.Interfaces;
 
 namespace ZeldaGame
 {
     public class MainMenuScreen : IScreen
     {
+        private readonly Game1 game;
+
         // Store menu items
         private record MenuItem(string Label, ICommand Command);
 
@@ -33,7 +36,12 @@ namespace ZeldaGame
         private const float ItemSpacing = 40f;
         private const float MarkerOffset = 24f;
 
-        public MainMenuScreen() { }
+        public MainMenuScreen(Game1 game) 
+        {
+            this.game = game;
+            AddItem("Start Game", new StartGameCommand(this.game));
+            AddItem("Exit", new ExitGameCommand(this.game));
+        }
 
         public void AddItem(string label, ICommand command)
         {
