@@ -13,6 +13,6 @@ public class ResetGameCommand : ICommand
     }
     public void Execute()
     {
-        game.GameStateMachine.ChangeState(new MainMenuState(game.GameStateMachine));
+        game.ChangeState(new MainMenuState(game));
     }
 }

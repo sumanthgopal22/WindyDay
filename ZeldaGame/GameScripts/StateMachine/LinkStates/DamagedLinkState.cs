@@ -5,16 +5,16 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
     public class DamagedLinkState : IState
     {
-        private readonly LinkStateMachine stateMachine;
+        private IPlayer link;
 
-        public DamagedLinkState(LinkStateMachine stateMachine)
+        public DamagedLinkState(IPlayer link)
         {
-            this.stateMachine = stateMachine;
+            this.link = link;
         }
 
         public void Enter()
         {
-            
+            System.Diagnostics.Debug.WriteLine("Entering DamagedLinkState.");
         }
 
         public void Update(GameTime gameTime)
@@ -23,6 +23,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 
         public void Exit()
         {
+            System.Diagnostics.Debug.WriteLine("Exiting DamagedLinkState.");
         }
     }
 }

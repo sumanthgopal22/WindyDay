@@ -5,31 +5,32 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
     public class UsingItemLinkState : IState
     {
-        private readonly LinkStateMachine stateMachine;
+        private IPlayer link;
 
-        public UsingItemLinkState(LinkStateMachine stateMachine)
+        public UsingItemLinkState(IPlayer link)
         {
-            this.stateMachine = stateMachine;
+            this.link = link;
         }
 
         public void Enter()
         {
-            stateMachine.Link.UseItem();
+            System.Diagnostics.Debug.WriteLine("Entering UsingItemLinkState.");
+            link.UseItem();
         }
 
         public void Update(GameTime gameTime)
         {
-            stateMachine.Link.UpdateSprite(gameTime);
+            link.UpdateSprite(gameTime);
 
-            if (!stateMachine.Link.IsActionPlaying)
+            if (!link.IsActionPlaying)
             {
-                stateMachine.ChangeState(new IdleLinkState(stateMachine));
+                link.ChangeState(new IdleLinkState(link));
             }
         }
 
         public void Exit()
         {
-
+            System.Diagnostics.Debug.WriteLine("Exiting UsingItemLinkState.");
         }
     }
 }

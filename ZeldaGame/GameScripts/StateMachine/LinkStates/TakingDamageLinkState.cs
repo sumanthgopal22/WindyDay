@@ -4,31 +4,31 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
     public class TakingDamageLinkState
     {
-        private readonly LinkStateMachine stateMachine;
+        private IPlayer link;
 
-        public TakingDamageLinkState(LinkStateMachine stateMachine)
+        public TakingDamageLinkState(IPlayer link)
         {
-            this.stateMachine = stateMachine;
+            this.link = link;
         }
 
         public void Enter()
         {
-            //TODO: Something like Link.TakeDamage();
+            System.Diagnostics.Debug.WriteLine("Entering TakingDamageLinkState.");
         }
 
         public void Update(GameTime gameTime)
         {
-            stateMachine.Link.UpdateSprite(gameTime);
+            link.UpdateSprite(gameTime);
 
-            if (!stateMachine.Link.IsActionPlaying)
+            if (!link.IsActionPlaying)
             {
-                stateMachine.ChangeState(new IdleLinkState(stateMachine));
+                link.ChangeState(new IdleLinkState(link));
             }
         }
 
         public void Exit()
         {
-
+            System.Diagnostics.Debug.WriteLine("Exiting TakingDamageLinkState.");
         }
     }
 }

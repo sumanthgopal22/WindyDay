@@ -208,13 +208,16 @@ public class Game1 : Core
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(new Color(147, 187, 236));
-
         SpriteBatch.Begin();
 
         CurrentScreen.Draw(SpriteBatch, gameTime);
 
         SpriteBatch.End();
-
         base.Draw(gameTime);
+    }
+
+    public void ChangeState(IState state)
+    {
+        GameStateMachine.ChangeState(state);
     }
 }

@@ -16,49 +16,51 @@ public class Player : IPlayer
     private LinkStateMachine stateMachine;
 
     public bool IsActionPlaying => sprite.IsActionPlaying;
+    public bool IsIdle {  get; set; }
+    public bool IsWalking { get; set; }
 
     public void MoveRight()
     {
+        if (!IsWalking)
+        {
+            ChangeState(new WalkingLinkState(this));
+        }
+
         movement = new Vector2(5f, 0f);
         sprite.SetDirection(SpriteDirection.Right);
-
-        if (!stateMachine.IsWalking)
-        {
-            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
-        }
     }
 
     public void MoveLeft()
     {
+        if (!IsWalking)
+        {
+            ChangeState(new WalkingLinkState(this));
+        }
+
         movement = new Vector2(-5f, 0f);
         sprite.SetDirection(SpriteDirection.Left);
-
-        if (!stateMachine.IsWalking)
-        {
-            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
-        }
     }
 
     public void MoveUp()
     {
+        if (!IsWalking)
+        {
+            ChangeState(new WalkingLinkState(this));
+        }
+
         movement = new Vector2(0f, -5f);
         sprite.SetDirection(SpriteDirection.Up);
-
-        if (!stateMachine.IsWalking)
-        {
-            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
-        }
     }
 
     public void MoveDown()
     {
+        if (!IsWalking)
+        {
+            ChangeState(new WalkingLinkState(this));
+        }
+
         movement = new Vector2(0f, 5f);
         sprite.SetDirection(SpriteDirection.Down);
-
-        if (!stateMachine.IsWalking)
-        {
-            stateMachine.ChangeState(new WalkingLinkState(stateMachine));
-        }
     }
 
     public void UseItem()
@@ -98,6 +100,7 @@ public class Player : IPlayer
         spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Link");
         sprite = new LinkSprite(spriteTexture);
         stateMachine = new LinkStateMachine(this);
+        IsIdle = true;
     }
 
     public void Update(GameTime gameTime)
@@ -115,9 +118,9 @@ public class Player : IPlayer
         position = nextPosition;
 
         // If idle, change to idle state
-        if (movement == Vector2.Zero && !stateMachine.IsIdle)
+        if (movement == Vector2.Zero && !(stateMachine.CurrentState is IdleLinkState))
         {
-            stateMachine.ChangeState(new IdleLinkState(stateMachine));
+            ChangeState(new IdleLinkState(this));
         }
 
         movement = Vector2.Zero;
@@ -126,5 +129,10 @@ public class Player : IPlayer
     public void Draw(GameTime gameTime)
     {
         sprite.Draw(gameTime, position);
+    }
+
+    public void ChangeState(IState state)
+    {
+        stateMachine.ChangeState(state);
     }
 }

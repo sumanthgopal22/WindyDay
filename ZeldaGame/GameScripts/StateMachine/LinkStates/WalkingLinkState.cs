@@ -5,24 +5,28 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
     public class WalkingLinkState : IState
     {
-        private readonly LinkStateMachine stateMachine;
+        private IPlayer link;
 
-        public WalkingLinkState(LinkStateMachine stateMachine)
+        public WalkingLinkState(IPlayer link)
         {
-            this.stateMachine = stateMachine;
+            this.link = link;
         }
 
         public void Enter()
         {
+            System.Diagnostics.Debug.WriteLine("Entering WalkingLinkState.");
+            link.IsWalking = true;
         }
 
         public void Update(GameTime gameTime)
         {
-            stateMachine.Link.UpdateSprite(gameTime);
+            link.UpdateSprite(gameTime);
         }
 
         public void Exit()
         {
+            System.Diagnostics.Debug.WriteLine("Exiting WalkingLinkState.");
+            link.IsWalking = false;
         }
     }
 }

@@ -1,10 +1,13 @@
 using Microsoft.Xna.Framework;
+using ZeldaGame.GameScripts.Interfaces;
 
 namespace ZeldaGame;
 
 public interface IPlayer
 {
     bool IsActionPlaying { get; }
+    bool IsIdle { get; set; }
+    bool IsWalking { get; set; }
     void MoveRight();
 
     void MoveLeft();
@@ -27,4 +30,5 @@ public interface IPlayer
     void Draw(GameTime gameTime);
 
     void Update(GameTime gameTime);
+    void ChangeState(IState state);
 }

@@ -5,16 +5,18 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 {
     public class IdleLinkState : IState
     {
-        private readonly LinkStateMachine stateMachine;
+        private IPlayer link;
 
-        public IdleLinkState(LinkStateMachine stateMachine)
+        public IdleLinkState(IPlayer link)
         {
-            this.stateMachine = stateMachine;
+            this.link = link;
         }
 
         public void Enter()
         {
-            stateMachine.Link.ResetSprite();
+            System.Diagnostics.Debug.WriteLine("Entering IdleLinkState.");
+            link.IsIdle = true;
+            link.ResetSprite();
         }
 
         public void Update(GameTime gameTime)
@@ -24,7 +26,8 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
 
         public void Exit()
         {
-            // Nothing needed upon exit
+            System.Diagnostics.Debug.WriteLine("Exiting IdleLinkState.");
+            link.IsIdle = false;
         }
     }
 }

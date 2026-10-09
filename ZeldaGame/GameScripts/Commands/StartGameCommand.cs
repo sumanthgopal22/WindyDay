@@ -16,6 +16,6 @@ namespace ZeldaGame.GameScripts.Commands
             _game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
-        public void Execute() => _game.GameStateMachine.ChangeState(new GameplayState(_game.GameStateMachine));
+        public void Execute() => _game.ChangeState(new GameplayState(_game));
     }
 }

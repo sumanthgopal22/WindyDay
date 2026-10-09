@@ -9,12 +9,9 @@ namespace ZeldaGame.GameScripts.StateMachine
     {
         private IState currentState;
 
-        public Game1 Game { get; }
-
         public GameStateMachine(Game1 game)
         {
-            Game = game;
-            currentState = new MainMenuState(this);
+            currentState = new MainMenuState(game);
             currentState.Enter();
         }
 
