@@ -18,7 +18,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering GameplayState.");
-            stateMachine.Game.Screen = new GameplayScreen(stateMachine.Game);
+            stateMachine.Game.CurrentScreen = stateMachine.Game.GameplayScreen;
         }
 
         public void Update(GameTime gameTime)
@@ -33,13 +33,13 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
             stateMachine.Game.EnemyCycler.Update(gameTime);
             stateMachine.Game.ItemCycler.Update(gameTime);
             stateMachine.Game.Block.Update(gameTime);
-            stateMachine.Game.Screen.Update(gameTime);
+            stateMachine.Game.CurrentScreen.Update(gameTime);
         }
 
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting GameplayState.");
-            stateMachine.Game.Screen = null;
+            stateMachine.Game.CurrentScreen = null;
         }
     }
 }

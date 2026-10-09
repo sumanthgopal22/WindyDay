@@ -15,18 +15,18 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering MainMenuState.");
-            stateMachine.Game.Screen = new MainMenuScreen(stateMachine.Game);
+            stateMachine.Game.CurrentScreen = stateMachine.Game.MainMenuScreen;
         }
 
         public void Update(GameTime gameTime)
         {
-            stateMachine.Game.Screen.Update(gameTime);
+            stateMachine.Game.CurrentScreen.Update(gameTime);
         }
 
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting MainMenuState.");
-            stateMachine.Game.Screen = null;
+            stateMachine.Game.CurrentScreen = null;
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
+using ZeldaGame.GameScripts.StateMachine.GameStates;
 
 namespace ZeldaGame;
 
@@ -12,6 +13,6 @@ public class ResetGameCommand : ICommand
     }
     public void Execute()
     {
-        //game.returnToMain();
+        game.GameStateMachine.ChangeState(new MainMenuState(game.GameStateMachine));
     }
 }

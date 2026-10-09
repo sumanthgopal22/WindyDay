@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Commands;
 using ZeldaGame.GameScripts.Interfaces;
+using ZeldaGame.GameScripts.Screens;
 using ZeldaGame.GameScripts.StateMachine;
 
 namespace ZeldaGame;
@@ -27,7 +28,9 @@ public class Game1 : Core
     public Cycler<IEnemy> EnemyCycler { get; private set; }
 
     // Screens
-    public IScreen Screen { get; set; }
+    public IScreen CurrentScreen { get; set; }
+    public IScreen MainMenuScreen { get; private set; }
+    public IScreen GameplayScreen { get; private set; }
 
     // Blocks
     public Block Block { get; private set; }
@@ -62,8 +65,12 @@ public class Game1 : Core
 
     protected override void Initialize()
     {
+        // Initialize screens
+        MainMenuScreen = new MainMenuScreen(this);
+        GameplayScreen = new GameplayScreen(this);
+        CurrentScreen = MainMenuScreen;
+
         // Initialize state machine
-        // Screen also gets init when entering state
         GameStateMachine = new GameStateMachine(this);
 
         // Initialize player //
@@ -129,7 +136,8 @@ public class Game1 : Core
     protected override void LoadContent()
     {
         // Screens
-        Screen.LoadContent(Content, GraphicsDevice);
+        MainMenuScreen.LoadContent(Content, GraphicsDevice);
+        GameplayScreen.LoadContent(Content, GraphicsDevice);
 
         // Player
         Player.LoadContent();
@@ -203,7 +211,7 @@ public class Game1 : Core
 
         SpriteBatch.Begin();
 
-        Screen.Draw(SpriteBatch, gameTime);
+        CurrentScreen.Draw(SpriteBatch, gameTime);
 
         SpriteBatch.End();
 
