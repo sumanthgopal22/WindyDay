@@ -10,8 +10,13 @@ namespace ZeldaGame;
 
 public class Game1 : Core
 {
+    // Controllers
     public List<IController> ControllerList { get; private set; }
+
+    // Player
     public IPlayer Player {  get; private set; }
+
+    // Enemies
     private IEnemy gelEnemy;
     private IEnemy keeseEnemy;
     private IEnemy goriyaEnemy;
@@ -19,8 +24,14 @@ public class Game1 : Core
     private IEnemy stalfosEnemy;
     private IEnemy aquamentusEnemy;
     public Cycler<IEnemy> EnemyCycler { get; private set; }
-    public MainMenuScreen Menu { get; private set; }
+
+    // Screens
+    public MainMenuScreen MainMenu { get; private set; }
+
+    // Blocks
     public Block Block { get; private set; }
+
+    // Items
     private Vector2 itemSpawn;
     public Cycler<IItem> ItemCycler { get; private set; }
     private IItem fairyItem;
@@ -39,7 +50,10 @@ public class Game1 : Core
     private IItem normalKeyItem;
     private IItem mapItem;
 
+    // State machine
     public GameStateMachine GameStateMachine { get; set; }
+
+    // ===================================================================================
 
     public Game1() : base("Sprint 0 Game", 1280, 720, false)
     {
@@ -47,12 +61,14 @@ public class Game1 : Core
 
     protected override void Initialize()
     {
+        // Initialize state machine
         GameStateMachine = new GameStateMachine(this);
-        Menu = new MainMenuScreen();
 
-        // Set up the main menu
-        Menu.AddItem("Start Game", new StartGameCommand(this));
-        Menu.AddItem("Exit", new ExitGameCommand(this));
+        // Initialize screens
+        MainMenu = new MainMenuScreen();
+        // Set up main menu
+        MainMenu.AddItem("Start Game", new StartGameCommand(this));
+        MainMenu.AddItem("Exit", new ExitGameCommand(this));
 
         // Initialize player //
         Player = new Player();
@@ -116,7 +132,10 @@ public class Game1 : Core
 
     protected override void LoadContent()
     {
-        Menu.LoadContent(Content, GraphicsDevice);
+        // Screens
+        MainMenu.LoadContent(Content, GraphicsDevice);
+
+        // Player
         Player.LoadContent();
 
         // Load Enemies //
@@ -188,7 +207,7 @@ public class Game1 : Core
 
         SpriteBatch.Begin();
 
-        Menu.Draw(SpriteBatch);
+        MainMenu.Draw(SpriteBatch);
 
         Player.Draw(gameTime);
         EnemyCycler.Draw(gameTime);
@@ -198,9 +217,5 @@ public class Game1 : Core
         SpriteBatch.End();
 
         base.Draw(gameTime);
-    }
-    public void returnToMain()
-    {
-        //CurrentState = GameStatus.MainMenu;
     }
 }

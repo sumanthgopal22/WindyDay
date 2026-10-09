@@ -19,7 +19,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
 
         public void Update(GameTime gameTime)
         {
-            stateMachine.Game.Menu.Update(gameTime);
+            stateMachine.Game.MainMenu.Update(gameTime);
         }
 
         public void Exit()
