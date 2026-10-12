@@ -65,7 +65,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
                 int y = i / Columns;
 
                 Vector2 pos = new Vector2(x * TileWidth, y * TileHeight);
-                tile.Draw(spriteBatch, pos, Color.White);
+                tile.Draw(spriteBatch, pos, Color.White, Scale);
             }
         }
 

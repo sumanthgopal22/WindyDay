@@ -22,8 +22,23 @@ namespace ZeldaGame.GameScripts.Screens
 
             // Default "test" level file
             LevelFile = "levels/tilemap-definition.xml";
+        }
 
-            Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            Tilemap.Draw(spriteBatch);
+            game.Player.Draw(gameTime);
+            game.EnemyCycler.Draw(gameTime);
+            game.ItemCycler.Draw(gameTime);
+            game.Block.Draw(gameTime);
+        }
+
+        public void LoadContent(ContentManager content, GraphicsDevice device)
+        {
+            Tilemap = Tilemap.FromFile(Core.Content, LevelFile);
+            Tilemap.Scale = new Vector2(4.0f, 4.0f);
+
+            Rectangle screenBounds = device.PresentationParameters.Bounds;
 
             RoomBounds = new Rectangle(
                 (int)Tilemap.TileWidth,
@@ -34,21 +49,6 @@ namespace ZeldaGame.GameScripts.Screens
 
             int centerRow = Tilemap.Rows / 2;
             int centerColumn = Tilemap.Columns / 2;
-        }
-
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
-        {
-            Tilemap.Draw(spriteBatch);
-            //game.Player.Draw(gameTime);
-            //game.EnemyCycler.Draw(gameTime);
-            //game.ItemCycler.Draw(gameTime);
-            //game.Block.Draw(gameTime);
-        }
-
-        public void LoadContent(ContentManager content, GraphicsDevice device)
-        {
-            Tilemap = Tilemap.FromFile(Core.Content, LevelFile);
-            Tilemap.Scale = new Vector2(4.0f, 4.0f);
         }
 
         public void Update(GameTime gameTime)
