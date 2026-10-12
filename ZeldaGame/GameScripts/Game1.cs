@@ -7,6 +7,7 @@ using ZeldaGame.GameScripts.Commands;
 using ZeldaGame.GameScripts.Interfaces;
 using ZeldaGame.GameScripts.Screens;
 using ZeldaGame.GameScripts.StateMachine;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
