@@ -44,6 +44,14 @@ public class NonAnimatedSprite : ISprite
         Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, SourceRectangle, Color.White);
     }
 
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+    {
+        spriteBatch.Draw(SpriteTexture,
+            position,
+            SourceRectangle,
+            color);
+    }
+
     public void Update(GameTime gameTime)
     {
     }
