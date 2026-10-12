@@ -17,9 +17,16 @@ public class NonAnimatedSprite : ISprite
 
     public NonAnimatedSprite(Texture2D spriteTexture, Rectangle sourceRectangle)
     {
-        this.SpriteTexture = spriteTexture;
-        this.SourceRectangle = sourceRectangle;
+        SpriteTexture = spriteTexture;
+        SourceRectangle = sourceRectangle;
         Size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+    }
+
+    public NonAnimatedSprite(Texture2D spriteTexture, int x, int y, int width, int height)
+    {
+        SpriteTexture = spriteTexture;
+        SourceRectangle = new Rectangle(x, y, width, height);
+        Size = new Vector2(width, height);
     }
 
     public void SetDirection(SpriteDirection direction)
