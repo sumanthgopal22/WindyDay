@@ -8,17 +8,17 @@ namespace ZeldaGame;
 public class NonAnimatedSprite : ISprite
 {
     public Texture2D SpriteTexture { get; set; }
-    private Rectangle sourceRectangle;
+    public Rectangle SourceRectangle { get; set; }
 
-    public int Width => sourceRectangle.Width;
-    public int Height => sourceRectangle.Height;
+    public int Width => SourceRectangle.Width;
+    public int Height => SourceRectangle.Height;
 
     public Vector2 Size { get; }
 
     public NonAnimatedSprite(Texture2D spriteTexture, Rectangle sourceRectangle)
     {
         this.SpriteTexture = spriteTexture;
-        this.sourceRectangle = sourceRectangle;
+        this.SourceRectangle = sourceRectangle;
         Size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
@@ -32,9 +32,9 @@ public class NonAnimatedSprite : ISprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangle.Width * 3, sourceRectangle.Height * 3);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, SourceRectangle.Width * 3, SourceRectangle.Height * 3);
 
-        Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, sourceRectangle, Color.White);
+        Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, SourceRectangle, Color.White);
     }
 
     public void Update(GameTime gameTime)
