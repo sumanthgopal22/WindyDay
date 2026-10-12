@@ -10,6 +10,9 @@ public class NonAnimatedSprite : ISprite
     private Texture2D spriteTexture;
     private Rectangle sourceRectangle;
 
+    public int Width => sourceRectangle.Width;
+    public int Height => sourceRectangle.Height;
+
     public Vector2 Size { get; }
 
     public NonAnimatedSprite(Texture2D spriteTexture, Rectangle sourceRectangle)
