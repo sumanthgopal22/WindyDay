@@ -31,6 +31,9 @@
 #begin levels/d01r01.xml
 /copy:levels/d01r01.xml
 
+#begin levels/d01r02.xml
+/copy:levels/d01r02.xml
+
 #begin levels/tilemap-definition.xml
 /copy:levels/tilemap-definition.xml
 
