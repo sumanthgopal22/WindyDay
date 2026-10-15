@@ -21,7 +21,7 @@ namespace ZeldaGame.GameScripts.Screens
             this.game = game;
 
             // Default "test" level file
-            LevelFile = "levels/tilemap-definition.xml";
+            LevelFile = "levels/d01r01.xml";
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

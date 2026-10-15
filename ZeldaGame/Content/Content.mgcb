@@ -28,6 +28,9 @@
 /processorParam:Version=3.8.5.1
 /build:Blip7.wav
 
+#begin levels/d01r01.xml
+/copy:levels/d01r01.xml
+
 #begin levels/tilemap-definition.xml
 /copy:levels/tilemap-definition.xml
 
