@@ -60,7 +60,7 @@ public class Game1 : Core
 
     // ===================================================================================
 
-    public Game1() : base("Sprint 0 Game", 1280, 720, false)
+    public Game1() : base("Sprint 0 Game", 1024, 704, false)
     {
     }
 
