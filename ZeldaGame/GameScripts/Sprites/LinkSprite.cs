@@ -76,6 +76,24 @@ public class LinkSprite : IActionSprite
                         break;
                 }
             }
+            else if (currentAction.Value == LinkSpriteAction.UseItem)
+            {
+                switch (currentDirection)
+                {
+                    case SpriteDirection.Left:
+                        sourceRectangle = new Rectangle(58, 116, 29, 30);
+                        break;
+                    case SpriteDirection.Right:
+                        sourceRectangle = new Rectangle(173, 116, 30, 30);
+                        break;
+                    case SpriteDirection.Up:
+                        sourceRectangle = new Rectangle(116, 116, 31, 31);
+                        break;
+                    default:
+                        sourceRectangle = new Rectangle(0, 116, 31, 30);
+                        break;
+                }
+            }
             else
             {
                 sourceRectangle = new Rectangle(x, 116, 29, 32);

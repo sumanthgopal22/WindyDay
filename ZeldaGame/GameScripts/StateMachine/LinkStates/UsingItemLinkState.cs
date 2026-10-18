@@ -15,6 +15,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering UsingItemLinkState.");
+            link.IsUsingItem = true;
             link.UseItem();
         }
 
@@ -31,6 +32,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting UsingItemLinkState.");
+            link.IsUsingItem = false;
         }
     }
 }

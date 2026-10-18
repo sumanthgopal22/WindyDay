@@ -15,6 +15,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering AttackingLinkState.");
+            link.IsSwingingSword = true;
             link.SwingSword();
         }
 
@@ -31,6 +32,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         public void Exit()
         {
             System.Diagnostics.Debug.WriteLine("Exiting AttackingLinkState.");
+            link.IsSwingingSword = false;
         }
     }
 }

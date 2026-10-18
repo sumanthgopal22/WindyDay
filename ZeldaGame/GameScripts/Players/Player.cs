@@ -18,9 +18,15 @@ public class Player : IPlayer
     public bool IsActionPlaying => sprite.IsActionPlaying;
     public bool IsIdle {  get; set; }
     public bool IsWalking { get; set; }
+    public bool IsUsingItem { get; set; }
+    public bool IsSwingingSword { get; set; }
 
     public void MoveRight()
     {
+        if (IsUsingItem || IsSwingingSword)
+        {
+            return;
+        }
         if (!IsWalking)
         {
             ChangeState(new WalkingLinkState(this));
@@ -32,6 +38,10 @@ public class Player : IPlayer
 
     public void MoveLeft()
     {
+        if (IsUsingItem || IsSwingingSword)
+        {
+            return;
+        }
         if (!IsWalking)
         {
             ChangeState(new WalkingLinkState(this));
@@ -43,6 +53,10 @@ public class Player : IPlayer
 
     public void MoveUp()
     {
+        if (IsUsingItem || IsSwingingSword)
+        {
+            return;
+        }
         if (!IsWalking)
         {
             ChangeState(new WalkingLinkState(this));
@@ -54,6 +68,10 @@ public class Player : IPlayer
 
     public void MoveDown()
     {
+        if (IsUsingItem || IsSwingingSword)
+        {
+            return;
+        }
         if (!IsWalking)
         {
             ChangeState(new WalkingLinkState(this));
@@ -65,11 +83,19 @@ public class Player : IPlayer
 
     public void UseItem()
     {
+        if (!IsUsingItem)
+        {
+            ChangeState(new UsingItemLinkState(this));
+        }
         sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     public void SwingSword()
     {
+        if (!IsSwingingSword)
+        {
+            ChangeState(new AttackingLinkState(this));
+        }
         sprite.PlayAction(LinkSpriteAction.SwingSword);
     }
 
@@ -118,7 +144,7 @@ public class Player : IPlayer
         position = nextPosition;
 
         // If idle, change to idle state
-        if (movement == Vector2.Zero && !(stateMachine.CurrentState is IdleLinkState))
+        if (movement == Vector2.Zero && IsWalking)
         {
             ChangeState(new IdleLinkState(this));
         }
