@@ -16,7 +16,6 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         {
             System.Diagnostics.Debug.WriteLine("Entering AttackingLinkState.");
             link.IsSwingingSword = true;
-            link.SwingSword();
         }
 
         public void Update(GameTime gameTime)

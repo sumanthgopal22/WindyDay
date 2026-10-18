@@ -16,7 +16,6 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
         {
             System.Diagnostics.Debug.WriteLine("Entering UsingItemLinkState.");
             link.IsUsingItem = true;
-            link.UseItem();
         }
 
         public void Update(GameTime gameTime)

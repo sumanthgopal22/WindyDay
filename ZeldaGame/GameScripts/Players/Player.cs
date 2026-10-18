@@ -83,19 +83,23 @@ public class Player : IPlayer
 
     public void UseItem()
     {
-        if (!IsUsingItem)
+        if (IsUsingItem || IsSwingingSword)
         {
-            ChangeState(new UsingItemLinkState(this));
+            return;
         }
+
+        ChangeState(new UsingItemLinkState(this));
         sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     public void SwingSword()
     {
-        if (!IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword)
         {
-            ChangeState(new AttackingLinkState(this));
+            return;
         }
+        
+        ChangeState(new AttackingLinkState(this));
         sprite.PlayAction(LinkSpriteAction.SwingSword);
     }
 
