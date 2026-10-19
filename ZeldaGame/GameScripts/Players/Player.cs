@@ -107,16 +107,16 @@ public class Player : IPlayer
         switch (finalDirection)
         {
             case SpriteDirection.Right:
-                velocity = new Vector2(3, 0);
+                velocity = new Vector2(8, 0);
                 break;  // right
             case SpriteDirection.Down:
-                velocity = new Vector2(0, 3);
+                velocity = new Vector2(0, 8);
                 break;  // down
             case SpriteDirection.Left:
-                velocity = new Vector2(-3, 0);
+                velocity = new Vector2(-8, 0);
                 break; // left
             default:
-                velocity = new Vector2(0, -3);
+                velocity = new Vector2(0, -8);
                 break; // up
         }
 
