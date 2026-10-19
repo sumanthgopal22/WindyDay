@@ -16,7 +16,7 @@ public class BlockSprite : ISprite
     {
         this.spriteTexture = spriteTexture;
         currentFrame = 0;
-        Size = new Vector2(80f, 80f);
+        Size = new Vector2(64f, 64f);
     }
 
     public void SetDirection(SpriteDirection direction)
@@ -40,7 +40,7 @@ public class BlockSprite : ISprite
         int y = (currentFrame / 9) * 16;
         Rectangle sourceRectangle = new Rectangle(x,y,16,16);
 
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 80,80);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 64,64);
 
         Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
     }

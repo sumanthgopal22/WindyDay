@@ -45,9 +45,6 @@ namespace ZeldaGame.GameScripts.Screens
         {
             Tilemap.Draw(spriteBatch);
             game.Player.Draw(gameTime);
-            game.EnemyCycler.Draw(gameTime);
-            game.ItemCycler.Draw(gameTime);
-            game.Block.Draw(gameTime);
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)

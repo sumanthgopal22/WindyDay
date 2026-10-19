@@ -15,14 +15,15 @@ public class LinkSprite : IActionSprite
     private SpriteDirection currentDirection;
     private LinkSpriteAction? currentAction;
 
-    private const double ActionDuration = 0.4;
+    private const double ActionDuration = 0.25;
 
-    public Vector2 Size { get; }
+    public Vector2 Size { get;}
     public bool IsActionPlaying => currentAction.HasValue;
 
     public LinkSprite(Texture2D spriteTexture)
     {
         this.spriteTexture = spriteTexture;
+        Size = new Vector2(58, 64);
         elapsedTime = 0;
         currentFrame = 0;
     }
@@ -121,18 +122,16 @@ public class LinkSprite : IActionSprite
             }
         }
 
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 76, 84);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangle.Width * 2, sourceRectangle.Height * 2);
         if (currentAction.HasValue && currentAction.Value == LinkSpriteAction.SwingSword)
         {
             if (currentDirection == SpriteDirection.Left || currentDirection == SpriteDirection.Right)
             {
-                destinationRectangle.Width = 158;
-                destinationRectangle.X += currentDirection == SpriteDirection.Left ? -76 : -20;
+                destinationRectangle.X += currentDirection == SpriteDirection.Left ? -62 : -16;
             }
             else if (currentDirection == SpriteDirection.Up || currentDirection == SpriteDirection.Down)
             {
-                destinationRectangle.Height = 152;
-                destinationRectangle.Y += currentDirection == SpriteDirection.Up ? -66 : -2;
+                destinationRectangle.Y += currentDirection == SpriteDirection.Up ? -50 : -2;
             }
         }
 

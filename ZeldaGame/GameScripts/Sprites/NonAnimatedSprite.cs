@@ -19,14 +19,14 @@ public class NonAnimatedSprite : ISprite
     {
         SpriteTexture = spriteTexture;
         SourceRectangle = sourceRectangle;
-        Size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+        Size = new Vector2(sourceRectangle.Width * 4, sourceRectangle.Height * 4);
     }
 
     public NonAnimatedSprite(Texture2D spriteTexture, int x, int y, int width, int height)
     {
         SpriteTexture = spriteTexture;
         SourceRectangle = new Rectangle(x, y, width, height);
-        Size = new Vector2(width, height);
+        Size = new Vector2(width * 4, height * 4);
     }
 
     public void SetDirection(SpriteDirection direction)
@@ -39,7 +39,7 @@ public class NonAnimatedSprite : ISprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, SourceRectangle.Width * 3, SourceRectangle.Height * 3);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, SourceRectangle.Width * 4, SourceRectangle.Height * 4);
 
         Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, SourceRectangle, Color.White);
     }

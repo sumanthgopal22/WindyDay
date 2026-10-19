@@ -30,9 +30,6 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
             }
 
             game.Player.Update(gameTime);
-            game.EnemyCycler.Update(gameTime);
-            game.ItemCycler.Update(gameTime);
-            game.Block.Update(gameTime);
             game.CurrentScreen.Update(gameTime);
         }
 

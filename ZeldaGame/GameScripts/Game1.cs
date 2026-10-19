@@ -3,11 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
-using ZeldaGame.GameScripts.Commands;
 using ZeldaGame.GameScripts.Interfaces;
 using ZeldaGame.GameScripts.Screens;
 using ZeldaGame.GameScripts.StateMachine;
-using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
@@ -19,41 +17,10 @@ public class Game1 : Core
     // Player
     public IPlayer Player {  get; private set; }
 
-    // Enemies
-    private IEnemy gelEnemy;
-    private IEnemy keeseEnemy;
-    private IEnemy goriyaEnemy;
-    private IEnemy wallMasterEnemy;
-    private IEnemy stalfosEnemy;
-    private IEnemy aquamentusEnemy;
-    public Cycler<IEnemy> EnemyCycler { get; private set; }
-
     // Screens
     public IScreen CurrentScreen { get; set; }
     public IScreen MainMenuScreen { get; private set; }
     public IScreen GameplayScreen { get; private set; }
-
-    // Blocks
-    public Block Block { get; private set; }
-
-    // Items
-    private Vector2 itemSpawn;
-    public Cycler<IItem> ItemCycler { get; private set; }
-    private IItem fairyItem;
-    private IItem heartItem;
-    private IItem rupeeItem;
-    private IItem triforceShardItem;
-    private IItem heartContainerItem;
-    private IItem clockItem;
-    private IItem woodenBoomerangItem;
-    private IItem bombItem;
-    private IItem compassItem;
-    private IItem bowItem;
-    private IItem woodenArrowItem;
-    private IItem blueCandleItem;
-    private IItem bluePotionItem;
-    private IItem normalKeyItem;
-    private IItem mapItem;
 
     // State machine
     public GameStateMachine GameStateMachine { get; set; }
@@ -76,23 +43,6 @@ public class Game1 : Core
 
         // Initialize player //
         Player = new Player();
-
-        // Initialize enemies // 
-        gelEnemy = new GelEnemy(Vector2.Zero);
-        keeseEnemy = new KeeseEnemy(Vector2.Zero);
-        goriyaEnemy = new GoriyaEnemy(Vector2.Zero);
-        wallMasterEnemy = new WallMasterEnemy(Vector2.Zero);
-        stalfosEnemy = new StalfosEnemy(Vector2.Zero);
-        aquamentusEnemy = new AquamentusEnemy(Vector2.Zero);
-
-        // Intialize blocks//
-        Block = new Block();
-
-        // Adding to enemyCycler to cycle through enemies being displayed for Sprint2
-        EnemyCycler = new Cycler<IEnemy>();
-
-        // Initialize itemCycler to cycle through items
-        ItemCycler = new Cycler<IItem>();
         
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
@@ -117,18 +67,6 @@ public class Game1 : Core
         keyboardController.RegisterPressCommand(Keys.R, new ResetGameCommand(this));
         keyboardController.RegisterPressCommand(Keys.Q, new QuitGameCommand());
 
-        //For cycling through enemies
-        keyboardController.RegisterPressCommand(Keys.P, new CycleRightCommand(EnemyCycler));
-        keyboardController.RegisterPressCommand(Keys.O, new CycleLeftCommand(EnemyCycler));
-
-        // Cycling through blocks
-        keyboardController.RegisterPressCommand(Keys.T, new PreviousBlockCommand(Block));
-        keyboardController.RegisterPressCommand(Keys.Y, new NextBlockCommand(Block));
-
-        // Cycling through items
-        keyboardController.RegisterPressCommand(Keys.I, new CycleRightCommand(ItemCycler));
-        keyboardController.RegisterPressCommand(Keys.U, new CycleLeftCommand(ItemCycler));
-
         ControllerList = [keyboardController];
 
         base.Initialize();
@@ -140,63 +78,12 @@ public class Game1 : Core
         MainMenuScreen.LoadContent(Content, GraphicsDevice);
         GameplayScreen.LoadContent(Content, GraphicsDevice);
 
+        // Sprite textures (the player's boomerang uses the enemy spritesheet)
+        EnemySpriteFactory.Instance.LoadTextures();
+
         // Player
         Player.LoadContent();
 
-        // Load Enemies //
-        EnemySpriteFactory.Instance.LoadTextures();
-        gelEnemy.LoadContent();
-        keeseEnemy.LoadContent();
-        goriyaEnemy.LoadContent();
-        wallMasterEnemy.LoadContent();
-        stalfosEnemy.LoadContent();
-        aquamentusEnemy.LoadContent();
-
-        // Load blocks //
-        Block.LoadContent();
-
-        // Add enemies to enemyCycler //
-        EnemyCycler.Add(gelEnemy);
-        EnemyCycler.Add(keeseEnemy);
-        EnemyCycler.Add(goriyaEnemy);
-        EnemyCycler.Add(wallMasterEnemy);
-        EnemyCycler.Add(stalfosEnemy);
-        EnemyCycler.Add(aquamentusEnemy);
-        
-        /* Load Items */
-        ItemSpriteFactory.Instance.LoadTextures();
-        itemSpawn = new Vector2(Instance.Window.ClientBounds.Width * 0.5f, Instance.Window.ClientBounds.Height * 0.25f);
-
-        fairyItem = new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), itemSpawn);
-        ItemCycler.Add(fairyItem);
-        heartItem = new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), itemSpawn);
-        ItemCycler.Add(heartItem);
-        rupeeItem = new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), itemSpawn);
-        ItemCycler.Add(rupeeItem);
-        triforceShardItem = new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), itemSpawn);
-        ItemCycler.Add(triforceShardItem);
-        heartContainerItem = new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), itemSpawn);
-        ItemCycler.Add(heartContainerItem);
-        clockItem = new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), itemSpawn);
-        ItemCycler.Add(clockItem);
-        woodenBoomerangItem = new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), itemSpawn);
-        ItemCycler.Add(woodenBoomerangItem);
-        bombItem = new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), itemSpawn);
-        ItemCycler.Add(bombItem);
-        compassItem = new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), itemSpawn);
-        ItemCycler.Add(compassItem);
-        bowItem = new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), itemSpawn);
-        ItemCycler.Add(bowItem);
-        woodenArrowItem = new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), itemSpawn);
-        ItemCycler.Add(woodenArrowItem);
-        blueCandleItem = new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), itemSpawn);
-        ItemCycler.Add(blueCandleItem);
-        bluePotionItem = new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), itemSpawn);
-        ItemCycler.Add(bluePotionItem);
-        normalKeyItem = new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), itemSpawn);
-        ItemCycler.Add(normalKeyItem);
-        mapItem = new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), itemSpawn);
-        ItemCycler.Add(mapItem);
     }
 
     protected override void Update(GameTime gameTime)

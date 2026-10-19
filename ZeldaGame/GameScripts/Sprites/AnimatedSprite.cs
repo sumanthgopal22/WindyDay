@@ -52,7 +52,7 @@ public class AnimatedSprite : ISprite
         elapsedTime = 0;
         currentFrame = 0;
 
-        Size = new Vector2(sourceRectangles[0].Width, sourceRectangles[0].Height);
+        Size = new Vector2(sourceRectangles[0].Width * 4, sourceRectangles[0].Height * 4);
     }
 
     public void SetDirection(SpriteDirection direction)
@@ -68,7 +68,7 @@ public class AnimatedSprite : ISprite
     {
         Rectangle sourceRectangle = sourceRectangles[currentFrame];
 
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangles[0].Width * 3, sourceRectangles[0].Height * 3);
+        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangles[0].Width * 4, sourceRectangles[0].Height * 4);
 
         Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White, 0f, Vector2.Zero, frameEffects[currentFrame], 0f);
     }
