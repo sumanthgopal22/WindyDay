@@ -8,6 +8,8 @@ public interface IPlayer
     bool IsActionPlaying { get; }
     bool IsIdle { get; set; }
     bool IsWalking { get; set; }
+    bool IsUsingItem { get; set; }
+    bool IsSwingingSword { get; set; }
     void MoveRight();
 
     void MoveLeft();
