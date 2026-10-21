@@ -23,6 +23,7 @@ public class Player : IPlayer
 
     SpriteDirection finalDirection;
     Boomerang boomerang;
+    Arrow arrow;
 
     public void MoveRight()
     {
@@ -90,7 +91,7 @@ public class Player : IPlayer
 
     public void UseItem()
     {
-        if (IsUsingItem || IsSwingingSword || boomerang != null)
+        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
         {
             return;
         }
@@ -101,29 +102,72 @@ public class Player : IPlayer
         sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
+    public void UseItem2()
+    {
+        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
+        {
+            return;
+        }
+
+        FireArrow();
+
+        ChangeState(new UsingItemLinkState(this));
+        sprite.PlayAction(LinkSpriteAction.UseItem);
+    }
+
+    // Matches the original Zelda
+    private const float BoomerangSpeed = 4 * 4;
+    private const int BoomerangStepsOut = 128 / 4;
+
     public void BoomerangThrow()
     {
         Vector2 velocity;
         switch (finalDirection)
         {
             case SpriteDirection.Right:
-                velocity = new Vector2(8, 0);
+                velocity = new Vector2(BoomerangSpeed, 0);
                 break;  // right
             case SpriteDirection.Down:
-                velocity = new Vector2(0, 8);
+                velocity = new Vector2(0, BoomerangSpeed);
                 break;  // down
             case SpriteDirection.Left:
-                velocity = new Vector2(-8, 0);
+                velocity = new Vector2(-BoomerangSpeed, 0);
                 break; // left
             default:
-                velocity = new Vector2(0, -8);
+                velocity = new Vector2(0, -BoomerangSpeed);
                 break; // up
         }
 
-        Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16) + velocity * 15;
+        Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16);
 
-        boomerang = new Boomerang(throwPosition, velocity);
+        boomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut);
 
+    }
+
+    private const float ArrowSpeed = 4 * 4;
+    public void FireArrow()
+    {
+        Vector2 velocity;
+        switch (finalDirection)
+        {
+            case SpriteDirection.Right:
+                velocity = new Vector2(ArrowSpeed, 0);
+                break;  // right
+            case SpriteDirection.Down:
+                velocity = new Vector2(0, ArrowSpeed);
+                break;  // down
+            case SpriteDirection.Left:
+                velocity = new Vector2(-ArrowSpeed, 0);
+                break; // left
+            default:
+                velocity = new Vector2(0, -ArrowSpeed);
+                break; // up
+        }
+
+        // Fire the arrow from the middle of Link
+        Vector2 linkCenter = position + sprite.Size / 2;
+
+        arrow = new Arrow(linkCenter, velocity);
     }
 
     public void SwingSword()
@@ -181,6 +225,16 @@ public class Player : IPlayer
             }
         }
 
+        if (arrow != null)
+        {
+            arrow.Update(gameTime);
+
+            if (arrow.hasHitWall == true)
+            {
+                arrow = null;
+            }
+        }
+
         Vector2 nextPosition = position + movement;
         
         int windowWidth = Core.Instance.Window.ClientBounds.Width;
@@ -207,6 +261,11 @@ public class Player : IPlayer
         if (boomerang != null)
         {
             boomerang.Draw(gameTime);
+        }
+
+        if (arrow != null)
+        {
+            arrow.Draw(gameTime);
         }
     }
 
