@@ -75,7 +75,6 @@ public class GoriyaEnemy : IEnemy
     
     public void LoadContent()
     {
-        position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.75f;
         goriyaUpSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Up);
         goriyaDownSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Down);
         goriyaLeftSprite = EnemySpriteFactory.Instance.CreateGoriyaSprite(SpriteDirection.Left);

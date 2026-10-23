@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Interfaces;
 using ZeldaGame.GameScripts.Sprites;
@@ -11,7 +10,6 @@ namespace ZeldaGame;
 public class Player : IPlayer
 {
     private IActionSprite sprite;
-    private Texture2D spriteTexture;
     private Vector2 position, movement;
     private LinkStateMachine stateMachine;
 
@@ -36,7 +34,7 @@ public class Player : IPlayer
         }
 
         finalDirection = SpriteDirection.Right;
-        movement = new Vector2(5f, 0f);
+        movement = new Vector2(4f, 0f);
         sprite.SetDirection(finalDirection);
     }
 
@@ -52,7 +50,7 @@ public class Player : IPlayer
         }
 
         finalDirection = SpriteDirection.Left;
-        movement = new Vector2(-5f, 0f);
+        movement = new Vector2(-4f, 0f);
         sprite.SetDirection(finalDirection);
     }
 
@@ -68,7 +66,7 @@ public class Player : IPlayer
         }
 
         finalDirection = SpriteDirection.Up;
-        movement = new Vector2(0f, -5f);
+        movement = new Vector2(0f, -4f);
         sprite.SetDirection(finalDirection);
     }
 
@@ -84,7 +82,7 @@ public class Player : IPlayer
         }
 
         finalDirection = SpriteDirection.Down;
-        movement = new Vector2(0f, 5f);
+        movement = new Vector2(0f, 4f);
         sprite.SetDirection(finalDirection);
     }
 
@@ -161,8 +159,7 @@ public class Player : IPlayer
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.5f;
-        spriteTexture = Core.Content.Load<Texture2D>("spritesheets/Link");
-        sprite = new LinkSprite(spriteTexture);
+        sprite = LinkSpriteFactory.Instance.CreateLinkSprite();
         stateMachine = new LinkStateMachine(this);
         IsIdle = true;
     }

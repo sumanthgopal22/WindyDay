@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input; 
 using MonoGameLibrary;
 using System;
+using System.Collections.Generic;
 using ZeldaGame.GameScripts.Interfaces;
 using ZeldaGame.GameScripts.Tilemapping;
 
@@ -11,6 +12,13 @@ namespace ZeldaGame.GameScripts.Screens
 {
     public class GameplayScreen : IScreen
     {
+        private sealed class RoomEntities
+        {
+            public List<IEnemy> Enemies { get; } = new();
+            public List<IItem> Items { get; } = new();
+            public List<Vector2> SpawnPositions { get; } = new();
+        }
+
         private Game1 game;
 
         public Tilemap Tilemap { get; set; }
@@ -21,6 +29,8 @@ namespace ZeldaGame.GameScripts.Screens
         private string[] levelFiles;
         private int currentLevelIndex = 0;
         private MouseState previousMouseState;
+        private readonly Dictionary<string, RoomEntities> entitiesByRoom = new();
+        private readonly Random random = new();
 
         public GameplayScreen(Game1 game)
         {
@@ -44,11 +54,29 @@ namespace ZeldaGame.GameScripts.Screens
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Tilemap.Draw(spriteBatch);
+
+            RoomEntities entities = entitiesByRoom[LevelFile];
+            foreach (IEnemy enemy in entities.Enemies)
+            {
+                enemy.Draw(gameTime);
+            }
+
+            foreach (IItem item in entities.Items)
+            {
+                item.Draw(gameTime);
+            }
+
             game.Player.Draw(gameTime);
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
+            LoadRoom(LevelFile, device);
+        }
+
+        private void LoadRoom(string levelFile, GraphicsDevice device)
+        {
+            LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile);
             Tilemap.Scale = new Vector2(4.0f, 4.0f);
 
@@ -61,21 +89,164 @@ namespace ZeldaGame.GameScripts.Screens
                 screenBounds.Height - (int)Tilemap.TileHeight * 2
             );
 
-            int centerRow = Tilemap.Rows / 2;
-            int centerColumn = Tilemap.Columns / 2;
+            if (entitiesByRoom.Count == 0)
+            {
+                CreateRoomEntities();
+            }
+        }
+
+        private void CreateRoomEntities()
+        {
+            var rooms = new RoomEntities[levelFiles.Length];
+            for (int i = 0; i < rooms.Length; i++)
+            {
+                rooms[i] = new RoomEntities();
+            }
+
+            var enemyTypes = new List<Func<Vector2, IEnemy>>
+            {
+                position => new AquamentusEnemy(position),
+                position => new GelEnemy(position),
+                position => new GoriyaEnemy(position),
+                position => new KeeseEnemy(position),
+                position => new StalfosEnemy(position),
+                position => new WallMasterEnemy(position)
+            };
+
+            var itemTypes = new List<Func<Vector2, IItem>>
+            {
+                position => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), position),
+                position => new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), position),
+                position => new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), position),
+                position => new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), position),
+                position => new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), position),
+                position => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), position),
+                position => new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), position),
+                position => new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), position),
+                position => new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), position),
+                position => new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), position),
+                position => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), position),
+                position => new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), position),
+                position => new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), position),
+                position => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), position),
+                position => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), position)
+            };
+
+            foreach (Func<Vector2, IEnemy> createEnemy in Shuffle(enemyTypes))
+            {
+                AddEnemy(rooms[random.Next(rooms.Length)], createEnemy);
+            }
+
+            foreach (Func<Vector2, IItem> createItem in Shuffle(itemTypes))
+            {
+                AddItem(rooms[random.Next(rooms.Length)], createItem);
+            }
+
+            foreach (RoomEntities entities in rooms)
+            {
+                if (entities.Enemies.Count == 0 || random.Next(3) == 0)
+                {
+                    AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
+                }
+
+                if (entities.Items.Count == 0 || random.Next(3) == 0)
+                {
+                    AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
+                }
+            }
+
+            for (int i = 0; i < rooms.Length; i++)
+            {
+                entitiesByRoom.Add(levelFiles[i], rooms[i]);
+            }
+        }
+
+        private void AddEnemy(RoomEntities entities, Func<Vector2, IEnemy> createEnemy)
+        {
+            IEnemy enemy = createEnemy(GetSpawnPosition(entities));
+            enemy.LoadContent();
+            entities.Enemies.Add(enemy);
+        }
+
+        private void AddItem(RoomEntities entities, Func<Vector2, IItem> createItem)
+        {
+            entities.Items.Add(createItem(GetSpawnPosition(entities)));
+        }
+
+        private Vector2 GetSpawnPosition(RoomEntities entities)
+        {
+            var roomCenter = new Vector2(
+                (RoomBounds.Left + RoomBounds.Right) / 2f,
+                (RoomBounds.Top + RoomBounds.Bottom) / 2f
+            );
+            int horizontalRange = RoomBounds.Width / 4;
+            int verticalRange = RoomBounds.Height / 4;
+            int minX = (int)roomCenter.X - horizontalRange;
+            int maxX = (int)roomCenter.X + horizontalRange;
+            int minY = (int)roomCenter.Y - verticalRange;
+            int maxY = (int)roomCenter.Y + verticalRange;
+
+            for (int attempt = 0; attempt < 50; attempt++)
+            {
+                var position = new Vector2(random.Next(minX, maxX), random.Next(minY, maxY));
+                if (Vector2.Distance(position, roomCenter) < 96)
+                {
+                    continue;
+                }
+
+                bool overlaps = false;
+                foreach (Vector2 existingPosition in entities.SpawnPositions)
+                {
+                    if (Vector2.Distance(position, existingPosition) < 48)
+                    {
+                        overlaps = true;
+                        break;
+                    }
+                }
+
+                if (!overlaps)
+                {
+                    entities.SpawnPositions.Add(position);
+                    return position;
+                }
+            }
+
+            var fallbackPosition = new Vector2(random.Next(minX, maxX), random.Next(minY, maxY));
+            entities.SpawnPositions.Add(fallbackPosition);
+            return fallbackPosition;
+        }
+
+        private List<T> Shuffle<T>(List<T> source)
+        {
+            var shuffled = new List<T>(source);
+            for (int i = shuffled.Count - 1; i > 0; i--)
+            {
+                int swapIndex = random.Next(i + 1);
+                (shuffled[i], shuffled[swapIndex]) = (shuffled[swapIndex], shuffled[i]);
+            }
+
+            return shuffled;
         }
 
         public void Update(GameTime gameTime)
         {
+            RoomEntities entities = entitiesByRoom[LevelFile];
+            foreach (IEnemy enemy in entities.Enemies)
+            {
+                enemy.Update(gameTime);
+            }
+
+            foreach (IItem item in entities.Items)
+            {
+                item.Update(gameTime);
+            }
+
             MouseState currentMouseState = Mouse.GetState();
 
             if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
             {
                 currentLevelIndex = (currentLevelIndex + 1) % levelFiles.Length;
-                LevelFile = levelFiles[currentLevelIndex];
-
-                Tilemap = Tilemap.FromFile(Core.Content, LevelFile);
-                Tilemap.Scale = new Vector2(4.0f, 4.0f);
+                LoadRoom(levelFiles[currentLevelIndex], Core.Graphics.GraphicsDevice);
             }
 
             previousMouseState = currentMouseState;

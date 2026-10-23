@@ -74,12 +74,14 @@ public class Game1 : Core
 
     protected override void LoadContent()
     {
+        // Load sprite factories before the gameplay screen creates room entities.
+        EnemySpriteFactory.Instance.LoadTextures();
+        ItemSpriteFactory.Instance.LoadTextures();
+        LinkSpriteFactory.Instance.LoadTextures();
+
         // Screens
         MainMenuScreen.LoadContent(Content, GraphicsDevice);
         GameplayScreen.LoadContent(Content, GraphicsDevice);
-
-        // Sprite textures (the player's boomerang uses the enemy spritesheet)
-        EnemySpriteFactory.Instance.LoadTextures();
 
         // Player
         Player.LoadContent();

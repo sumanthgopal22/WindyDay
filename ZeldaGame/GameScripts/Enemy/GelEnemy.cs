@@ -42,7 +42,6 @@ public class GelEnemy : IEnemy
 
     public void LoadContent()
     {
-        position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.75f;
         gelSprite = EnemySpriteFactory.Instance.CreateGelSprite();
     }
 
