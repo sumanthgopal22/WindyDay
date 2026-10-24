@@ -10,6 +10,7 @@ public class NonAnimatedSprite : ISprite
     public Texture2D SpriteTexture { get; set; }
     public Rectangle SourceRectangle { get; set; }
 
+    private float rotation = 0f;
     public int Width => SourceRectangle.Width;
     public int Height => SourceRectangle.Height;
 
@@ -31,6 +32,21 @@ public class NonAnimatedSprite : ISprite
 
     public void SetDirection(SpriteDirection direction)
     {
+        switch (direction)
+        {
+            case SpriteDirection.Right:
+                rotation = MathHelper.PiOver2;
+                break;
+            case SpriteDirection.Down:
+                rotation = MathHelper.Pi;
+                break;
+            case SpriteDirection.Left:
+                rotation = -MathHelper.PiOver2;
+                break;
+            default:
+                rotation = 0f;
+                break;
+        }
     }
 
     public void Reset()
@@ -39,9 +55,15 @@ public class NonAnimatedSprite : ISprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, SourceRectangle.Width * 4, SourceRectangle.Height * 4);
+        // Rotate around the middle of the sprite instead of its top-left corner
+        Vector2 origin = new Vector2(SourceRectangle.Width / 2f, SourceRectangle.Height / 2f);
+        Rectangle destinationRectangle = new Rectangle((int)(position.X + Size.X / 2),
+        (int)(position.Y + Size.Y / 2),
+        SourceRectangle.Width * 4,
+        SourceRectangle.Height * 4);
 
-        Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, SourceRectangle, Color.White);
+        Core.SpriteBatch.Draw(SpriteTexture, destinationRectangle, SourceRectangle, 
+        Color.White, rotation, origin, SpriteEffects.None, 0f);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, Vector2 scale)

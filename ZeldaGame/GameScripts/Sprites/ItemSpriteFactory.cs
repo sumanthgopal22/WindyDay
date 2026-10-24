@@ -123,7 +123,7 @@ public class ItemSpriteFactory
         // Return the wooden arrow sprite
         return new NonAnimatedSprite(items, woodenArrowSourceRectangle);
     }
-
+    
     public ISprite CreateBlueCandleSprite()
     {
         // Extract the blue candle frame from the spritesheet

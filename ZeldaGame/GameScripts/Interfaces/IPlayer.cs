@@ -20,6 +20,8 @@ public interface IPlayer
 
     void UseItem();
 
+    void UseItem2();
+
     void SwingSword();
 
     void Teleport(Vector2 targetPosition);
