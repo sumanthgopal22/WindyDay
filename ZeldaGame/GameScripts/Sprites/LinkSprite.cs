@@ -8,22 +8,44 @@ namespace ZeldaGame;
 
 public class LinkSprite : IActionSprite
 {
-    private Texture2D spriteTexture;
+    private readonly Texture2D spriteTexture;
+    private readonly Rectangle[][] walkingFrames;
+    private readonly Rectangle[] itemUseFrames;
+    private readonly Rectangle[] swordSwingFrames;
+    private readonly Vector2[] swordSwingOffsets;
+    private readonly float spriteScale;
+    private readonly double frameDuration;
+    private readonly double actionDuration;
     private double elapsedTime;
     private double actionElapsedTime;
     private int currentFrame;
     private SpriteDirection currentDirection;
     private LinkSpriteAction? currentAction;
 
-    private const double ActionDuration = 0.25;
-
     public Vector2 Size { get;}
     public bool IsActionPlaying => currentAction.HasValue;
 
-    public LinkSprite(Texture2D spriteTexture)
+    public LinkSprite(
+        Texture2D spriteTexture,
+        Rectangle[][] walkingFrames,
+        Rectangle[] itemUseFrames,
+        Rectangle[] swordSwingFrames,
+        Vector2[] swordSwingOffsets,
+        float spriteScale,
+        double frameDuration,
+        double actionDuration)
     {
         this.spriteTexture = spriteTexture;
-        Size = new Vector2(58, 64);
+        this.walkingFrames = walkingFrames;
+        this.itemUseFrames = itemUseFrames;
+        this.swordSwingFrames = swordSwingFrames;
+        this.swordSwingOffsets = swordSwingOffsets;
+        this.spriteScale = spriteScale;
+        this.frameDuration = frameDuration;
+        this.actionDuration = actionDuration;
+        Size = new Vector2(
+            walkingFrames[0][0].Width * spriteScale,
+            walkingFrames[0][0].Height * spriteScale);
         elapsedTime = 0;
         currentFrame = 0;
     }
@@ -49,93 +71,38 @@ public class LinkSprite : IActionSprite
 
     public void Draw(GameTime gameTime, Vector2 position)
     {
-        Rectangle sourceRectangle;
-
-        int x = currentDirection switch
+        int directionIndex = GetDirectionIndex(currentDirection);
+        Rectangle sourceRectangle = currentAction switch
         {
-            SpriteDirection.Down => 0,
-            SpriteDirection.Left => 58,
-            SpriteDirection.Up => 114,
-            SpriteDirection.Right => 174,
-            _ => 0
+            LinkSpriteAction.SwingSword => swordSwingFrames[directionIndex],
+            LinkSpriteAction.UseItem => itemUseFrames[directionIndex],
+            _ => walkingFrames[directionIndex][currentFrame]
         };
 
-        if (currentAction.HasValue)
-        {
-            if (currentAction.Value == LinkSpriteAction.SwingSword)
-            {
-                switch (currentDirection)
-                {
-                    case SpriteDirection.Left:
-                        sourceRectangle = new Rectangle(x-22, 174, 64, 32);
-                        break;
-                    case SpriteDirection.Right:
-                        sourceRectangle = new Rectangle(x-22, 174, 64, 32);
-                        break;
-                    default:
-                        sourceRectangle = new Rectangle(x, 160, 29, 58);
-                        break;
-                }
-            }
-            else if (currentAction.Value == LinkSpriteAction.UseItem)
-            {
-                switch (currentDirection)
-                {
-                    case SpriteDirection.Left:
-                        sourceRectangle = new Rectangle(58, 116, 29, 30);
-                        break;
-                    case SpriteDirection.Right:
-                        sourceRectangle = new Rectangle(173, 116, 30, 30);
-                        break;
-                    case SpriteDirection.Up:
-                        sourceRectangle = new Rectangle(116, 116, 31, 31);
-                        break;
-                    default:
-                        sourceRectangle = new Rectangle(0, 116, 31, 30);
-                        break;
-                }
-            }
-            else
-            {
-                sourceRectangle = new Rectangle(x, 116, 29, 32);
-            }
-        }
-        else
-        {
-            switch (currentDirection)
-            {
-                case SpriteDirection.Down:
-                    sourceRectangle = new Rectangle(0, currentFrame == 0 ? 0 : 58, 29, 32);
-                    break;
-                case SpriteDirection.Up:
-                    sourceRectangle = new Rectangle(116, currentFrame == 0 ? 0 : 58, 29, 32);
-                    break;
-                case SpriteDirection.Left:
-                    sourceRectangle = new Rectangle(58, currentFrame == 0 ? 0 : 58, 29, 32);
-                    break;
-                case SpriteDirection.Right:
-                    sourceRectangle = new Rectangle(174, currentFrame == 0 ? 58 : 0, 29, 32);
-                    break;
-                default:
-                    sourceRectangle = new Rectangle(0, 0, 29, 32);
-                    break;
-            }
-        }
-
-        Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, sourceRectangle.Width * 2, sourceRectangle.Height * 2);
+        Rectangle destinationRectangle = new Rectangle(
+            (int)position.X,
+            (int)position.Y,
+            (int)(sourceRectangle.Width * spriteScale),
+            (int)(sourceRectangle.Height * spriteScale));
         if (currentAction.HasValue && currentAction.Value == LinkSpriteAction.SwingSword)
         {
-            if (currentDirection == SpriteDirection.Left || currentDirection == SpriteDirection.Right)
-            {
-                destinationRectangle.X += currentDirection == SpriteDirection.Left ? -62 : -16;
-            }
-            else if (currentDirection == SpriteDirection.Up || currentDirection == SpriteDirection.Down)
-            {
-                destinationRectangle.Y += currentDirection == SpriteDirection.Up ? -50 : -2;
-            }
+            Vector2 offset = swordSwingOffsets[directionIndex];
+            destinationRectangle.Offset((int)offset.X, (int)offset.Y);
         }
 
         Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
+    }
+
+    private static int GetDirectionIndex(SpriteDirection direction)
+    {
+        return direction switch
+        {
+            SpriteDirection.Down => 0,
+            SpriteDirection.Up => 1,
+            SpriteDirection.Left => 2,
+            SpriteDirection.Right => 3,
+            _ => 0
+        };
     }
 
     public void Update(GameTime gameTime)
@@ -143,7 +110,7 @@ public class LinkSprite : IActionSprite
         if (currentAction.HasValue)
         {
             actionElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
-            if (actionElapsedTime >= ActionDuration)
+            if (actionElapsedTime >= actionDuration)
             {
                 currentAction = null;
                 actionElapsedTime = 0;
@@ -154,7 +121,6 @@ public class LinkSprite : IActionSprite
             return;
         }
 
-        double frameDuration = 0.2;
         elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
 
         if (elapsedTime > frameDuration)

@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿// File: Tilemapping/Tilemap.cs
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
-using System.Numerics;
 using System.Xml;
 using System.Xml.Linq;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -14,6 +14,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
     {
         private readonly Tileset tileset;
         private readonly int[] tiles;
+        private readonly TileBlock[] blocks; // Parallel array for collision block objects
 
         public int Rows { get; }
         public int Columns { get; }
@@ -30,6 +31,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
             Count = Columns * Rows;
             Scale = Vector2.One;
             tiles = new int[Count];
+            blocks = new TileBlock[Count];
         }
 
         public void SetTile(int index, int tilesetID)
@@ -54,6 +56,14 @@ namespace ZeldaGame.GameScripts.Tilemapping
             return GetTile(index);
         }
 
+        public TileBlock GetBlock(int index) => blocks[index];
+
+        public TileBlock GetBlock(int col, int row)
+        {
+            int index = row * Columns + col;
+            return GetBlock(index);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < Count; i++)
@@ -67,6 +77,16 @@ namespace ZeldaGame.GameScripts.Tilemapping
                 Vector2 pos = new Vector2(x * TileWidth, y * TileHeight);
                 tile.Draw(spriteBatch, pos, Color.White, Scale);
             }
+        }
+
+        // A tile is only passable (non-collidable) if it matches specific floor numbers
+        private static bool IsTileCollidable(int tilesetID)
+        {
+            if (tilesetID == 1216 || tilesetID == 1217 || tilesetID == 1248 || tilesetID == 1249)
+            {
+                return false; // nonCollidableObject (Passable floor)
+            }
+            return true; // collidableObject (Walls, barriers, etc.)
         }
 
         public static Tilemap FromFile(ContentManager content, string filename)
@@ -115,13 +135,23 @@ namespace ZeldaGame.GameScripts.Tilemapping
                         {
                             int tilesetIndex = int.Parse(columns[column]);
 
+                            // Set rendering tile ID[cite: 1]
                             tilemap.SetTile(column, row, tilesetIndex);
+
+                            // Create and map the corresponding collision TileBlock object once on load
+                            Vector2 pos = new Vector2(column * tilemap.TileWidth, row * tilemap.TileHeight);
+                            bool collidable = IsTileCollidable(tilesetIndex);
+
+                            TileBlock block = new TileBlock(pos, (int)tilemap.TileWidth, (int)tilemap.TileHeight, tilesetIndex, collidable);
+
+                            int index = row * columnCount + column;
+                            tilemap.blocks[index] = block;
                         }
                     }
 
                     return tilemap;
                 }
             }
-        } 
+        }
     }
 }
