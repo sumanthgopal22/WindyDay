@@ -1,1 +1,4 @@
-<Solution />
+<Solution>
+  <Project Path="MonoGameLibrary/MonoGameLibrary.csproj" />
+  <Project Path="ZeldaGame/ZeldaGame.csproj" />
+</Solution>
