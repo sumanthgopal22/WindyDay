@@ -27,6 +27,8 @@ public class Player : IPlayer
     private Boomerang activeBoomerang;
     private Arrow activeArrow;
     private Bomb bomb;
+    private IItem heldItem;
+
 
     public void MoveRight()
     {
@@ -114,6 +116,18 @@ public class Player : IPlayer
         }
 
         ChangeState(new UsingItemLinkState(this));
+    }
+
+    public void PickUpItem(IItem item)
+    {
+        heldItem = item;
+        ChangeState(new PickingUpItemLinkState(this));
+        sprite.PlayAction(LinkSpriteAction.PickUpItem);
+    }
+
+    public void DropHeldItem()
+    {
+        heldItem = null;
     }
 
     // Matches the original Zelda
@@ -229,6 +243,17 @@ public class Player : IPlayer
     public void Draw(GameTime gameTime)
     {
         sprite.Draw(gameTime, position);
+
+        if (heldItem != null)
+        {
+            //Positions item over his head
+            float itemX = position.X + (sprite.Size.X - heldItem.Size.X) / 2;
+            float itemY = position.Y - heldItem.Size.Y;
+
+            heldItem.Position = new Vector2(itemX, itemY);
+            heldItem.Draw(gameTime);
+        }
+
     }
 
     public void ChangeState(IState state)

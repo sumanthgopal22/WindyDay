@@ -13,9 +13,11 @@ public class LinkSprite : IActionSprite
     private readonly Rectangle[] itemUseFrames;
     private readonly Rectangle[] swordSwingFrames;
     private readonly Vector2[] swordSwingOffsets;
+    private readonly Rectangle pickedUpItemFrame;
     private readonly float spriteScale;
     private readonly double frameDuration;
     private readonly double actionDuration;
+    private readonly double pickUpDuration;
     private double elapsedTime;
     private double actionElapsedTime;
     private int currentFrame;
@@ -31,18 +33,22 @@ public class LinkSprite : IActionSprite
         Rectangle[] itemUseFrames,
         Rectangle[] swordSwingFrames,
         Vector2[] swordSwingOffsets,
+        Rectangle pickedUpItemFrame,
         float spriteScale,
         double frameDuration,
-        double actionDuration)
+        double actionDuration,
+        double pickUpDuration)
     {
         this.spriteTexture = spriteTexture;
         this.walkingFrames = walkingFrames;
         this.itemUseFrames = itemUseFrames;
         this.swordSwingFrames = swordSwingFrames;
         this.swordSwingOffsets = swordSwingOffsets;
+        this.pickedUpItemFrame = pickedUpItemFrame;
         this.spriteScale = spriteScale;
         this.frameDuration = frameDuration;
         this.actionDuration = actionDuration;
+        this.pickUpDuration = pickUpDuration;
         Size = new Vector2(
             walkingFrames[0][0].Width * spriteScale,
             walkingFrames[0][0].Height * spriteScale);
@@ -69,6 +75,16 @@ public class LinkSprite : IActionSprite
         elapsedTime = 0;
     }
 
+    private double GetCurrentActionDuration()
+    {
+        if (currentAction == LinkSpriteAction.PickUpItem)
+        {
+            return pickUpDuration;
+        }
+
+        return actionDuration;
+    }
+
     public void Draw(GameTime gameTime, Vector2 position)
     {
         int directionIndex = GetDirectionIndex(currentDirection);
@@ -76,6 +92,7 @@ public class LinkSprite : IActionSprite
         {
             LinkSpriteAction.SwingSword => swordSwingFrames[directionIndex],
             LinkSpriteAction.UseItem => itemUseFrames[directionIndex],
+            LinkSpriteAction.PickUpItem => pickedUpItemFrame,
             _ => walkingFrames[directionIndex][currentFrame]
         };
 
@@ -92,7 +109,7 @@ public class LinkSprite : IActionSprite
 
         //Mirror link
         SpriteEffects flip = SpriteEffects.None;
-        if (currentDirection == SpriteDirection.Left)
+        if (currentDirection == SpriteDirection.Left && currentAction != LinkSpriteAction.PickUpItem)
         {
             flip = SpriteEffects.FlipHorizontally;
         }
@@ -125,7 +142,7 @@ public class LinkSprite : IActionSprite
         if (currentAction.HasValue)
         {
             actionElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
-            if (actionElapsedTime >= actionDuration)
+            if (actionElapsedTime >= GetCurrentActionDuration())
             {
                 currentAction = null;
                 actionElapsedTime = 0;

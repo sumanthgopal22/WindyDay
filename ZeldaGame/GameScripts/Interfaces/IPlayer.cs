@@ -21,6 +21,9 @@ public interface IPlayer : ICollidable
     void MoveDown();
 
     void UseItem(WeaponType weaponType);
+    void PickUpItem(IItem item);
+    void DropHeldItem();
+
 
     void SwingSword();
     void Teleport(Vector2 targetPosition);
