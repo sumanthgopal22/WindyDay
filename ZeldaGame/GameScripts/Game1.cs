@@ -54,7 +54,7 @@ public class Game1 : Core
         keyboardController.RegisterPressCommand(Keys.N, new SwingSwordCommand(Player));
         keyboardController.RegisterPressCommand(Keys.D1, new UseItemCommand(Player));
         keyboardController.RegisterPressCommand(Keys.D2, new UseItem2Command(Player));
-        keyboardController.RegisterPressCommand(Keys.D3, new UseItemCommand(Player));
+        keyboardController.RegisterPressCommand(Keys.D3, new UseItem3Command(Player));
         keyboardController.RegisterPressCommand(Keys.D4, new UseItemCommand(Player));
 
         // Arrow key controls
