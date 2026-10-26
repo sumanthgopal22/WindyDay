@@ -33,6 +33,9 @@ public class Game1 : Core
 
     protected override void Initialize()
     {
+         // Initialize player //
+        Player = new Player();
+
         // Initialize screens
         MainMenuScreen = new MainMenuScreen(this);
         GameplayScreen = new GameplayScreen(this);
@@ -40,9 +43,6 @@ public class Game1 : Core
 
         // Initialize state machine
         GameStateMachine = new GameStateMachine(this);
-
-        // Initialize player //
-        Player = new Player();
         
         //Keyboard controls for Link
         KeyboardController keyboardController = new KeyboardController();
