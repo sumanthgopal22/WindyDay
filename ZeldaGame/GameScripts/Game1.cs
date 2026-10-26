@@ -27,14 +27,7 @@ public class Game1 : Core
 
     // ===================================================================================
 
-    // The game is laid out at the NES screen size times 4 (256x176 * 4).
-    // The window can be a different size; Draw scales the picture to fit it.
-    public const int GameWidth = 1024;
-    public const int GameHeight = 704;
-    private const int WindowWidth = 768;
-    private const int WindowHeight = 528;
-
-    public Game1() : base("Sprint 0 Game", WindowWidth, WindowHeight, false)
+    public Game1() : base("Sprint 0 Game", 1024, 704, false)
     {
     }
 
@@ -105,9 +98,7 @@ public class Game1 : Core
     {
         GraphicsDevice.Clear(new Color(147, 187, 236));
         
-        // Shrink the 1024x704 game down to the window size
-        Matrix scale = Matrix.CreateScale((float)WindowWidth / GameWidth);
-        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: scale);
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         CurrentScreen.Draw(SpriteBatch, gameTime);
 

@@ -62,7 +62,7 @@ public class Arrow : IProjectile
     public void Update(GameTime gameTime)
     {
         position += velocity;
-        if (position.Y >= Game1.GameHeight || position.X >= Game1.GameWidth || position.X < 0 || position.Y < 0)
+        if (position.Y >= Core.Instance.Window.ClientBounds.Height || position.X >= Core.Instance.Window.ClientBounds.Width || position.X < 0 || position.Y < 0)
         {
             hasHitWall = true;
         }

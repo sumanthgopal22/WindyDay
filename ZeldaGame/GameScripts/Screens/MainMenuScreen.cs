@@ -143,7 +143,7 @@ namespace ZeldaGame
 
             spriteBatch.Draw(
                 _background,
-                new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight), // game size, Game1 scales it to the window
+                spriteBatch.GraphicsDevice.Viewport.Bounds,
                 Color.White
             );
         }

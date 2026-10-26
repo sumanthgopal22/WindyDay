@@ -97,7 +97,7 @@ namespace ZeldaGame.GameScripts.Screens
             LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
 
-            Rectangle screenBounds = new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight);
+            Rectangle screenBounds = device.PresentationParameters.Bounds;
 
             RoomBounds = new Rectangle(
                 (int)Tilemap.TileWidth,
