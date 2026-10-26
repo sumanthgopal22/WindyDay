@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoGameLibrary;
 
 namespace ZeldaGame;
 
@@ -37,6 +38,21 @@ public class FairyItem : IItem
     {
         // Autonomous item movement
         Position += velocity;
+
+        // Bounce within game window bounds
+        int minX = 64, maxX = Core.Instance.Window.ClientBounds.Width - 64 - (int)Size.X;
+        int minY = 64, maxY = Core.Instance.Window.ClientBounds.Height - 64 - (int)Size.Y;
+
+        if (Position.X <= minX || Position.X >= maxX)
+        {
+            velocity.X = -velocity.X;
+            Position = new Vector2(MathHelper.Clamp(Position.X, minX, maxX), Position.Y);
+        }
+        if (Position.Y <= minY || Position.Y >= maxY)
+        {
+            velocity.Y = -velocity.Y;
+            Position = new Vector2(Position.X, MathHelper.Clamp(Position.Y, minY, maxY));
+        }
 
         // Update item animation
         sprite.Update(gameTime);

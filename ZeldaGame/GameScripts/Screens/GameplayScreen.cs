@@ -304,6 +304,18 @@ namespace ZeldaGame.GameScripts.Screens
                 }
             }
 
+            // Items vs. Blocks (for autonomous items like the Fairy)
+            foreach (IItem item in entities.Items)
+            {
+                foreach (TileBlock block in Tilemap.Blocks)
+                {
+                    if (CollisionDetector.CheckCollision(item, block, out CollisionSide side, out Rectangle overlap))
+                    {
+                        ItemBlockCollisionHandler.Handle(item, block, side, overlap);
+                    }
+                }
+            }
+
             // Link vs. Enemies
             // Enemies vs. Blocks
             // Projectiles vs. Enemies
