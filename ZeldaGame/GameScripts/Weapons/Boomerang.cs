@@ -1,9 +1,10 @@
 using Microsoft.Xna.Framework;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
 //Goriya and Link both use this class
-public class Boomerang : IGameObject
+public class Boomerang : IGameObject, ICollidable, IProjectile
 {
     private ISprite boomerangSprite;
     private Vector2 position;
@@ -14,14 +15,34 @@ public class Boomerang : IGameObject
     private bool isComingBack = false;
     // True once the boomerang has made it back to where it was thrown from
     public bool HasReturned { get; private set; } = false;
+    public bool isHostile { get; }
 
-    public Boomerang(Vector2 startPosition, Vector2 velocity, int stepsBeforeComingBack = 30)
+    public bool IsActive => !HasReturned;
+
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)boomerangSprite.Size.X, (int)boomerangSprite.Size.Y);
+
+    public Boomerang(Vector2 startPosition, Vector2 velocity, int stepsBeforeComingBack = 30, bool isHostile = false)
     {
         this.startPosition = startPosition;
         this.velocity = velocity;
         this.stepsBeforeComingBack = stepsBeforeComingBack;
+        this.isHostile = isHostile;
         position = startPosition;
         boomerangSprite = ItemSpriteFactory.Instance.CreateThrownBoomerangSprite();
+    }
+
+    public void TriggerReturn()
+    {
+        isComingBack = true;
+        stepsTaken = 0;
+    }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            TriggerReturn();
+        }
     }
 
     public void Update(GameTime gameTime)

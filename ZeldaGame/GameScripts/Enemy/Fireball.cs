@@ -8,6 +8,7 @@ public class Fireball : IGameObject
     private Vector2 position;
     private Vector2 velocity; // how many pixels the fireball moves each frame
     public double framesAlive;
+    public event System.Action<IProjectile> ProjectileSpawned;
 
     public Fireball(Vector2 startPosition, Vector2 velocity)
     {

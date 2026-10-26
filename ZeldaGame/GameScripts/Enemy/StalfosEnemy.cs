@@ -11,6 +11,7 @@ public class StalfosEnemy : IEnemy
     private int direction = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
     private Random random = new Random();
+    public event Action<IProjectile> ProjectileSpawned;
 
     public StalfosEnemy(Vector2 startPosition)
     {

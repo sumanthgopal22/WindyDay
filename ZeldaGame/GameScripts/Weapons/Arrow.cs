@@ -1,17 +1,24 @@
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Sprites;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
 //Goriya and Link both use this class
-public class Arrow : IGameObject
+public class Arrow : IGameObject, ICollidable, IProjectile
 {
     private ISprite arrowSprite;
     private Vector2 position;
     private Vector2 startPosition;
     private Vector2 velocity;
     public bool hasHitWall = false;
+
+    public bool isHostile { get; }
+
+    public bool IsActive => !hasHitWall;
+
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)arrowSprite.Size.X, (int)arrowSprite.Size.Y);
 
     public Arrow(Vector2 startPosition, Vector2 velocity)
     {
@@ -42,6 +49,14 @@ public class Arrow : IGameObject
 
         }
 
+    }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            hasHitWall = true;
+        }
     }
 
     public void Update(GameTime gameTime)

@@ -10,6 +10,7 @@ public class KeeseEnemy : IEnemy
     private const int SideLength = 40; // how many steps Keese flies before picking a new direction
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up, 4 = up-right, 5 = down-right, 6 = down-left, 7 = up-left
     private int stepsTaken = 0;
+    public event Action<IProjectile> ProjectileSpawned;
     private Random random = new Random();
 
     public KeeseEnemy(Vector2 startPosition)

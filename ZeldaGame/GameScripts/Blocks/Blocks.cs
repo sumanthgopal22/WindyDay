@@ -12,7 +12,6 @@ public class Block : IBlock
     private int currentFrame;
     private double elapsedTime;
 
-
     public void LoadContent()
     {
         position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.25f;

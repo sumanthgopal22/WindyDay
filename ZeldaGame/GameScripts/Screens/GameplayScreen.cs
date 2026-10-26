@@ -16,6 +16,7 @@ namespace ZeldaGame.GameScripts.Screens
         {
             public List<IEnemy> Enemies { get; } = new();
             public List<IItem> Items { get; } = new();
+            public List<IProjectile> Projectiles { get; } = new();
             public List<Vector2> SpawnPositions { get; } = new();
         }
 
@@ -49,6 +50,15 @@ namespace ZeldaGame.GameScripts.Screens
             // Set default starting level to the first item in our array
             currentLevelIndex = 0;
             LevelFile = levelFiles[currentLevelIndex];
+
+            // Listen for spawned projectiles, route them to active room
+            game.Player.ProjectileSpawned += projectile =>
+            {
+                if (entitiesByRoom.TryGetValue(LevelFile, out RoomEntities entities))
+                {
+                    entities.Projectiles.Add(projectile);
+                }
+            };
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -56,6 +66,12 @@ namespace ZeldaGame.GameScripts.Screens
             Tilemap.Draw(spriteBatch);
 
             RoomEntities entities = entitiesByRoom[LevelFile];
+
+            foreach (IProjectile projectile in entities.Projectiles)
+            {
+                projectile.Draw(gameTime);
+            }
+
             foreach (IEnemy enemy in entities.Enemies)
             {
                 enemy.Draw(gameTime);
@@ -165,6 +181,13 @@ namespace ZeldaGame.GameScripts.Screens
         {
             IEnemy enemy = createEnemy(GetSpawnPosition(entities));
             enemy.LoadContent();
+
+            // Route projectiles created by this enemy to the room's projectile list
+            enemy.ProjectileSpawned += projectile =>
+            {
+                entities.Projectiles.Add(projectile);
+            };
+
             entities.Enemies.Add(enemy);
         }
 
@@ -228,9 +251,39 @@ namespace ZeldaGame.GameScripts.Screens
             return shuffled;
         }
 
+        private void DetectCollisions(RoomEntities entities)
+        {
+            // Link vs. Items
+            foreach (IItem item in entities.Items)
+            {
+                if (CollisionDetector.CheckCollision(game.Player, item, out CollisionSide side, out _))
+                {
+                    PlayerItemCollisionHandler.Handle(game.Player, item);
+                }
+            }
+
+            // Projectiles vs. Solid Tiles
+            foreach (IProjectile projectile in entities.Projectiles)
+            {
+                foreach (TileBlock block in Tilemap.Blocks)
+                {
+                    if (CollisionDetector.CheckCollision(projectile, block, out CollisionSide side, out _))
+                    {
+                        ProjectileBlockCollisionHandler.Handle(projectile, block, side);
+                    }
+                }
+            }
+
+            // Link vs. Blocks
+            // Link vs. Enemies
+            // Enemies vs. Blocks
+            // Projectiles vs. Enemies
+        }
+
         public void Update(GameTime gameTime)
         {
             RoomEntities entities = entitiesByRoom[LevelFile];
+
             foreach (IEnemy enemy in entities.Enemies)
             {
                 enemy.Update(gameTime);
@@ -240,6 +293,23 @@ namespace ZeldaGame.GameScripts.Screens
             {
                 item.Update(gameTime);
             }
+
+            // Update projectiles and remove spent ones
+            for (int i = entities.Projectiles.Count - 1; i >= 0; i--)
+            {
+                IProjectile projectile = entities.Projectiles[i];
+                projectile.Update(gameTime);
+                if (!projectile.IsActive)
+                {
+                    entities.Projectiles.RemoveAt(i);
+                }
+            }
+
+            // Run collision detection and resolution sweeps
+            DetectCollisions(entities);
+
+            // Prune collected items
+            entities.Items.RemoveAll(item => !item.IsActive);
 
             MouseState currentMouseState = Mouse.GetState();
 

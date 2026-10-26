@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Interfaces;
@@ -9,19 +10,23 @@ namespace ZeldaGame;
 
 public class Player : IPlayer
 {
+    public event Action<IProjectile> ProjectileSpawned;
+
     private IActionSprite sprite;
     private Vector2 position, movement;
     private LinkStateMachine stateMachine;
     public bool IsActionPlaying => sprite.IsActionPlaying;
-    public bool IsIdle {  get; set; }
+    public bool IsIdle { get; set; }
     public bool IsWalking { get; set; }
     public bool IsUsingItem { get; set; }
     public bool IsSwingingSword { get; set; }
 
-    SpriteDirection finalDirection;
-    Boomerang boomerang;
-    Arrow arrow;
-    Bomb bomb;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y);
+
+    private SpriteDirection finalDirection;
+    private Boomerang activeBoomerang;
+    private Arrow activeArrow;
+    private Bomb bomb;
 
     public void MoveRight()
     {
@@ -89,7 +94,7 @@ public class Player : IPlayer
 
     public void UseItem(WeaponType weaponType)
     {
-        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
+        if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive))
         {
             return;
         }
@@ -109,6 +114,7 @@ public class Player : IPlayer
         }
 
         ChangeState(new UsingItemLinkState(this));
+        sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     // Matches the original Zelda
@@ -117,60 +123,46 @@ public class Player : IPlayer
 
     public void BoomerangThrow()
     {
-        Vector2 velocity;
-        switch (finalDirection)
+        Vector2 velocity = finalDirection switch
         {
-            case SpriteDirection.Right:
-                velocity = new Vector2(BoomerangSpeed, 0);
-                break;  // right
-            case SpriteDirection.Down:
-                velocity = new Vector2(0, BoomerangSpeed);
-                break;  // down
-            case SpriteDirection.Left:
-                velocity = new Vector2(-BoomerangSpeed, 0);
-                break; // left
-            default:
-                velocity = new Vector2(0, -BoomerangSpeed);
-                break; // up
-        }
+            SpriteDirection.Right => new Vector2(BoomerangSpeed, 0),
+            SpriteDirection.Down  => new Vector2(0, BoomerangSpeed),
+            SpriteDirection.Left  => new Vector2(-BoomerangSpeed, 0),
+            _                     => new Vector2(0, -BoomerangSpeed)
+        };
 
-        // Start the boomerang (32x32 on screen) centered on Link
-        Vector2 throwPosition = position + sprite.Size / 2 - new Vector2(16, 16);
-
-        boomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut);
-
+        Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16);
+        activeBoomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: false);
+        ProjectileSpawned?.Invoke(activeBoomerang);
     }
 
     private const float ArrowSpeed = 4 * 4;
+
     public void FireArrow()
     {
-        Vector2 velocity;
-        switch (finalDirection)
+        Vector2 velocity = finalDirection switch
         {
-            case SpriteDirection.Right:
-                velocity = new Vector2(ArrowSpeed, 0);
-                break;  // right
-            case SpriteDirection.Down:
-                velocity = new Vector2(0, ArrowSpeed);
-                break;  // down
-            case SpriteDirection.Left:
-                velocity = new Vector2(-ArrowSpeed, 0);
-                break; // left
-            default:
-                velocity = new Vector2(0, -ArrowSpeed);
-                break; // up
-        }
+            SpriteDirection.Right => new Vector2(ArrowSpeed, 0),
+            SpriteDirection.Down  => new Vector2(0, ArrowSpeed),
+            SpriteDirection.Left  => new Vector2(-ArrowSpeed, 0),
+            _                     => new Vector2(0, -ArrowSpeed)
+        };
 
-        // Fire the arrow from the middle of Link
         Vector2 linkCenter = position + sprite.Size / 2;
-
-        arrow = new Arrow(linkCenter, velocity);
+        activeArrow = new Arrow(linkCenter, velocity);
+        ProjectileSpawned?.Invoke(activeArrow);
     }
 
     public void PlaceBomb()
     {
         Vector2 linkCenter = position + sprite.Size / 2;
         bomb = new Bomb(linkCenter);
+
+        // If Bomb implements IProjectile, route it into the room's collision pipeline
+        if (bomb is IProjectile projectile)
+        {
+            ProjectileSpawned?.Invoke(projectile);
+        }
     }
 
     public void SwingSword()
@@ -217,37 +209,6 @@ public class Player : IPlayer
     {
         stateMachine.Update(gameTime);
 
-         if (boomerang != null)
-        {
-            boomerang.Update(gameTime);
-
-            if (boomerang.HasReturned)
-            {
-                boomerang = null;
-            }
-        }
-
-        if (arrow != null)
-        {
-            arrow.Update(gameTime);
-
-            if (arrow.hasHitWall == true)
-            {
-                arrow = null;
-            }
-        }
-
-        if (bomb != null)
-        {
-            bomb.Update(gameTime);
-
-            if (bomb.hasExploded == true)
-            {
-                bomb = null;
-            }
-        }
-
-
         Vector2 nextPosition = position + movement;
         
         int windowWidth = Core.Instance.Window.ClientBounds.Width;
@@ -258,7 +219,6 @@ public class Player : IPlayer
 
         position = nextPosition;
 
-        // If idle, change to idle state
         if (movement == Vector2.Zero && IsWalking)
         {
             ChangeState(new IdleLinkState(this));
@@ -270,21 +230,6 @@ public class Player : IPlayer
     public void Draw(GameTime gameTime)
     {
         sprite.Draw(gameTime, position);
-
-        if (boomerang != null)
-        {
-            boomerang.Draw(gameTime);
-        }
-
-        if (arrow != null)
-        {
-            arrow.Draw(gameTime);
-        }
-
-        if (bomb != null)
-        {
-            bomb.Draw(gameTime);
-        }
     }
 
     public void ChangeState(IState state)
