@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Interfaces;
@@ -98,9 +97,11 @@ public class Player : IPlayer
         {
             case WeaponType.Boomerang:
                 BoomerangThrow();
+                sprite.PlayAction(LinkSpriteAction.UseItem);
                 break;
             case WeaponType.Arrow:
                 FireArrow();
+                sprite.PlayAction(LinkSpriteAction.UseItem);
                 break;
             case WeaponType.Bomb:
                 PlaceBomb();
@@ -108,7 +109,6 @@ public class Player : IPlayer
         }
 
         ChangeState(new UsingItemLinkState(this));
-        sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     // Matches the original Zelda

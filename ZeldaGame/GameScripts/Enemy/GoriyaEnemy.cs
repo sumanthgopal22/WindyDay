@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using MonoGameLibrary;
 using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;

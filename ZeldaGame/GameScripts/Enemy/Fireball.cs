@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using MonoGameLibrary;
 
 namespace ZeldaGame;
 

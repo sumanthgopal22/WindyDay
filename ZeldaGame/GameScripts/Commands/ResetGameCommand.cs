@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework;
-using MonoGameLibrary;
 using ZeldaGame.GameScripts.StateMachine.GameStates;
 
 namespace ZeldaGame;

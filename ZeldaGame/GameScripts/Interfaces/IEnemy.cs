@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-
 namespace ZeldaGame;
 
 public interface IEnemy : IGameObject

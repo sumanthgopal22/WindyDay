@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Numerics;
-using System.Threading;
 using ZeldaGame.GameScripts.Interfaces;
-using ZeldaGame.GameScripts.Screens;
 
 namespace ZeldaGame.GameScripts.StateMachine.GameStates
 {

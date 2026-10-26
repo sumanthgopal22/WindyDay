@@ -1,8 +1,4 @@
-using System.Reflection;
-using System.Timers;
 using Microsoft.Xna.Framework;
-using MonoGameLibrary;
-using ZeldaGame.GameScripts.Sprites;
 
 namespace ZeldaGame;
 
