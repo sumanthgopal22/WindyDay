@@ -216,6 +216,28 @@ namespace ZeldaGame.GameScripts.Screens
                     continue;
                 }
 
+                // Check against solid room blocks
+                Rectangle proposedBounds = new Rectangle((int)position.X, (int)position.Y, 32, 32);
+                bool insideSolidBlock = false;
+
+                if (Tilemap != null && Tilemap.Blocks != null)
+                {
+                    foreach (TileBlock block in Tilemap.Blocks)
+                    {
+                        if (block.IsCollidable && block.BoundingBox.Intersects(proposedBounds))
+                        {
+                            insideSolidBlock = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (insideSolidBlock)
+                {
+                    continue;
+                }
+
+                // Check against already spawned entity positions
                 bool overlaps = false;
                 foreach (Vector2 existingPosition in entities.SpawnPositions)
                 {
@@ -281,7 +303,7 @@ namespace ZeldaGame.GameScripts.Screens
                     PlayerBlockCollisionHandler.Handle(game.Player, block, side, overlap);
                 }
             }
-            
+
             // Link vs. Enemies
             // Enemies vs. Blocks
             // Projectiles vs. Enemies
