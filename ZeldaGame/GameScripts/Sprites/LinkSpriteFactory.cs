@@ -8,7 +8,7 @@ namespace ZeldaGame;
 public class LinkSpriteFactory
 {
     private Texture2D link;
-    private const float SpriteScale = 2f;
+    private const float SpriteScale = 4f;
     private const double FrameDuration = 0.2;
     private const double ActionDuration = 0.25;
 
@@ -25,34 +25,34 @@ public class LinkSpriteFactory
     {
         Rectangle[][] walkingFrames =
         [
-            [new Rectangle(0, 0, 29, 32), new Rectangle(0, 58, 29, 32)],
-            [new Rectangle(116, 0, 29, 32), new Rectangle(116, 58, 29, 32)],
-            [new Rectangle(58, 0, 29, 32), new Rectangle(58, 58, 29, 32)],
-            [new Rectangle(174, 58, 29, 32), new Rectangle(174, 0, 29, 32)]
+            [new Rectangle(1, 11, 16, 16), new Rectangle(18, 11, 16, 16)],
+            [new Rectangle(69, 11, 16, 16), new Rectangle(86, 11, 16, 16)],
+            [new Rectangle(35, 11, 16, 16), new Rectangle(52, 11, 16, 16)],
+            [new Rectangle(35, 11, 16, 16), new Rectangle(52, 11, 16, 16)]
         ];
 
         Rectangle[] itemUseFrames =
         [
-            new Rectangle(0, 116, 31, 30),
-            new Rectangle(116, 116, 31, 31),
-            new Rectangle(58, 116, 29, 30),
-            new Rectangle(173, 116, 30, 30)
+            new Rectangle(107, 11, 16, 16),
+            new Rectangle(141, 11, 16, 16),
+            new Rectangle(124, 11, 16, 16),
+            new Rectangle(124, 11, 16, 16)
         ];
 
         Rectangle[] swordSwingFrames =
         [
-            new Rectangle(0, 160, 29, 58),
-            new Rectangle(114, 160, 29, 58),
-            new Rectangle(36, 174, 64, 32),
-            new Rectangle(152, 174, 64, 32)
+            new Rectangle(18, 47, 16, 27),
+            new Rectangle(18, 97, 16, 28),
+            new Rectangle(18, 77, 27, 16),
+            new Rectangle(18, 77, 27, 16)
         ];
 
         Vector2[] swordSwingOffsets =
         [
-            new Vector2(0, -2),
-            new Vector2(0, -50),
-            new Vector2(-62, 0),
-            new Vector2(-16, 0)
+            new Vector2(0, 0),
+            new Vector2(0, -(28 - 16) * SpriteScale),
+            new Vector2(-(27 - 16) * SpriteScale, 0),
+            new Vector2(0, 0)
         ];
 
         return new LinkSprite(

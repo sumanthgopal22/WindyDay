@@ -90,7 +90,22 @@ public class LinkSprite : IActionSprite
             destinationRectangle.Offset((int)offset.X, (int)offset.Y);
         }
 
-        Core.SpriteBatch.Draw(spriteTexture, destinationRectangle, sourceRectangle, Color.White);
+        //Mirror link
+        SpriteEffects flip = SpriteEffects.None;
+        if (currentDirection == SpriteDirection.Left)
+        {
+            flip = SpriteEffects.FlipHorizontally;
+        }
+
+        Core.SpriteBatch.Draw(
+            spriteTexture,
+            destinationRectangle,
+            sourceRectangle,
+            Color.White,
+            rotation: 0f,          
+            origin: Vector2.Zero,  
+            effects: flip,         
+            layerDepth: 0f);       
     }
 
     private static int GetDirectionIndex(SpriteDirection direction)

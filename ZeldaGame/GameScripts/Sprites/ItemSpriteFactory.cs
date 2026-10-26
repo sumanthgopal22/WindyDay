@@ -15,7 +15,7 @@ public class ItemSpriteFactory
     public void LoadTextures()
     {
         // Load item spritesheet
-        items = Core.Content.Load<Texture2D>("spritesheets/zelda_items_weapons");
+        items = Core.Content.Load<Texture2D>("spritesheets/Items");
     }
 
     /* Animated Items */

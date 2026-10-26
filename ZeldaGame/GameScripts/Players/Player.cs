@@ -13,7 +13,6 @@ public class Player : IPlayer
     private IActionSprite sprite;
     private Vector2 position, movement;
     private LinkStateMachine stateMachine;
-
     public bool IsActionPlaying => sprite.IsActionPlaying;
     public bool IsIdle {  get; set; }
     public bool IsWalking { get; set; }
@@ -150,7 +149,8 @@ public class Player : IPlayer
                 break; // up
         }
 
-        Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16);
+        // Start the boomerang (32x32 on screen) centered on Link
+        Vector2 throwPosition = position + sprite.Size / 2 - new Vector2(16, 16);
 
         boomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut);
 

@@ -98,7 +98,8 @@ public class Game1 : Core
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(new Color(147, 187, 236));
-        SpriteBatch.Begin();
+        
+        SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         CurrentScreen.Draw(SpriteBatch, gameTime);
 
