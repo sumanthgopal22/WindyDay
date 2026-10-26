@@ -40,8 +40,8 @@ public class FairyItem : IItem
         Position += velocity;
 
         // Bounce within game window bounds
-        int minX = 64, maxX = Core.Instance.Window.ClientBounds.Width - 64 - (int)Size.X;
-        int minY = 64, maxY = Core.Instance.Window.ClientBounds.Height - 64 - (int)Size.Y;
+        int minX = 64, maxX = Game1.GameWidth - 64 - (int)Size.X;
+        int minY = 64, maxY = Game1.GameHeight - 64 - (int)Size.Y;
 
         if (Position.X <= minX || Position.X >= maxX)
         {

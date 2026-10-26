@@ -97,7 +97,7 @@ namespace ZeldaGame.GameScripts.Screens
             LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
 
-            Rectangle screenBounds = device.PresentationParameters.Bounds;
+            Rectangle screenBounds = new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight);
 
             RoomBounds = new Rectangle(
                 (int)Tilemap.TileWidth,
@@ -235,7 +235,7 @@ namespace ZeldaGame.GameScripts.Screens
         {
             if (Tilemap == null || Tilemap.Blocks == null)
             {
-                return new Vector2(Core.Instance.Window.ClientBounds.Width / 2f - 32, Core.Instance.Window.ClientBounds.Height / 2f - 32);
+                return new Vector2(Game1.GameWidth / 2f - 32, Game1.GameHeight / 2f - 32);
             }
 
             float pWidth = game.Player.BoundingBox.Width > 0 ? game.Player.BoundingBox.Width : 64f;
