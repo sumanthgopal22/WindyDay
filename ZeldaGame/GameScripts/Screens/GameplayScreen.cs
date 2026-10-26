@@ -274,6 +274,14 @@ namespace ZeldaGame.GameScripts.Screens
             }
 
             // Link vs. Blocks
+            foreach (TileBlock block in Tilemap.Blocks)
+            {
+                if (CollisionDetector.CheckCollision(game.Player, block, out CollisionSide side, out Rectangle overlap))
+                {
+                    PlayerBlockCollisionHandler.Handle(game.Player, block, side, overlap);
+                }
+            }
+            
             // Link vs. Enemies
             // Enemies vs. Blocks
             // Projectiles vs. Enemies
