@@ -18,12 +18,8 @@ public interface IPlayer
 
     void MoveDown();
 
-    void UseItem();
+    void UseItem(WeaponType weaponType);
 
-    void UseItem2();
-
-    void UseItem3();
-    
     void SwingSword();
 
     void Teleport(Vector2 targetPosition);

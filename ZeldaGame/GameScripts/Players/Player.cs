@@ -88,42 +88,27 @@ public class Player : IPlayer
         sprite.SetDirection(finalDirection);
     }
 
-    public void UseItem()
+    public void UseItem(WeaponType weaponType)
     {
         if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
         {
             return;
         }
-
-        BoomerangThrow();
+        switch (weaponType)
+        {
+            case WeaponType.Boomerang:
+                BoomerangThrow();
+                break;
+            case WeaponType.Arrow:
+                FireArrow();
+                break;
+            case WeaponType.Bomb:
+                PlaceBomb();
+                break;
+        }
 
         ChangeState(new UsingItemLinkState(this));
         sprite.PlayAction(LinkSpriteAction.UseItem);
-    }
-
-    public void UseItem2()
-    {
-        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
-        {
-            return;
-        }
-
-        FireArrow();
-
-        ChangeState(new UsingItemLinkState(this));
-        sprite.PlayAction(LinkSpriteAction.UseItem);
-    }
-
-    public void UseItem3()
-    {
-        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
-        {
-            return;
-        }
-
-        PlaceBomb();
-
-        ChangeState(new UsingItemLinkState(this));
     }
 
     // Matches the original Zelda
