@@ -11,6 +11,7 @@ public class LinkSpriteFactory
     private const float SpriteScale = 4f;
     private const double FrameDuration = 0.2;
     private const double ActionDuration = 0.25;
+    private const double PickUpDuration = 1.0;
 
     public static LinkSpriteFactory Instance { get; } = new LinkSpriteFactory();
 
@@ -55,14 +56,19 @@ public class LinkSpriteFactory
             new Vector2(0, 0)
         ];
 
+        //Stand alone, for when he picks things up
+        Rectangle pickUpItemFrame = new Rectangle(230, 11, 16, 16);
+
         return new LinkSprite(
             link,
             walkingFrames,
             itemUseFrames,
             swordSwingFrames,
             swordSwingOffsets,
+            pickUpItemFrame,
             SpriteScale,
             FrameDuration,
-            ActionDuration);
+            ActionDuration,
+            PickUpDuration);
     }
 }

@@ -7,7 +7,7 @@ public class CompassItem : IItem
     private readonly ISprite sprite;
     public Vector2 Position { get; set; }
     public Vector2 Size => sprite.Size;
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
     public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
 
     public CompassItem(ISprite sprite, Vector2 initialPosition)

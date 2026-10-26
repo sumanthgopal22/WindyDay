@@ -3,6 +3,7 @@
     public enum LinkSpriteAction
     {
         UseItem,
-        SwingSword
+        SwingSword,
+        PickUpItem
     }
 }
