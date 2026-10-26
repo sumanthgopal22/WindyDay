@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using ZeldaGame.GameScripts.Sprites;
+using ZeldaGame.GameScripts.Tilemapping;
 using System;
 
 namespace ZeldaGame;
@@ -12,6 +13,7 @@ public class GoriyaEnemy : IEnemy
     private ISprite goriyaLeftSprite;
     private ISprite goriyaRightSprite;
     private Vector2 position;
+    private Vector2 previousPosition;
     private Random random = new Random();
     private const int SideLength = 80; // pixels per side of the square basically the max amount of steps sprite can take before changing directions
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
@@ -82,7 +84,13 @@ public class GoriyaEnemy : IEnemy
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
-        
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            position = previousPosition;
+
+            this.side = random.Next(4);
+            stepsTaken = 0;
+        }
     }
     
     public void LoadContent()
@@ -111,6 +119,8 @@ public class GoriyaEnemy : IEnemy
                 return;
             }
         }
+
+        previousPosition = position;
 
         switch (side)
         {

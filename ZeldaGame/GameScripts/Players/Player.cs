@@ -188,15 +188,9 @@ public class Player : IPlayer
         sprite.PlayAction(LinkSpriteAction.SwingSword);
     }
 
-    public void Teleport(Vector2 targetPosition)
+    public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
     {
-        int windowWidth = Core.Instance.Window.ClientBounds.Width;
-        int windowHeight = Core.Instance.Window.ClientBounds.Height;
-
-        targetPosition.X = MathHelper.Clamp(targetPosition.X, 0, windowWidth - sprite.Size.X);
-        targetPosition.Y = MathHelper.Clamp(targetPosition.Y, 0, windowHeight - sprite.Size.Y);
-
-        position = targetPosition;
+        
     }
 
     public void UpdateSprite(GameTime gameTime)
@@ -211,7 +205,7 @@ public class Player : IPlayer
 
     public void LoadContent()
     {
-        position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.5f;
+        position = new Vector2(Game1.GameWidth, Game1.GameHeight) * 0.5f;
         sprite = LinkSpriteFactory.Instance.CreateLinkSprite();
         stateMachine = new LinkStateMachine(this);
         IsIdle = true;
@@ -223,8 +217,8 @@ public class Player : IPlayer
 
         Vector2 nextPosition = position + movement;
         
-        int windowWidth = Core.Instance.Window.ClientBounds.Width;
-        int windowHeight = Core.Instance.Window.ClientBounds.Height;
+        int windowWidth = Game1.GameWidth;
+        int windowHeight = Game1.GameHeight;
 
         nextPosition.X = MathHelper.Clamp(nextPosition.X, 0, windowWidth - sprite.Size.X);
         nextPosition.Y = MathHelper.Clamp(nextPosition.Y, 0, windowHeight - sprite.Size.Y);

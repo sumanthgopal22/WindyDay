@@ -95,7 +95,7 @@ namespace ZeldaGame.GameScripts.Screens
             LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
 
-            Rectangle screenBounds = device.PresentationParameters.Bounds;
+            Rectangle screenBounds = new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight);
 
             RoomBounds = new Rectangle(
                 (int)Tilemap.TileWidth,
@@ -215,7 +215,6 @@ namespace ZeldaGame.GameScripts.Screens
                 {
                     continue;
                 }
-
                 bool overlaps = false;
                 foreach (Vector2 existingPosition in entities.SpawnPositions)
                 {
@@ -275,6 +274,14 @@ namespace ZeldaGame.GameScripts.Screens
 
             // Link vs. Blocks
             // Link vs. Enemies
+            foreach (IEnemy enemy in entities.Enemies)
+            {
+                if (CollisionDetector.CheckCollision(game.Player, enemy, out CollisionSide side, out _))
+                {
+                    PlayerEnemyCollisionHandler.Handle(game.Player, enemy, side);
+                }
+                
+            }
             
             // Enemies vs. Blocks
             foreach (IEnemy enemy in entities.Enemies)

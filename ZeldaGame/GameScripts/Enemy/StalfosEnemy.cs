@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
@@ -7,8 +8,9 @@ public class StalfosEnemy : IEnemy
 {
     private ISprite stalfosSprite;
     private Vector2 position;
+    private Vector2 previousPosition;
     private const int StepsBeforeTurning = 60; // how many steps (pixels) Stalfos walks before picking a new direction
-    private int direction = 0; // 0 = right, 1 = down, 2 = left, 3 = up
+    private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
     private Random random = new Random();
     public event Action<IProjectile> ProjectileSpawned;
@@ -47,7 +49,13 @@ public class StalfosEnemy : IEnemy
     
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
-        
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            position = previousPosition;
+
+            this.side = random.Next(4);
+            stepsTaken = 0;
+        }
     }
 
     public void LoadContent()
@@ -57,7 +65,9 @@ public class StalfosEnemy : IEnemy
 
     public void Update(GameTime gameTime)
     {
-        switch (direction)
+        previousPosition = position;
+
+        switch (side)
         {
             case 0: 
                 MoveRight(); 
@@ -78,7 +88,7 @@ public class StalfosEnemy : IEnemy
         if (stepsTaken >= StepsBeforeTurning)
         {
             stepsTaken = 0;
-            direction = random.Next(4);
+            side = random.Next(4);
         }
 
         stalfosSprite.Update(gameTime);

@@ -26,11 +26,12 @@ public interface IPlayer : ICollidable
 
 
     void SwingSword();
-    void Teleport(Vector2 targetPosition);
     void UpdateSprite(GameTime gameTime);
     void ResetSprite();
     void LoadContent();
     void Draw(GameTime gameTime);
     void Update(GameTime gameTime);
     void ChangeState(IState state);
+
+    void OnCollideWithEnemy(ICollidable target, CollisionSide side);
 }
