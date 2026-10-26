@@ -187,7 +187,7 @@ namespace ZeldaGame.GameScripts.Screens
             {
                 entities.Projectiles.Add(projectile);
             };
-            
+
             entities.Enemies.Add(enemy);
         }
 
@@ -251,9 +251,48 @@ namespace ZeldaGame.GameScripts.Screens
             return shuffled;
         }
 
+        private void DetectCollisions(RoomEntities entities)
+        {
+            // Link vs. Items
+            foreach (IItem item in entities.Items)
+            {
+                if (CollisionDetector.CheckCollision(game.Player, item, out CollisionSide side, out _))
+                {
+                    PlayerItemCollisionHandler.Handle(game.Player, item);
+                }
+            }
+
+            // Projectiles vs. Solid Tiles
+            foreach (IProjectile projectile in entities.Projectiles)
+            {
+                foreach (TileBlock block in Tilemap.Blocks)
+                {
+                    if (CollisionDetector.CheckCollision(projectile, block, out CollisionSide side, out _))
+                    {
+                        ProjectileBlockCollisionHandler.Handle(projectile, block, side);
+                    }
+                }
+            }
+
+            // Link vs. Blocks
+            // Link vs. Enemies
+            // Enemies vs. Blocks
+            // Projectiles vs. Enemies
+        }
+
         public void Update(GameTime gameTime)
         {
             RoomEntities entities = entitiesByRoom[LevelFile];
+
+            foreach (IEnemy enemy in entities.Enemies)
+            {
+                enemy.Update(gameTime);
+            }
+
+            foreach (IItem item in entities.Items)
+            {
+                item.Update(gameTime);
+            }
 
             // Update projectiles and remove spent ones
             for (int i = entities.Projectiles.Count - 1; i >= 0; i--)
@@ -266,15 +305,11 @@ namespace ZeldaGame.GameScripts.Screens
                 }
             }
 
-            foreach (IEnemy enemy in entities.Enemies)
-            {
-                enemy.Update(gameTime);
-            }
+            // Run collision detection and resolution sweeps
+            DetectCollisions(entities);
 
-            foreach (IItem item in entities.Items)
-            {
-                item.Update(gameTime);
-            }
+            // Prune collected items
+            entities.Items.RemoveAll(item => !item.IsActive);
 
             MouseState currentMouseState = Mouse.GetState();
 

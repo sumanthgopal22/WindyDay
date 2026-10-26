@@ -16,6 +16,9 @@ namespace ZeldaGame.GameScripts.Tilemapping
         private readonly int[] tiles;
         private readonly TileBlock[] blocks; // Parallel array for collision block objects
 
+        // Expose blocks for collisions
+        public TileBlock[] Blocks => blocks;
+
         public int Rows { get; }
         public int Columns { get; }
         public int Count { get; }

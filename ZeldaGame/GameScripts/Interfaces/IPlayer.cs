@@ -3,14 +3,13 @@ using ZeldaGame.GameScripts.Interfaces;
 
 namespace ZeldaGame;
 
-public interface IPlayer
+public interface IPlayer : ICollidable
 {
     bool IsActionPlaying { get; }
     bool IsIdle { get; set; }
     bool IsWalking { get; set; }
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
-    Rectangle BoundingBox { get; }
     event System.Action<IProjectile> ProjectileSpawned;
 
     void MoveRight();
