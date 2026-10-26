@@ -6,7 +6,7 @@ using ZeldaGame.GameScripts.Tilemapping;
 namespace ZeldaGame;
 
 //Goriya and Link both use this class
-public class Arrow : IGameObject, ICollidable, IProjectile
+public class Arrow : IProjectile
 {
     private ISprite arrowSprite;
     private Vector2 position;
