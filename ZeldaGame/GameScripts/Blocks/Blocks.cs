@@ -14,7 +14,7 @@ public class Block : IBlock
 
     public void LoadContent()
     {
-        position = new Vector2(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Height) * 0.25f;
+        position = new Vector2(Game1.GameWidth, Game1.GameHeight) * 0.25f;
         spriteTexture = Core.Content.Load<Texture2D>("spritesheets/BlocksSheet");
         block = new BlockSprite(spriteTexture);
         currentFrame = 0;

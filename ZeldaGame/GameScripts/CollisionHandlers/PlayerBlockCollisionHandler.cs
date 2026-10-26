@@ -36,8 +36,8 @@ public static class PlayerBlockCollisionHandler
         }
 
         // Clamp to prevent Link from being ejected off the screen or under the room
-        int windowWidth = Core.Instance.Window.ClientBounds.Width;
-        int windowHeight = Core.Instance.Window.ClientBounds.Height;
+        int windowWidth = Game1.GameWidth;
+        int windowHeight = Game1.GameHeight;
         float pWidth = player.BoundingBox.Width > 0 ? player.BoundingBox.Width : 64f;
         float pHeight = player.BoundingBox.Height > 0 ? player.BoundingBox.Height : 64f;
 

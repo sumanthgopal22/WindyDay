@@ -58,8 +58,8 @@ public class Boomerang : IProjectile
             position += velocity;
         }
 
-        int screenWidth = Core.Instance.Window.ClientBounds.Width;
-        int screenHeight = Core.Instance.Window.ClientBounds.Height;
+        int screenWidth = Game1.GameWidth;
+        int screenHeight = Game1.GameHeight;
 
         bool hitScreenEdge =
             position.X < 0 ||
