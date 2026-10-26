@@ -12,6 +12,8 @@ public class StalfosEnemy : IEnemy
     private int stepsTaken = 0;
     private Random random = new Random();
     public event Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)stalfosSprite.Size.X, (int)stalfosSprite.Size.Y);
+
 
     public StalfosEnemy(Vector2 startPosition)
     {
@@ -41,6 +43,11 @@ public class StalfosEnemy : IEnemy
     public void Attack()
     {
         // Stalfos does not have a ranged attack, it only hurts Link by walking into him
+    }
+    
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        
     }
 
     public void LoadContent()

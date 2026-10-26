@@ -171,7 +171,6 @@ public class Player : IPlayer
         Vector2 linkCenter = position + sprite.Size / 2;
         bomb = new Bomb(linkCenter);
 
-        // If Bomb implements IProjectile, route it into the room's collision pipeline
         if (bomb is IProjectile projectile)
         {
             ProjectileSpawned?.Invoke(projectile);

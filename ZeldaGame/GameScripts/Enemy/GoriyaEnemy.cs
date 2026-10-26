@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using ZeldaGame.GameScripts.Sprites;
+using System;
 
 namespace ZeldaGame;
 
@@ -11,6 +12,7 @@ public class GoriyaEnemy : IEnemy
     private ISprite goriyaLeftSprite;
     private ISprite goriyaRightSprite;
     private Vector2 position;
+    private Random random = new Random();
     private const int SideLength = 80; // pixels per side of the square basically the max amount of steps sprite can take before changing directions
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
@@ -19,6 +21,8 @@ public class GoriyaEnemy : IEnemy
     private double secondsSinceLastAttack = 0;
 
     public event System.Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)goriyaSprite.Size.X, (int)goriyaSprite.Size.Y);
+
 
     public GoriyaEnemy(Vector2 startPosition)
     {
@@ -75,6 +79,11 @@ public class GoriyaEnemy : IEnemy
         activeBoomerang = new Boomerang(throwPosition, velocity, isHostile: true);
         ProjectileSpawned?.Invoke(activeBoomerang);
     }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        
+    }
     
     public void LoadContent()
     {
@@ -123,7 +132,7 @@ public class GoriyaEnemy : IEnemy
         if (stepsTaken >= SideLength)
         {
             stepsTaken = 0;
-            side = (side + 1) % 4;
+            side = random.Next(4);
         }
 
         // Attack every few seconds

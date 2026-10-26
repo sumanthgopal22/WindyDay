@@ -12,6 +12,8 @@ public class KeeseEnemy : IEnemy
     private int stepsTaken = 0;
     public event Action<IProjectile> ProjectileSpawned;
     private Random random = new Random();
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)keeseSprite.Size.X, (int)keeseSprite.Size.Y);
+
 
     public KeeseEnemy(Vector2 startPosition)
     {
@@ -41,6 +43,11 @@ public class KeeseEnemy : IEnemy
     public void Attack()
     {
         // Keese does not have a ranged attack, it only hurts Link by flying into him
+    }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        
     }
 
     public void LoadContent()

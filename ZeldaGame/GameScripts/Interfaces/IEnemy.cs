@@ -1,6 +1,6 @@
 namespace ZeldaGame;
 
-public interface IEnemy : IGameObject
+public interface IEnemy : IGameObject, ICollidable
 {
     event System.Action<IProjectile> ProjectileSpawned;
 
@@ -9,5 +9,6 @@ public interface IEnemy : IGameObject
     void MoveUp();
     void MoveDown();
     void Attack();
+    void OnCollideWithObject(ICollidable target, CollisionSide side);
     void LoadContent();
 }

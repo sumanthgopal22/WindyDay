@@ -12,6 +12,7 @@ public class WallMasterEnemy : IEnemy
     private int stepsTaken = 0;
     private Random random = new Random();
     public event Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)wallMasterSprite.Size.X, (int)wallMasterSprite.Size.Y);
 
     public WallMasterEnemy(Vector2 startPosition)
     {
@@ -41,6 +42,11 @@ public class WallMasterEnemy : IEnemy
     public void Attack()
     {
         // Wall Master does not have a ranged attack, it grabs Link by crawling into him
+    }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        
     }
 
     public void LoadContent()
