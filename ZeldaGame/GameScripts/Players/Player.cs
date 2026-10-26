@@ -20,6 +20,7 @@ public class Player : IPlayer
     public bool IsWalking { get; set; }
     public bool IsUsingItem { get; set; }
     public bool IsSwingingSword { get; set; }
+    public bool IsDamaged { get; set; }
 
     public Rectangle BoundingBox => sprite != null 
     ? new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y)
@@ -43,7 +44,8 @@ public class Player : IPlayer
         {
             return;
         }
-        if (!IsWalking)
+
+        if (!IsWalking && !IsDamaged)
         {
             ChangeState(new WalkingLinkState(this));
         }
@@ -59,7 +61,8 @@ public class Player : IPlayer
         {
             return;
         }
-        if (!IsWalking)
+
+        if (!IsWalking && !IsDamaged)
         {
             ChangeState(new WalkingLinkState(this));
         }
@@ -75,7 +78,8 @@ public class Player : IPlayer
         {
             return;
         }
-        if (!IsWalking)
+
+        if (!IsWalking && !IsDamaged)
         {
             ChangeState(new WalkingLinkState(this));
         }
@@ -91,7 +95,8 @@ public class Player : IPlayer
         {
             return;
         }
-        if (!IsWalking)
+        
+        if (!IsWalking && !IsDamaged)
         {
             ChangeState(new WalkingLinkState(this));
         }
@@ -103,7 +108,7 @@ public class Player : IPlayer
 
     public void UseItem(WeaponType weaponType)
     {
-        if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive))
+        if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive) || IsDamaged)
         {
             return;
         }
@@ -186,7 +191,7 @@ public class Player : IPlayer
 
     public void SwingSword()
     {
-        if (IsUsingItem || IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword || IsDamaged)
         {
             return;
         }
@@ -197,7 +202,13 @@ public class Player : IPlayer
 
     public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
     {
-        
+        if (IsDamaged)
+        {
+            return;
+        }
+
+        ChangeState(new DamagedLinkState(this));
+        sprite.PlayAction(LinkSpriteAction.Damaged);
     }
 
     public void UpdateSprite(GameTime gameTime)

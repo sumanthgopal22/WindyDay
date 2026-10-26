@@ -13,6 +13,8 @@ public interface IPlayer : ICollidable
     bool IsWalking { get; set; }
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
+    bool IsDamaged { get; set; }
+
     new Rectangle BoundingBox { get; }
     Vector2 Position { get; set; }
     
