@@ -14,11 +14,14 @@ public class LinkSprite : IActionSprite
     private readonly Rectangle[] swordSwingFrames;
     private readonly Vector2[] swordSwingOffsets;
     private readonly Rectangle pickedUpItemFrame;
+    private readonly Rectangle[] damagedLinkFrames;
     private readonly float spriteScale;
     private readonly double frameDuration;
     private readonly double actionDuration;
     private readonly double pickUpDuration;
+    private double damageDuration;
     private double elapsedTime;
+    private const double DamageFlashFrameDuration = 0.05;
     private double actionElapsedTime;
     private int currentFrame;
     private SpriteDirection currentDirection;
@@ -34,10 +37,12 @@ public class LinkSprite : IActionSprite
         Rectangle[] swordSwingFrames,
         Vector2[] swordSwingOffsets,
         Rectangle pickedUpItemFrame,
+        Rectangle[] damagedLinkFrames,
         float spriteScale,
         double frameDuration,
         double actionDuration,
-        double pickUpDuration)
+        double pickUpDuration,
+        double damageDuration)
     {
         this.spriteTexture = spriteTexture;
         this.walkingFrames = walkingFrames;
@@ -45,10 +50,12 @@ public class LinkSprite : IActionSprite
         this.swordSwingFrames = swordSwingFrames;
         this.swordSwingOffsets = swordSwingOffsets;
         this.pickedUpItemFrame = pickedUpItemFrame;
+        this.damagedLinkFrames = damagedLinkFrames;
         this.spriteScale = spriteScale;
         this.frameDuration = frameDuration;
         this.actionDuration = actionDuration;
         this.pickUpDuration = pickUpDuration;
+        this.damageDuration = damageDuration;
         Size = new Vector2(
             walkingFrames[0][0].Width * spriteScale,
             walkingFrames[0][0].Height * spriteScale);
@@ -82,6 +89,11 @@ public class LinkSprite : IActionSprite
             return pickUpDuration;
         }
 
+        if (currentAction == LinkSpriteAction.Damaged)
+        {
+            return damageDuration;
+        }
+
         return actionDuration;
     }
 
@@ -93,6 +105,7 @@ public class LinkSprite : IActionSprite
             LinkSpriteAction.SwingSword => swordSwingFrames[directionIndex],
             LinkSpriteAction.UseItem => itemUseFrames[directionIndex],
             LinkSpriteAction.PickUpItem => pickedUpItemFrame,
+            LinkSpriteAction.Damaged => damagedLinkFrames[currentFrame],
             _ => walkingFrames[directionIndex][currentFrame]
         };
 
@@ -142,6 +155,17 @@ public class LinkSprite : IActionSprite
         if (currentAction.HasValue)
         {
             actionElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (currentAction == LinkSpriteAction.Damaged)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (elapsedTime > DamageFlashFrameDuration)
+                {
+                    elapsedTime -= DamageFlashFrameDuration;
+                    currentFrame = (currentFrame + 1) % damagedLinkFrames.Length;
+                }
+            }
+
             if (actionElapsedTime >= GetCurrentActionDuration())
             {
                 currentAction = null;

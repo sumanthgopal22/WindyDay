@@ -26,7 +26,6 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
                 controller.Update(gameTime);
             }
 
-            game.Player.Update(gameTime);
             game.CurrentScreen.Update(gameTime);
         }
 

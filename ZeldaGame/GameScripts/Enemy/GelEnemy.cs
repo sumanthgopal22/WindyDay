@@ -1,4 +1,6 @@
+using System;
 using Microsoft.Xna.Framework;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
@@ -6,10 +8,14 @@ public class GelEnemy : IEnemy
 {
     private ISprite gelSprite;
     private Vector2 position;
+    private Vector2 previousPosition;
     private const int SideLength = 80; // pixels per side of the square basically the max amount of steps sprite can take before changing directions
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
+    private Random random = new Random();
     public event System.Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)gelSprite.Size.X, (int)gelSprite.Size.Y);
+
     public GelEnemy(Vector2 startPostion)
     {
         position = startPostion;
@@ -40,6 +46,18 @@ public class GelEnemy : IEnemy
         
     }
 
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            position = previousPosition;
+
+            this.side = random.Next(4);
+            stepsTaken = 0;
+        }
+    }
+
+
     public void LoadContent()
     {
         gelSprite = EnemySpriteFactory.Instance.CreateGelSprite();
@@ -47,6 +65,8 @@ public class GelEnemy : IEnemy
 
     public void Update(GameTime gameTime)
     {
+        previousPosition = position;
+
         switch (side)
         {
             case 0: 
@@ -67,7 +87,7 @@ public class GelEnemy : IEnemy
         if (stepsTaken >= SideLength)
         {
             stepsTaken = 0;
-            side = (side + 1) % 4;
+            side = random.Next(4);
         }
         gelSprite.Update(gameTime);
 

@@ -14,6 +14,8 @@ public class AquamentusEnemy : IEnemy
     private const double SecondsBetweenAttacks = 2.0;
     private double secondsSinceLastAttack = 0;
     public event System.Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)aquamentusSprite.Size.X, (int)aquamentusSprite.Size.Y);
+
     public AquamentusEnemy(Vector2 startPosition)
     {
         position = startPosition;
@@ -39,7 +41,6 @@ public class AquamentusEnemy : IEnemy
     // Shoots three fireballs to the left: one angled up, one straight, and one angled down
     public void Attack()
     {
-        // Aquamentus faces left, so the fireballs start near its mouth on the left side of the sprite
         Vector2 mouthPosition = new Vector2(position.X, position.Y + 20);
 
         // Adding 3 fireballs like the game
@@ -47,11 +48,16 @@ public class AquamentusEnemy : IEnemy
         Vector2 straightLeft = new Vector2(-2, 0);
         Vector2 downAndLeft = new Vector2(-2, 1);
 
-        // Adding to the list
         fireballs.Add(new Fireball(mouthPosition, upAndLeft));
         fireballs.Add(new Fireball(mouthPosition, straightLeft));
         fireballs.Add(new Fireball(mouthPosition, downAndLeft));
     }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        //Not needed
+    }
+
 
     public void LoadContent()
     {

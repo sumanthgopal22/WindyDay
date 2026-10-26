@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
@@ -7,11 +8,13 @@ public class WallMasterEnemy : IEnemy
 {
     private ISprite wallMasterSprite;
     private Vector2 position;
+    private Vector2 previousPosition;
     private const int SideLength = 40; // how many steps Wall Master crawls before picking a new direction
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
     private Random random = new Random();
     public event Action<IProjectile> ProjectileSpawned;
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)wallMasterSprite.Size.X, (int)wallMasterSprite.Size.Y);
 
     public WallMasterEnemy(Vector2 startPosition)
     {
@@ -40,7 +43,18 @@ public class WallMasterEnemy : IEnemy
 
     public void Attack()
     {
-        // Wall Master does not have a ranged attack, it grabs Link by crawling into him
+        
+    }
+
+    public void OnCollideWithObject(ICollidable target, CollisionSide side)
+    {
+        if (target is TileBlock tile && tile.IsCollidable)
+        {
+            position = previousPosition;
+
+            this.side = random.Next(4);
+            stepsTaken = 0;
+        }
     }
 
     public void LoadContent()
@@ -50,6 +64,8 @@ public class WallMasterEnemy : IEnemy
 
     public void Update(GameTime gameTime)
     {
+        previousPosition = position;
+        
         switch (side)
         {
             case 0: 

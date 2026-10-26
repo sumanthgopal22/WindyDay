@@ -4,6 +4,7 @@
     {
         UseItem,
         SwingSword,
-        PickUpItem
+        PickUpItem,
+        Damaged
     }
 }

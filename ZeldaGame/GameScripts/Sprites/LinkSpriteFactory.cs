@@ -12,7 +12,8 @@ public class LinkSpriteFactory
     private const double FrameDuration = 0.2;
     private const double ActionDuration = 0.25;
     private const double PickUpDuration = 1.0;
-
+    private const double DamageDuration = 1.0;
+    
     public static LinkSpriteFactory Instance { get; } = new LinkSpriteFactory();
 
     private LinkSpriteFactory() { }
@@ -56,6 +57,14 @@ public class LinkSpriteFactory
             new Vector2(0, 0)
         ];
 
+        Rectangle[] damagedLinkFrames =
+        [
+            new Rectangle(58, 224, 16, 16),
+            new Rectangle(75, 224, 16, 16),
+            new Rectangle(92, 224, 16, 16),
+            new Rectangle(109, 224, 16, 16)
+        ];
+
         //Stand alone, for when he picks things up
         Rectangle pickUpItemFrame = new Rectangle(230, 11, 16, 16);
 
@@ -66,9 +75,11 @@ public class LinkSpriteFactory
             swordSwingFrames,
             swordSwingOffsets,
             pickUpItemFrame,
+            damagedLinkFrames,
             SpriteScale,
             FrameDuration,
             ActionDuration,
-            PickUpDuration);
+            PickUpDuration,
+            DamageDuration);
     }
 }

@@ -13,6 +13,8 @@ public interface IPlayer : ICollidable
     bool IsWalking { get; set; }
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
+    bool IsDamaged { get; set; }
+
     new Rectangle BoundingBox { get; }
     Vector2 Position { get; set; }
     
@@ -27,11 +29,12 @@ public interface IPlayer : ICollidable
 
 
     void SwingSword();
-    void Teleport(Vector2 targetPosition);
     void UpdateSprite(GameTime gameTime);
     void ResetSprite();
     void LoadContent();
     void Draw(GameTime gameTime);
     void Update(GameTime gameTime);
     void ChangeState(IState state);
+
+    void OnCollideWithEnemy(ICollidable target, CollisionSide side);
 }
