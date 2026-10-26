@@ -14,6 +14,7 @@ public class AquamentusEnemy : IEnemy
     private List<Fireball> fireballs = new List<Fireball>();
     private const double SecondsBetweenAttacks = 2.0;
     private double secondsSinceLastAttack = 0;
+    public event System.Action<IProjectile> ProjectileSpawned;
     public AquamentusEnemy(Vector2 startPosition)
     {
         position = startPosition;

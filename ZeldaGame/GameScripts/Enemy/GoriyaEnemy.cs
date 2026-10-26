@@ -15,13 +15,15 @@ public class GoriyaEnemy : IEnemy
     private const int SideLength = 80; // pixels per side of the square basically the max amount of steps sprite can take before changing directions
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
-    private Boomerang boomerang = null; // null when Goriya is not throwing
+    private Boomerang activeBoomerang = null; // null when Goriya is not throwing
     private const double SecondsBetweenAttacks = 3.0;
     private double secondsSinceLastAttack = 0;
 
-    public GoriyaEnemy(Vector2 startPostion)
+    public event System.Action<IProjectile> ProjectileSpawned;
+
+    public GoriyaEnemy(Vector2 startPosition)
     {
-        position = startPostion;
+        position = startPosition;
     }
     public void MoveRight()
     {
@@ -70,7 +72,9 @@ public class GoriyaEnemy : IEnemy
         // Start the boomerang roughly in the middle of Goriya
         Vector2 throwPosition = new Vector2(position.X + 8, position.Y + 12);
 
-        boomerang = new Boomerang(throwPosition, velocity);
+        // Mark as hostile so collision handlers target Link instead of enemies
+        activeBoomerang = new Boomerang(throwPosition, velocity, isHostile: true);
+        ProjectileSpawned?.Invoke(activeBoomerang);
     }
     
     public void LoadContent()
@@ -85,17 +89,19 @@ public class GoriyaEnemy : IEnemy
     public void Update(GameTime gameTime)
     {
         // While the boomerang is flying, Goriya stands still and waits for it to come back
-        if (boomerang != null)
+        if (activeBoomerang != null)
         {
-            boomerang.Update(gameTime);
+            activeBoomerang.Update(gameTime);
 
-            if (boomerang.HasReturned)
+            if (activeBoomerang.HasReturned || !activeBoomerang.IsActive)
             {
-                boomerang = null;
+                activeBoomerang = null;
             }
-
-            goriyaSprite.Update(gameTime);
-            return;
+            else
+            {
+                goriyaSprite.Update(gameTime);
+                return;
+            }
         }
 
         switch (side)
@@ -136,9 +142,9 @@ public class GoriyaEnemy : IEnemy
     {
         goriyaSprite.Draw(gameTime, position);
 
-        if (boomerang != null)
-        {
-            boomerang.Draw(gameTime);
-        }
+        // if (activeBoomerang != null)
+        // {
+        //     activeBoomerang.Draw(gameTime);
+        // }
     }
 }

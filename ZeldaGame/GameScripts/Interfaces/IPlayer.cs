@@ -10,6 +10,9 @@ public interface IPlayer
     bool IsWalking { get; set; }
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
+    Rectangle BoundingBox { get; }
+    event System.Action<IProjectile> ProjectileSpawned;
+
     void MoveRight();
 
     void MoveLeft();
@@ -34,5 +37,6 @@ public interface IPlayer
     void Draw(GameTime gameTime);
 
     void Update(GameTime gameTime);
+
     void ChangeState(IState state);
 }

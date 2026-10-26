@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame.GameScripts.Tilemapping
 {
-    public class TileBlock
+    public class TileBlock : ICollidable
     {
         public Vector2 Position { get; set; }
         public Rectangle BoundingBox { get; set; }

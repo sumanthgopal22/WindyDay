@@ -14,14 +14,18 @@ public class Player : IPlayer
     private LinkStateMachine stateMachine;
 
     public bool IsActionPlaying => sprite.IsActionPlaying;
-    public bool IsIdle {  get; set; }
+    public bool IsIdle { get; set; }
     public bool IsWalking { get; set; }
     public bool IsUsingItem { get; set; }
     public bool IsSwingingSword { get; set; }
 
+    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y);
+
     SpriteDirection finalDirection;
-    Boomerang boomerang;
-    Arrow arrow;
+
+    public event System.Action<IProjectile> ProjectileSpawned;
+    private Boomerang activeBoomerang;
+    private Arrow activeArrow;
 
     public void MoveRight()
     {
@@ -89,7 +93,7 @@ public class Player : IPlayer
 
     public void UseItem()
     {
-        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
+        if (IsUsingItem || IsSwingingSword || activeBoomerang != null || activeArrow != null)
         {
             return;
         }
@@ -102,7 +106,7 @@ public class Player : IPlayer
 
     public void UseItem2()
     {
-        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
+        if (IsUsingItem || IsSwingingSword || activeBoomerang != null || activeArrow != null)
         {
             return;
         }
@@ -137,9 +141,8 @@ public class Player : IPlayer
         }
 
         Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16);
-
-        boomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut);
-
+        activeBoomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: false);
+        ProjectileSpawned?.Invoke(activeBoomerang);
     }
 
     private const float ArrowSpeed = 4 * 4;
@@ -164,8 +167,8 @@ public class Player : IPlayer
 
         // Fire the arrow from the middle of Link
         Vector2 linkCenter = position + sprite.Size / 2;
-
-        arrow = new Arrow(linkCenter, velocity);
+        activeArrow = new Arrow(linkCenter, velocity);
+        ProjectileSpawned?.Invoke(activeArrow);
     }
 
     public void SwingSword()
@@ -212,25 +215,25 @@ public class Player : IPlayer
     {
         stateMachine.Update(gameTime);
 
-         if (boomerang != null)
-        {
-            boomerang.Update(gameTime);
+        // if (boomerang != null)
+        // {
+        //     boomerang.Update(gameTime);
 
-            if (boomerang.HasReturned)
-            {
-                boomerang = null;
-            }
-        }
+        //     if (boomerang.HasReturned)
+        //     {
+        //         boomerang = null;
+        //     }
+        // }
 
-        if (arrow != null)
-        {
-            arrow.Update(gameTime);
+        // if (arrow != null)
+        // {
+        //     arrow.Update(gameTime);
 
-            if (arrow.hasHitWall == true)
-            {
-                arrow = null;
-            }
-        }
+        //     if (arrow.hasHitWall == true)
+        //     {
+        //         arrow = null;
+        //     }
+        // }
 
         Vector2 nextPosition = position + movement;
         
@@ -255,15 +258,15 @@ public class Player : IPlayer
     {
         sprite.Draw(gameTime, position);
 
-        if (boomerang != null)
-        {
-            boomerang.Draw(gameTime);
-        }
+        // if (boomerang != null)
+        // {
+        //     boomerang.Draw(gameTime);
+        // }
 
-        if (arrow != null)
-        {
-            arrow.Draw(gameTime);
-        }
+        // if (arrow != null)
+        // {
+        //     arrow.Draw(gameTime);
+        // }
     }
 
     public void ChangeState(IState state)
