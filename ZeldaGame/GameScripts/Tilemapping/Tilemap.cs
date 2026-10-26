@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml;
 using System.Xml.Linq;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -92,7 +93,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
             return true; // collidableObject (Walls, barriers, etc.)
         }
 
-        public static Tilemap FromFile(ContentManager content, string filename)
+        public static Tilemap FromFile(ContentManager content, string filename, Vector2 scale)
         {
             string filePath = Path.Combine(content.RootDirectory, filename);
 
@@ -129,6 +130,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
                     int columnCount = rows[0].Split(" ", StringSplitOptions.RemoveEmptyEntries).Length;
 
                     Tilemap tilemap = new Tilemap(tileset, columnCount, rows.Length);
+                    tilemap.Scale = scale;
 
                     for (int row = 0; row < rows.Length; row++)
                     {

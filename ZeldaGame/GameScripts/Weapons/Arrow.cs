@@ -62,8 +62,7 @@ public class Arrow : IGameObject, ICollidable, IProjectile
     public void Update(GameTime gameTime)
     {
         position += velocity;
-        if (position.Y >= Core.Instance.Window.ClientBounds.Height || position.X >= Core.Instance.Window.ClientBounds.Width
-         || position.X < 0 || position.Y < 0)
+        if (position.Y >= Core.Instance.Window.ClientBounds.Height || position.X >= Core.Instance.Window.ClientBounds.Width || position.X < 0 || position.Y < 0)
         {
             hasHitWall = true;
         }

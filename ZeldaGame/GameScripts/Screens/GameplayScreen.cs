@@ -93,8 +93,7 @@ namespace ZeldaGame.GameScripts.Screens
         private void LoadRoom(string levelFile, GraphicsDevice device)
         {
             LevelFile = levelFile;
-            Tilemap = Tilemap.FromFile(Core.Content, LevelFile);
-            Tilemap.Scale = new Vector2(4.0f, 4.0f);
+            Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
 
             Rectangle screenBounds = device.PresentationParameters.Bounds;
 
