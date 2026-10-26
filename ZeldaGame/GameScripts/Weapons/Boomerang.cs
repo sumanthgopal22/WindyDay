@@ -21,7 +21,7 @@ public class Boomerang : IGameObject
         this.velocity = velocity;
         this.stepsBeforeComingBack = stepsBeforeComingBack;
         position = startPosition;
-        boomerangSprite = EnemySpriteFactory.Instance.CreateBoomerangSprite();
+        boomerangSprite = ItemSpriteFactory.Instance.CreateThrownBoomerangSprite();
     }
 
     public void Update(GameTime gameTime)

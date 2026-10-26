@@ -7,6 +7,7 @@ namespace ZeldaGame;
 public class ItemSpriteFactory
 {
     private Texture2D items;
+    private Texture2D link;
 
     public static ItemSpriteFactory Instance { get; } = new ItemSpriteFactory();
 
@@ -14,8 +15,10 @@ public class ItemSpriteFactory
 
     public void LoadTextures()
     {
-        // Load item spritesheet
+        // Load item spritesheet, plus link sheet for thrown boomerang
+        // (That boomerang throw also gets used for goriya)
         items = Core.Content.Load<Texture2D>("spritesheets/Items");
+        link = Core.Content.Load<Texture2D>("spritesheets/Link");
     }
 
     /* Animated Items */
@@ -86,6 +89,21 @@ public class ItemSpriteFactory
 
         // Return the wooden boomerang sprite
         return new NonAnimatedSprite(items, woodenBoomerangSourceRectangle);
+    }
+
+    public ISprite CreateThrownBoomerangSprite()
+    {
+        Rectangle uprightBoomerang = new Rectangle(64, 189, 8, 8);
+        Rectangle diagonalBoomerang = new Rectangle(73, 189, 8, 8);
+        Rectangle flatBoomerang = new Rectangle(82, 189, 8, 8);
+
+        Rectangle[] boomerangSourceRectangles = [uprightBoomerang, diagonalBoomerang, flatBoomerang, diagonalBoomerang];
+        SpriteEffects[] boomerangEffects = [SpriteEffects.None, SpriteEffects.None, SpriteEffects.None, SpriteEffects.FlipVertically];
+        double boomerangFrameDuration = 0.05;
+
+        // Return the animated boomerang sprite
+        return new AnimatedSprite(link, boomerangSourceRectangles, boomerangFrameDuration, boomerangEffects);
+    
     }
 
     public ISprite CreateBombSprite()

@@ -72,23 +72,6 @@ public class EnemySpriteFactory
         }
     }
 
-    public ISprite CreateBoomerangSprite()
-    {
-        // Extract boomerang frames from spritesheet and set a frame duration
-        // The spritesheet has upright, diagonal, and flat boomerangs. Flipping the diagonal one makes the opposite diagonal,
-        // so these four frames together make the boomerang look like it is spinning
-        Rectangle uprightBoomerang = new Rectangle(291, 15, 8, 8);
-        Rectangle diagonalBoomerang = new Rectangle(299, 15, 8, 8);
-        Rectangle flatBoomerang = new Rectangle(308, 15, 8, 8);
-
-        Rectangle[] boomerangSourceRectangles = [uprightBoomerang, diagonalBoomerang, flatBoomerang, diagonalBoomerang];
-        SpriteEffects[] boomerangEffects = [SpriteEffects.None, SpriteEffects.None, SpriteEffects.None, SpriteEffects.FlipVertically];
-        double boomerangFrameDuration = 0.05;
-
-        // Return the animated boomerang sprite
-        return new AnimatedSprite(dungeonEnemies, boomerangSourceRectangles, boomerangFrameDuration, boomerangEffects);
-    }
-
     public ISprite CreateWallMasterSprite()
     {
         // Extract wall master frames from spritesheet and set a frame duration
