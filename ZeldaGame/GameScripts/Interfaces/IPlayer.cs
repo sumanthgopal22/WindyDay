@@ -14,6 +14,7 @@ public interface IPlayer : ICollidable
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
     new Rectangle BoundingBox { get; }
+    Vector2 Position { get; set; }
     
     void MoveRight();
     void MoveLeft();

@@ -40,7 +40,7 @@ public class Game1 : Core
 
     protected override void Initialize()
     {
-         // Initialize player //
+        // Initialize player //
         Player = new Player();
 
         // Initialize screens
@@ -86,13 +86,12 @@ public class Game1 : Core
         ItemSpriteFactory.Instance.LoadTextures();
         LinkSpriteFactory.Instance.LoadTextures();
 
-        // Screens
-        MainMenuScreen.LoadContent(Content, GraphicsDevice);
-        GameplayScreen.LoadContent(Content, GraphicsDevice);
-
         // Player
         Player.LoadContent();
 
+        // Screens
+        MainMenuScreen.LoadContent(Content, GraphicsDevice);
+        GameplayScreen.LoadContent(Content, GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)

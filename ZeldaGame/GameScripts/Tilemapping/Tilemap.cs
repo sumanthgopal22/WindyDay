@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
-using System.Reflection.Metadata.Ecma335;
 using System.Xml;
 using System.Xml.Linq;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -90,6 +89,17 @@ namespace ZeldaGame.GameScripts.Tilemapping
             {
                 return false; // nonCollidableObject (Passable floor)
             }
+
+            if (tilesetID == 1224 || tilesetID == 1225 || tilesetID == 1256 || tilesetID == 1257)
+            {
+                return false; // Underground black corridor / pit floor (nonCollidableObject)
+            }
+
+            if (tilesetID == 1234 || tilesetID == 1235 || tilesetID == 1266 || tilesetID == 1267)
+            {
+                return false; // Underground ladder rungs & rails (nonCollidableObject)
+            }
+
             return true; // collidableObject (Walls, barriers, etc.)
         }
 

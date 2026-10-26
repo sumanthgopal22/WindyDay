@@ -92,6 +92,8 @@ namespace ZeldaGame.GameScripts.Screens
 
         private void LoadRoom(string levelFile, GraphicsDevice device)
         {
+            System.Diagnostics.Debug.WriteLine($"Active Room: {levelFile}");
+
             LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
 
@@ -104,76 +106,171 @@ namespace ZeldaGame.GameScripts.Screens
                 screenBounds.Height - (int)Tilemap.TileHeight * 2
             );
 
-            if (entitiesByRoom.Count == 0)
+            // Safely reset Link to room center or entrance upon room switch
+            // game.Player.Position = new Vector2(
+            //     screenBounds.Width / 2f - game.Player.BoundingBox.Width / 2f,
+            //     screenBounds.Height * 0.75f
+            // );
+            game.Player.Position = GetSafePlayerSpawnPosition();
+
+            // if (entitiesByRoom.Count == 0)
+            // {
+            //     CreateRoomEntities();
+            // }
+
+            // Initialize entities for THIS room using ITS OWN Tilemap
+            if (!entitiesByRoom.ContainsKey(LevelFile))
             {
-                CreateRoomEntities();
+                CreateEntitiesForCurrentRoom();
             }
         }
 
-        private void CreateRoomEntities()
+        private void CreateEntitiesForCurrentRoom()
         {
-            var rooms = new RoomEntities[levelFiles.Length];
-            for (int i = 0; i < rooms.Length; i++)
-            {
-                rooms[i] = new RoomEntities();
-            }
-
-            var enemyTypes = new List<Func<Vector2, IEnemy>>
-            {
-                position => new AquamentusEnemy(position),
-                position => new GelEnemy(position),
-                position => new GoriyaEnemy(position),
-                position => new KeeseEnemy(position),
-                position => new StalfosEnemy(position),
-                position => new WallMasterEnemy(position)
-            };
+            RoomEntities entities = new RoomEntities();
 
             var itemTypes = new List<Func<Vector2, IItem>>
             {
-                position => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), position),
-                position => new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), position),
-                position => new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), position),
-                position => new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), position),
-                position => new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), position),
-                position => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), position),
-                position => new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), position),
-                position => new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), position),
-                position => new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), position),
-                position => new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), position),
-                position => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), position),
-                position => new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), position),
-                position => new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), position),
-                position => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), position),
-                position => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), position)
+                pos => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), pos),
+                pos => new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), pos),
+                pos => new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), pos),
+                pos => new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), pos),
+                pos => new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), pos),
+                pos => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), pos),
+                pos => new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), pos),
+                pos => new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), pos),
+                pos => new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), pos),
+                pos => new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), pos),
+                pos => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), pos),
+                pos => new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), pos),
+                pos => new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), pos),
+                pos => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), pos),
+                pos => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), pos)
             };
 
-            foreach (Func<Vector2, IEnemy> createEnemy in Shuffle(enemyTypes))
+            var enemyTypes = new List<Func<Vector2, IEnemy>>
             {
-                AddEnemy(rooms[random.Next(rooms.Length)], createEnemy);
+                pos => new AquamentusEnemy(pos),
+                pos => new GelEnemy(pos),
+                pos => new GoriyaEnemy(pos),
+                pos => new KeeseEnemy(pos),
+                pos => new StalfosEnemy(pos),
+                pos => new WallMasterEnemy(pos)
+            };
+
+            // Pick 1-2 random items and 1-2 random enemies for this specific room
+            AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
+            AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
+
+            entitiesByRoom.Add(LevelFile, entities);
+        }
+
+        // private void CreateRoomEntities()
+        // {
+        //     var rooms = new RoomEntities[levelFiles.Length];
+        //     for (int i = 0; i < rooms.Length; i++)
+        //     {
+        //         rooms[i] = new RoomEntities();
+        //     }
+
+        //     var enemyTypes = new List<Func<Vector2, IEnemy>>
+        //     {
+        //         position => new AquamentusEnemy(position),
+        //         position => new GelEnemy(position),
+        //         position => new GoriyaEnemy(position),
+        //         position => new KeeseEnemy(position),
+        //         position => new StalfosEnemy(position),
+        //         position => new WallMasterEnemy(position)
+        //     };
+
+        //     var itemTypes = new List<Func<Vector2, IItem>>
+        //     {
+        //         position => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), position),
+        //         position => new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), position),
+        //         position => new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), position),
+        //         position => new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), position),
+        //         position => new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), position),
+        //         position => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), position),
+        //         position => new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), position),
+        //         position => new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), position),
+        //         position => new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), position),
+        //         position => new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), position),
+        //         position => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), position),
+        //         position => new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), position),
+        //         position => new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), position),
+        //         position => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), position),
+        //         position => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), position)
+        //     };
+
+        //     foreach (Func<Vector2, IEnemy> createEnemy in Shuffle(enemyTypes))
+        //     {
+        //         AddEnemy(rooms[random.Next(rooms.Length)], createEnemy);
+        //     }
+
+        //     foreach (Func<Vector2, IItem> createItem in Shuffle(itemTypes))
+        //     {
+        //         AddItem(rooms[random.Next(rooms.Length)], createItem);
+        //     }
+
+        //     foreach (RoomEntities entities in rooms)
+        //     {
+        //         if (entities.Enemies.Count == 0 || random.Next(3) == 0)
+        //         {
+        //             AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
+        //         }
+
+        //         if (entities.Items.Count == 0 || random.Next(3) == 0)
+        //         {
+        //             AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
+        //         }
+        //     }
+
+        //     for (int i = 0; i < rooms.Length; i++)
+        //     {
+        //         entitiesByRoom.Add(levelFiles[i], rooms[i]);
+        //     }
+        // }
+
+        private Vector2 GetSafePlayerSpawnPosition()
+        {
+            if (Tilemap == null || Tilemap.Blocks == null)
+            {
+                return new Vector2(Core.Instance.Window.ClientBounds.Width / 2f - 32, Core.Instance.Window.ClientBounds.Height / 2f - 32);
             }
 
-            foreach (Func<Vector2, IItem> createItem in Shuffle(itemTypes))
-            {
-                AddItem(rooms[random.Next(rooms.Length)], createItem);
-            }
+            float pWidth = game.Player.BoundingBox.Width > 0 ? game.Player.BoundingBox.Width : 64f;
+            float pHeight = game.Player.BoundingBox.Height > 0 ? game.Player.BoundingBox.Height : 64f;
 
-            foreach (RoomEntities entities in rooms)
+            // Scan candidate floor tiles starting from the lower half of the room upwards
+            for (int row = Tilemap.Rows - 5; row >= 1; row--)
             {
-                if (entities.Enemies.Count == 0 || random.Next(3) == 0)
+                for (int col = 1; col < Tilemap.Columns - 1; col++)
                 {
-                    AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
-                }
+                    TileBlock candidate = Tilemap.GetBlock(col, row);
+                    if (candidate == null || candidate.IsCollidable) continue;
 
-                if (entities.Items.Count == 0 || random.Next(3) == 0)
-                {
-                    AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
+                    // Verify a full player bounding box at this spot does not intersect ANY solid tile
+                    Rectangle proposedBox = new Rectangle((int)candidate.Position.X, (int)candidate.Position.Y, (int)pWidth, (int)pHeight);
+                    bool overlapsSolid = false;
+
+                    foreach (TileBlock block in Tilemap.Blocks)
+                    {
+                        if (block.IsCollidable && block.BoundingBox.Intersects(proposedBox))
+                        {
+                            overlapsSolid = true;
+                            break;
+                        }
+                    }
+
+                    if (!overlapsSolid)
+                    {
+                        return candidate.Position;
+                    }
                 }
             }
 
-            for (int i = 0; i < rooms.Length; i++)
-            {
-                entitiesByRoom.Add(levelFiles[i], rooms[i]);
-            }
+            // Fallback: room center
+            return new Vector2(RoomBounds.Center.X - pWidth / 2f, RoomBounds.Center.Y - pHeight / 2f);
         }
 
         private void AddEnemy(RoomEntities entities, Func<Vector2, IEnemy> createEnemy)
@@ -215,6 +312,29 @@ namespace ZeldaGame.GameScripts.Screens
                 {
                     continue;
                 }
+
+                // Check against solid room blocks
+                Rectangle proposedBounds = new Rectangle((int)position.X, (int)position.Y, 32, 32);
+                bool insideSolidBlock = false;
+
+                if (Tilemap != null && Tilemap.Blocks != null)
+                {
+                    foreach (TileBlock block in Tilemap.Blocks)
+                    {
+                        if (block.IsCollidable && block.BoundingBox.Intersects(proposedBounds))
+                        {
+                            insideSolidBlock = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (insideSolidBlock)
+                {
+                    continue;
+                }
+
+                // Check against already spawned entity positions
                 bool overlaps = false;
                 foreach (Vector2 existingPosition in entities.SpawnPositions)
                 {
@@ -273,6 +393,26 @@ namespace ZeldaGame.GameScripts.Screens
             }
 
             // Link vs. Blocks
+            foreach (TileBlock block in Tilemap.Blocks)
+            {
+                if (CollisionDetector.CheckCollision(game.Player, block, out CollisionSide side, out Rectangle overlap))
+                {
+                    PlayerBlockCollisionHandler.Handle(game.Player, block, side, overlap);
+                }
+            }
+
+            // Items vs. Blocks (for autonomous items like the Fairy)
+            foreach (IItem item in entities.Items)
+            {
+                foreach (TileBlock block in Tilemap.Blocks)
+                {
+                    if (CollisionDetector.CheckCollision(item, block, out CollisionSide side, out Rectangle overlap))
+                    {
+                        ItemBlockCollisionHandler.Handle(item, block, side, overlap);
+                    }
+                }
+            }
+
             // Link vs. Enemies
             foreach (IEnemy enemy in entities.Enemies)
             {
@@ -301,6 +441,9 @@ namespace ZeldaGame.GameScripts.Screens
         public void Update(GameTime gameTime)
         {
             RoomEntities entities = entitiesByRoom[LevelFile];
+
+            // Update player
+            game.Player.Update(gameTime);
 
             foreach (IEnemy enemy in entities.Enemies)
             {
