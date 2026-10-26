@@ -1,10 +1,11 @@
 using Microsoft.Xna.Framework;
+using MonoGameLibrary;
 using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
 //Goriya and Link both use this class
-public class Boomerang : IGameObject, ICollidable, IProjectile
+public class Boomerang : IProjectile
 {
     private ISprite boomerangSprite;
     private Vector2 position;
@@ -55,6 +56,20 @@ public class Boomerang : IGameObject, ICollidable, IProjectile
         else
         {
             position += velocity;
+        }
+
+        int screenWidth = Core.Instance.Window.ClientBounds.Width;
+        int screenHeight = Core.Instance.Window.ClientBounds.Height;
+
+        bool hitScreenEdge =
+            position.X < 0 ||
+            position.Y < 0 ||
+            position.X + boomerangSprite.Size.X > screenWidth ||
+            position.Y + boomerangSprite.Size.Y > screenHeight;
+
+        if (hitScreenEdge && !isComingBack)
+        {
+            TriggerReturn();
         }
 
         stepsTaken++;

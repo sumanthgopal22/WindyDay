@@ -114,7 +114,6 @@ public class Player : IPlayer
         }
 
         ChangeState(new UsingItemLinkState(this));
-        sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
     // Matches the original Zelda
