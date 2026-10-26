@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Interfaces;
@@ -22,6 +23,7 @@ public class Player : IPlayer
     SpriteDirection finalDirection;
     Boomerang boomerang;
     Arrow arrow;
+    Bomb bomb;
 
     public void MoveRight()
     {
@@ -113,6 +115,18 @@ public class Player : IPlayer
         sprite.PlayAction(LinkSpriteAction.UseItem);
     }
 
+    public void UseItem3()
+    {
+        if (IsUsingItem || IsSwingingSword || boomerang != null || arrow != null)
+        {
+            return;
+        }
+
+        PlaceBomb();
+
+        ChangeState(new UsingItemLinkState(this));
+    }
+
     // Matches the original Zelda
     private const float BoomerangSpeed = 4 * 4;
     private const int BoomerangStepsOut = 128 / 4;
@@ -166,6 +180,12 @@ public class Player : IPlayer
         Vector2 linkCenter = position + sprite.Size / 2;
 
         arrow = new Arrow(linkCenter, velocity);
+    }
+
+    public void PlaceBomb()
+    {
+        Vector2 linkCenter = position + sprite.Size / 2;
+        bomb = new Bomb(linkCenter);
     }
 
     public void SwingSword()
@@ -232,6 +252,17 @@ public class Player : IPlayer
             }
         }
 
+        if (bomb != null)
+        {
+            bomb.Update(gameTime);
+
+            if (bomb.hasExploded == true)
+            {
+                bomb = null;
+            }
+        }
+
+
         Vector2 nextPosition = position + movement;
         
         int windowWidth = Core.Instance.Window.ClientBounds.Width;
@@ -263,6 +294,11 @@ public class Player : IPlayer
         if (arrow != null)
         {
             arrow.Draw(gameTime);
+        }
+
+        if (bomb != null)
+        {
+            bomb.Draw(gameTime);
         }
     }
 
