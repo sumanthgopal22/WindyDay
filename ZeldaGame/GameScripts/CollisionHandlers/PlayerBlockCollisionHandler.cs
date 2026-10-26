@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoGameLibrary;
 using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
@@ -33,6 +34,15 @@ public static class PlayerBlockCollisionHandler
                 correctedPosition.Y += overlap.Height;
                 break;
         }
+
+        // Clamp to prevent Link from being ejected off the screen or under the room
+        int windowWidth = Core.Instance.Window.ClientBounds.Width;
+        int windowHeight = Core.Instance.Window.ClientBounds.Height;
+        float pWidth = player.BoundingBox.Width > 0 ? player.BoundingBox.Width : 64f;
+        float pHeight = player.BoundingBox.Height > 0 ? player.BoundingBox.Height : 64f;
+
+        correctedPosition.X = MathHelper.Clamp(correctedPosition.X, 0, windowWidth - pWidth);
+        correctedPosition.Y = MathHelper.Clamp(correctedPosition.Y, 0, windowHeight - pHeight);
 
         player.Position = correctedPosition;
     }

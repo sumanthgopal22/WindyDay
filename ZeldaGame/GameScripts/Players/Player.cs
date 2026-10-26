@@ -21,7 +21,9 @@ public class Player : IPlayer
     public bool IsUsingItem { get; set; }
     public bool IsSwingingSword { get; set; }
 
-    public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y);
+    public Rectangle BoundingBox => sprite != null 
+    ? new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y)
+    : Rectangle.Empty;
 
     public Vector2 Position
     {
