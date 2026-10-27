@@ -1,44 +1,47 @@
-Sumanth Gopal
-9/30/2026
-Sprint 2
-Screens.cs
-Yaswanth Ruddarraju
-MainMenuScreen mixes state storage, input handling, audio playback, rendering into a single class. Font and asset fields use vague names, they should be changed to describe what they are used for. AddItem adds items directly with checking if the labels are null. Potential changes can include separating the rendering into into DrawBackground, DrawTitle, and DrawItems instead of putting all the code in Draw and changing the screen and marker offset values into named constants.
-
-Yaswanth Ruddarraju
-10/01/2026
-Sprint 2
-Cycler.cs
-Sam Van Oss
-Lines 24 to 26 handle only IEnemy types and the enemiesList directly and makes the file need duplicate code when items need to be cycled. You need to decouple the cycling logic from enemies and make it reusable across any entity type; refactor the class into a generic type like Cycler<T>.
-
-Sam Van Oss
-10/01/2026
-Sprint 2
-Sprite.cs
-Max Nabring 
-Switch(currentDirection) statement with if-else creates high complexity in Draw. However, SetDirection(spriteDirection direction) and storing currentDirection allow for clean and efficient lookup for the sprite to pivot based on character orientation. Some changes the could be added are animations for damage and more use of state patterns for character states.
-
 Matthias Hamm
-10/02/2026
-Sprint 2
-BlockSprite.cs
+10/22/2026
+Sprint 3
+LinkSpriteFactory, Max Nabring Readability Review, 5 minutes
+Descriptive variable names, easy to understand and follow. Could be improved with more comments.
+PlayerBlockCollisionHandler, Andrew Dome, Maintainability Review, 5 minutes
+Code is straightforward and simple, with nice features such as the switch case, making any future changes easy to make. In the future, collision with doorframes will need to be handled.
+
+Sam Van Oss
+10/25/2026
+Sprint 3
+PlayerBlockCollisionHandler, Andrew Dome, Readability Review, 5 minutes
+Code could be improved with easier variable names, but the included comments are helpful.
+Tilemap, Matthias Hamm, Maintainability Review, 5 minutes
+Code has strong methods and are separated into easily understandable parts, making any bugs easy to spot. FromFile could be refactored in the future but not necessary.
+
 Andrew Dome
-Size = new Vector2(24f, 32f) is immediately overwritten by Size = new Vector2(80f, 80f). Uses position in Draw even though hardcoded destination logic is still also included in the code.
+10/25/2026
+Sprint 3
+Tilemap, Matthias Hamm, Readability Review, 5 minutes
+Code has descriptive method names, more descriptive variable names could be beneficial, great use of comments. 
+TileBlock, Yaswanth Ruddarraju, Maintainability Review, 5 minutes
+Simple and easy file that would be very easy to update if needed. Future developments in project might make it so this file needs to be updated.
 
-Max Nabring 
-10/03/2026
-Sprint 2
-EnemySpriteFactory.cs
 Sumanth Gopal
-The code does a good job at centralized point of access for instantiating enemy sprites while hiding spritesheet coordinates from rest of the codebase. BossEnemies is loaded in LoadTextures(), but only used in CreateAquamentusSprite().Spritesheet coordinates are hardcoded inline inside method bodies. There are few load state guard clauses to check if LoadTextures() has already been called. A change could be to move the Rectangle arrays and frame durations out of method bodies and into private static readonly.
+10/25/2026
+Sprint 3
+TileBlock, Yaswanth Ruddarraju, Readability Review, 5 minutes
+Short and concise with simple variable names.
+CollisionDetector, Sam Van Oss, Maintainability Review, 5 minutes
+Very strong due to reusability and CheckCollision function is easy to use. Code could be refactored so that syntax is easier to understand.
 
-Andrew Dome
-10/03/2026
-Sprint 2
-AnimatedSprite.cs
-Sumanth Gopal
-DestinationRectangle calculates width and height strictly using sourceRectangles[0] so if some frames have different source dimensions they might look off. Providing multiple constructors like no effects, uniform effect, and per-frame effects array gives the caller a lot of flexibility and also centralizes the state assignment into a single Initialize method. A change could be to update the width and height dynamically based on the frame being rendered instead of using sourceRectangles[0].
+Max Nabring
+10/25/2026
+Sprint 3
+CollisionDetector, Sam Van Oss, Readability Review, 5 minutes
+Variable names could be more descriptive and more comments could be beneficial due to collision logic being complex, but included comment is helpful.
+PlayerEnemyCollisionHandler, Sumanth Gopal, Maintainability Reivew, 5 minutes
+Including OnCollideWithEnemy, the file is simple and effective. Link damaged sprite could be updated in the future to be more seamless and smooth.
 
-
-
+Yaswanth Ruddarraju
+10/25/2026
+Sprint 3
+PlayerEnemyCollisionHandler, Sumanth Gopal, Readability Review, 5 minutes
+Including OnCollideWithEnemy, simple and straightforward. Comments could be helpful but code is already simple.
+LinkSpriteFactory, Max Nabring, Maintainability Review, 5 minutes
+Code is simple and is easy to update, making future changes easy. More Link sprites could be added in the future.
