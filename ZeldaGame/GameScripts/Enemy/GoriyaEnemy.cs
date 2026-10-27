@@ -18,7 +18,7 @@ public class GoriyaEnemy : IEnemy
     private const int SideLength = 80; // pixels per side of the square basically the max amount of steps sprite can take before changing directions
     private int side = 0; // 0 = right, 1 = down, 2 = left, 3 = up
     private int stepsTaken = 0;
-    private Boomerang activeBoomerang = null; // null when Goriya is not throwing
+    private Boomerang boomerang = null; // null when Goriya is not throwing
     private const double SecondsBetweenAttacks = 3.0;
     private double secondsSinceLastAttack = 0;
 
@@ -79,8 +79,8 @@ public class GoriyaEnemy : IEnemy
 
         Vector2 throwPosition = new Vector2(position.X + 8, position.Y + 12);
 
-        activeBoomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: true);
-        ProjectileSpawned?.Invoke(activeBoomerang);
+        boomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: true);
+        ProjectileSpawned?.Invoke(boomerang);
     }
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
@@ -106,15 +106,15 @@ public class GoriyaEnemy : IEnemy
     public void Update(GameTime gameTime)
     {
         // While the boomerang is flying, Goriya stands still and waits for it to come back
-        if (activeBoomerang != null)
+        if (boomerang != null)
         {
-            if (activeBoomerang.IsActive)
+            if (boomerang.IsActive)
             {
                 goriyaSprite.Update(gameTime);
                 return;
             }
 
-            activeBoomerang = null;
+            boomerang = null;
         }
 
         previousPosition = position;
@@ -156,10 +156,5 @@ public class GoriyaEnemy : IEnemy
     public void Draw(GameTime gameTime)
     {
         goriyaSprite.Draw(gameTime, position);
-
-        // if (activeBoomerang != null)
-        // {
-        //     activeBoomerang.Draw(gameTime);
-        // }
     }
 }
