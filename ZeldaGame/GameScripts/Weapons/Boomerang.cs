@@ -35,12 +35,11 @@ public class Boomerang : IProjectile
     public void TriggerReturn()
     {
         isComingBack = true;
-        stepsTaken = 0;
     }
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
-        if (target is TileBlock tile && tile.IsCollidable)
+        if (target is TileBlock tile && tile.IsCollidable && !isComingBack)
         {
             TriggerReturn();
         }
@@ -72,22 +71,23 @@ public class Boomerang : IProjectile
             TriggerReturn();
         }
 
-        stepsTaken++;
-        if (stepsTaken >= stepsBeforeComingBack)
+        if (isComingBack)
         {
-            stepsTaken = 0;
-
-            if (isComingBack)
+            if (Vector2.Distance(position, startPosition) <= velocity.Length())
             {
-                // It has flown back the full distance, so it is back where it started
                 position = startPosition;
                 HasReturned = true;
             }
-            else
+        }
+        else
+        {
+            stepsTaken++;
+            if (stepsTaken >= stepsBeforeComingBack)
             {
                 isComingBack = true;
             }
         }
+
 
         boomerangSprite.Update(gameTime);
     }
