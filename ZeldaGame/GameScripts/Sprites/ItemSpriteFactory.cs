@@ -115,6 +115,21 @@ public class ItemSpriteFactory
         return new NonAnimatedSprite(items, bombSourceRectangle);
     }
 
+    public ISprite CreateBombExplosionEffectSprite()
+    {
+        // Extract the 3 explosion smoke phases from Link's spritesheet (big cloud, smaller cloud, fading puff)
+        Rectangle[] explosionSourceRectangles =
+        [
+            new Rectangle(138, 185, 16, 16),
+            new Rectangle(155, 185, 16, 16),
+            new Rectangle(172, 185, 16, 16)
+        ];
+        double explosionFrameDuration = 0.1;
+
+        // Return the animated explosion sprite
+        return new AnimatedSprite(link, explosionSourceRectangles, explosionFrameDuration);
+    }
+
     public ISprite CreateCompassSprite()
     {
         // Extract the compass frame from the spritesheet
