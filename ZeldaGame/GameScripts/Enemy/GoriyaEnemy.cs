@@ -54,6 +54,9 @@ public class GoriyaEnemy : IEnemy
         goriyaSprite = goriyaDownSprite;
     }
 
+    private const float BoomerangSpeed = 4 * 4;
+    private const int BoomerangStepsOut = 128 / 4;
+
     // Throws a boomerang in the direction Goriya is facing
     public void Attack()
     {
@@ -61,24 +64,22 @@ public class GoriyaEnemy : IEnemy
         switch (side)
         {
             case 0: 
-                velocity = new Vector2(3, 0); 
+                velocity = new Vector2(BoomerangSpeed, 0); 
                 break;  // right
             case 1: 
-                velocity = new Vector2(0, 3); 
+                velocity = new Vector2(0, BoomerangSpeed); 
                 break;  // down
             case 2: 
-                velocity = new Vector2(-3, 0); 
+                velocity = new Vector2(-BoomerangSpeed, 0); 
                 break; // left
             default: 
-                velocity = new Vector2(0, -3); 
+                velocity = new Vector2(0, -BoomerangSpeed); 
                 break; // up
         }
 
-        // Start the boomerang roughly in the middle of Goriya
         Vector2 throwPosition = new Vector2(position.X + 8, position.Y + 12);
 
-        // Mark as hostile so collision handlers target Link instead of enemies
-        activeBoomerang = new Boomerang(throwPosition, velocity, isHostile: true);
+        activeBoomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: true);
         ProjectileSpawned?.Invoke(activeBoomerang);
     }
 
@@ -107,17 +108,13 @@ public class GoriyaEnemy : IEnemy
         // While the boomerang is flying, Goriya stands still and waits for it to come back
         if (activeBoomerang != null)
         {
-            activeBoomerang.Update(gameTime);
-
-            if (activeBoomerang.HasReturned || !activeBoomerang.IsActive)
-            {
-                activeBoomerang = null;
-            }
-            else
+            if (activeBoomerang.IsActive)
             {
                 goriyaSprite.Update(gameTime);
                 return;
             }
+
+            activeBoomerang = null;
         }
 
         previousPosition = position;
