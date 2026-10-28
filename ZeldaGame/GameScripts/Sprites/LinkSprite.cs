@@ -1,8 +1,10 @@
+using System.Runtime.Serialization.Formatters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Interfaces;
 using ZeldaGame.GameScripts.Sprites;
+using ZeldaGame.GameScripts.StateMachine;
 
 namespace ZeldaGame;
 
@@ -14,7 +16,7 @@ public class LinkSprite : IActionSprite
     private readonly Rectangle[] swordSwingFrames;
     private readonly Vector2[] swordSwingOffsets;
     private readonly Rectangle pickedUpItemFrame;
-    private readonly Rectangle[] damagedLinkFrames;
+    private readonly Rectangle[][] damagedLinkFrames;
     private readonly float spriteScale;
     private readonly double frameDuration;
     private readonly double actionDuration;
@@ -37,7 +39,7 @@ public class LinkSprite : IActionSprite
         Rectangle[] swordSwingFrames,
         Vector2[] swordSwingOffsets,
         Rectangle pickedUpItemFrame,
-        Rectangle[] damagedLinkFrames,
+        Rectangle[][] damagedLinkFrames,
         float spriteScale,
         double frameDuration,
         double actionDuration,
@@ -105,7 +107,7 @@ public class LinkSprite : IActionSprite
             LinkSpriteAction.SwingSword => swordSwingFrames[directionIndex],
             LinkSpriteAction.UseItem => itemUseFrames[directionIndex],
             LinkSpriteAction.PickUpItem => pickedUpItemFrame,
-            LinkSpriteAction.Damaged => damagedLinkFrames[currentFrame],
+            LinkSpriteAction.Damaged => damagedLinkFrames[directionIndex][currentFrame],
             _ => walkingFrames[directionIndex][currentFrame]
         };
 
@@ -162,7 +164,7 @@ public class LinkSprite : IActionSprite
                 if (elapsedTime > DamageFlashFrameDuration)
                 {
                     elapsedTime -= DamageFlashFrameDuration;
-                    currentFrame = (currentFrame + 1) % damagedLinkFrames.Length;
+                    currentFrame = (currentFrame + 1) % damagedLinkFrames[GetDirectionIndex(currentDirection)].Length;
                 }
             }
 

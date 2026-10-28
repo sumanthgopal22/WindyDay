@@ -57,12 +57,24 @@ public class LinkSpriteFactory
             new Vector2(0, 0)
         ];
 
-        Rectangle[] damagedLinkFrames =
+        Rectangle[][] damagedLinkFrames =
         [
-            new Rectangle(58, 224, 16, 16),
-            new Rectangle(75, 224, 16, 16),
-            new Rectangle(92, 224, 16, 16),
-            new Rectangle(109, 224, 16, 16)
+            [
+                new Rectangle(1, 311, 16, 16), new Rectangle(18, 311, 16, 16), new Rectangle(35, 311, 16, 16), new Rectangle(52, 311, 16, 16),
+                new Rectangle(1, 328, 16, 16), new Rectangle(18, 328, 16, 16), new Rectangle(35, 328, 16, 16), new Rectangle(52, 328, 16, 16)
+            ],
+            [
+                new Rectangle(1, 345, 16, 16), new Rectangle(18, 345, 16, 16), new Rectangle(35, 345, 16, 16), new Rectangle(52, 345, 16, 16),
+                new Rectangle(1, 362, 16, 16), new Rectangle(18, 362, 16, 16), new Rectangle(35, 362, 16, 16), new Rectangle(52, 362, 16, 16)
+            ],
+            [
+                new Rectangle(1, 379, 16, 16), new Rectangle(18, 379, 16, 16), new Rectangle(35, 379, 16, 16), new Rectangle(52, 379, 16, 16),
+                new Rectangle(1, 396, 16, 16), new Rectangle(18, 396, 16, 16), new Rectangle(35, 396, 16, 16), new Rectangle(52, 396, 16, 16)
+            ],
+            [
+                new Rectangle(1, 379, 16, 16), new Rectangle(18, 379, 16, 16), new Rectangle(35, 379, 16, 16), new Rectangle(52, 379, 16, 16),
+                new Rectangle(1, 396, 16, 16), new Rectangle(18, 396, 16, 16), new Rectangle(35, 396, 16, 16), new Rectangle(52, 396, 16, 16)
+            ]
         ];
 
         //Stand alone, for when he picks things up
