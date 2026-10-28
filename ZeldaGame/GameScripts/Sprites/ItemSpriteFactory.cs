@@ -117,7 +117,7 @@ public class ItemSpriteFactory
 
     public ISprite CreateBombExplosionEffectSprite()
     {
-        // Extract the 3 explosion smoke phases from Link's spritesheet (big cloud, smaller cloud, fading puff)
+        // Extract bomb explosion frames from link spritesheet
         Rectangle[] explosionSourceRectangles =
         [
             new Rectangle(138, 185, 16, 16),

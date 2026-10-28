@@ -16,15 +16,26 @@ public static class CollisionDetector
         // Horizontal contact takes precedence when overlap width is narrower than overlap height
         if (overlap.Width < overlap.Height)
         {
-            side = first.BoundingBox.Center.X < second.BoundingBox.Center.X 
-                ? CollisionSide.Right 
-                : CollisionSide.Left;
+            if (first.BoundingBox.Center.X < second.BoundingBox.Center.X)
+            {
+                side = CollisionSide.Right;
+            }
+            else
+            {
+                side = CollisionSide.Left;
+            }
+            
         }
         else
         {
-            side = first.BoundingBox.Center.Y < second.BoundingBox.Center.Y 
-                ? CollisionSide.Bottom 
-                : CollisionSide.Top;
+            if (first.BoundingBox.Center.Y < second.BoundingBox.Center.Y)
+            {
+                side = CollisionSide.Bottom;
+            }
+            else
+            {
+                side = CollisionSide.Top;
+            }
         }
 
         return true;
