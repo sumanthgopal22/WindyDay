@@ -23,7 +23,7 @@ public interface IPlayer : ICollidable
     void MoveUp();
     void MoveDown();
 
-    void UseItem(WeaponType weaponType);
+    void UseItem(ProjectileType projectileType);
     void PickUpItem(IItem item);
     void DropHeldItem();
 

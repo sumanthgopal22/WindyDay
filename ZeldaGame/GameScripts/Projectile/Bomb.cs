@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame;
 
-//Goriya and Link both use this class
 public class Bomb : IProjectile
 {
     private ISprite bombSprite;
@@ -13,6 +12,7 @@ public class Bomb : IProjectile
     private double elapsedTime = 0.0;
     public bool hasExploded;
     private bool isFinished;
+    public bool hasHitEnemy = false;
 
     public bool isHostile => false;
     public bool IsActive => !isFinished;
@@ -30,6 +30,13 @@ public class Bomb : IProjectile
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
         
+    }
+    public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
+    {
+        if (target is IEnemy enemy && enemy.IsCollidable)
+        {
+            hasHitEnemy = true;
+        }
     }
 
 

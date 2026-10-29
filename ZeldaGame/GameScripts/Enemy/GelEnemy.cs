@@ -4,7 +4,7 @@ using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
-public class GelEnemy : IEnemy
+public class GelEnemy : IEnemy, ICollidable
 {
     private ISprite gelSprite;
     private Vector2 position;
@@ -15,10 +15,13 @@ public class GelEnemy : IEnemy
     private Random random = new Random();
     public event System.Action<IProjectile> ProjectileSpawned;
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)gelSprite.Size.X, (int)gelSprite.Size.Y);
+    public bool IsCollidable { get; set; }
+    public bool IsAlive { get; set; } = true;
 
     public GelEnemy(Vector2 startPostion)
     {
         position = startPostion;
+        this.IsCollidable = true;
 
     }
     public void MoveRight()
@@ -55,8 +58,13 @@ public class GelEnemy : IEnemy
             this.side = random.Next(4);
             stepsTaken = 0;
         }
-    }
 
+        if (target is IProjectile weapon)
+        {
+            IsAlive = false;
+            IsCollidable = false;
+        }
+    }
 
     public void LoadContent()
     {

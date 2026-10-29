@@ -6,4 +6,6 @@ public interface IProjectile : ICollidable, IGameObject
     bool isHostile { get; }
 
     void OnCollideWithObject(ICollidable target, CollisionSide side);
+    void OnCollideWithEnemy(ICollidable target, CollisionSide side);
+
 }

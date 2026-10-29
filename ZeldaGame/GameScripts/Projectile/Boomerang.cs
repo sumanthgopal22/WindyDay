@@ -17,6 +17,7 @@ public class Boomerang : IProjectile
     // True once the boomerang has made it back to where it was thrown from
     public bool HasReturned { get; private set; } = false;
     public bool isHostile { get; }
+    public bool hasHitEnemy = false;
 
     public bool IsActive => !HasReturned;
 
@@ -41,6 +42,15 @@ public class Boomerang : IProjectile
     {
         if (target is TileBlock tile && tile.IsCollidable && !isComingBack)
         {
+            TriggerReturn();
+        }
+    }
+
+    public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
+    {
+        if (target is IEnemy enemy && enemy.IsCollidable)
+        {
+            hasHitEnemy = true;
             TriggerReturn();
         }
     }

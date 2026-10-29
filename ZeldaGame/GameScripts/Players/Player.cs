@@ -106,23 +106,23 @@ public class Player : IPlayer
         sprite.SetDirection(finalDirection);
     }
 
-    public void UseItem(WeaponType weaponType)
+    public void UseItem(ProjectileType projectileType)
     {
         if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive) || IsDamaged)
         {
             return;
         }
-        switch (weaponType)
+        switch (projectileType)
         {
-            case WeaponType.Boomerang:
+            case ProjectileType.Boomerang:
                 BoomerangThrow();
                 sprite.PlayAction(LinkSpriteAction.UseItem);
                 break;
-            case WeaponType.Arrow:
+            case ProjectileType.Arrow:
                 FireArrow();
                 sprite.PlayAction(LinkSpriteAction.UseItem);
                 break;
-            case WeaponType.Bomb:
+            case ProjectileType.Bomb:
                 PlaceBomb();
                 break;
         }

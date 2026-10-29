@@ -24,6 +24,8 @@ public class GoriyaEnemy : IEnemy
 
     public event System.Action<IProjectile> ProjectileSpawned;
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)goriyaSprite.Size.X, (int)goriyaSprite.Size.Y);
+    public bool IsCollidable { get; set; }
+    public bool IsAlive { get; set; } = true;
 
 
     public GoriyaEnemy(Vector2 startPosition)
@@ -91,6 +93,11 @@ public class GoriyaEnemy : IEnemy
 
             this.side = random.Next(4);
             stepsTaken = 0;
+        }
+        if (target is IProjectile weapon)
+        {
+            IsAlive = false;
+            IsCollidable = false;
         }
     }
     

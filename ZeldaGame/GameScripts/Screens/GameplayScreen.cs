@@ -436,6 +436,16 @@ namespace ZeldaGame.GameScripts.Screens
             }
 
             // Projectiles vs. Enemies
+            foreach (IEnemy enemy in entities.Enemies)
+            {
+                foreach (IProjectile projectile in entities.Projectiles)
+                {
+                    if (CollisionDetector.CheckCollision(projectile, enemy, out CollisionSide side, out _))
+                    {
+                        EnemyProjectileCollisionHandler.Handle(projectile, enemy, side);
+                    }
+                }
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -468,6 +478,8 @@ namespace ZeldaGame.GameScripts.Screens
 
             // Run collision detection and resolution sweeps
             DetectCollisions(entities);
+            
+            entities.Enemies.RemoveAll(enemy => !enemy.IsAlive);
 
             // Prune collected items
             entities.Items.RemoveAll(item => !item.IsActive);

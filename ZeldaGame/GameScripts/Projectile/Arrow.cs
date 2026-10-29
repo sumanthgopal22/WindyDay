@@ -5,7 +5,6 @@ using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame;
 
-//Goriya and Link both use this class
 public class Arrow : IProjectile
 {
     private ISprite arrowSprite;
@@ -13,10 +12,11 @@ public class Arrow : IProjectile
     private Vector2 startPosition;
     private Vector2 velocity;
     public bool hasHitWall = false;
+    public bool hasHitEnemy = false;
 
     public bool isHostile { get; }
 
-    public bool IsActive => !hasHitWall;
+    public bool IsActive => !hasHitWall && !hasHitEnemy;
 
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)arrowSprite.Size.X, (int)arrowSprite.Size.Y);
 
@@ -56,6 +56,14 @@ public class Arrow : IProjectile
         if (target is TileBlock tile && tile.IsCollidable)
         {
             hasHitWall = true;
+        }
+    }
+
+    public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
+    {
+        if (target is IEnemy enemy && enemy.IsCollidable)
+        {
+            hasHitEnemy = true;
         }
     }
 

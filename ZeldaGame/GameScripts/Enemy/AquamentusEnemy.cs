@@ -15,6 +15,9 @@ public class AquamentusEnemy : IEnemy
     private double secondsSinceLastAttack = 0;
     public event System.Action<IProjectile> ProjectileSpawned;
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)aquamentusSprite.Size.X, (int)aquamentusSprite.Size.Y);
+    public bool IsCollidable { get; set; }
+    public bool IsAlive { get; set; } = true;
+
 
     public AquamentusEnemy(Vector2 startPosition)
     {
@@ -55,9 +58,12 @@ public class AquamentusEnemy : IEnemy
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
-        //Not needed
+        if (target is IProjectile weapon)
+        {
+            IsAlive = false;
+            IsCollidable = false;
+        }
     }
-
 
     public void LoadContent()
     {

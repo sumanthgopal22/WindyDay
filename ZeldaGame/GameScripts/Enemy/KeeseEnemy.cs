@@ -15,6 +15,8 @@ public class KeeseEnemy : IEnemy
     public event Action<IProjectile> ProjectileSpawned;
     private Random random = new Random();
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)keeseSprite.Size.X, (int)keeseSprite.Size.Y);
+    public bool IsCollidable { get; set; }
+    public bool IsAlive { get; set; } = true;
 
 
     public KeeseEnemy(Vector2 startPosition)
@@ -55,6 +57,12 @@ public class KeeseEnemy : IEnemy
 
             this.side = random.Next(8);
             stepsTaken = 0;
+        }
+
+        if (target is IProjectile weapon)
+        {
+            IsAlive = false;
+            IsCollidable = false;
         }
     }
 
