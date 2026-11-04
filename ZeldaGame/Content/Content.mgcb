@@ -104,6 +104,19 @@
 /processorParam:Version=3.8.5.1
 /build:spritesheets/dungeon-1-sheet.png
 
+#begin spritesheets/Items.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:spritesheets/Items.png
+
 #begin spritesheets/Link.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -117,7 +130,7 @@
 /processorParam:Version=3.8.5.1
 /build:spritesheets/Link.png
 
-#begin spritesheets/Items.png
+#begin spritesheets/NES - The Legend of Zelda - Miscellaneous - HUD & Pause Screen.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -128,7 +141,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /processorParam:Version=3.8.5.1
-/build:spritesheets/Items.png
+/build:spritesheets/NES - The Legend of Zelda - Miscellaneous - HUD & Pause Screen.png;spritesheets/HUDandPauseScreen.png
 
 #begin zelda_bg.jpg
 /importer:TextureImporter
