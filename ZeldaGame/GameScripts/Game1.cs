@@ -21,6 +21,7 @@ public class Game1 : Core
     public IScreen CurrentScreen { get; set; }
     public IScreen MainMenuScreen { get; private set; }
     public IScreen GameplayScreen { get; private set; }
+    public IScreen GameOverScreen { get; private set; }
 
     // State machine
     public GameStateMachine GameStateMachine { get; set; }
@@ -47,6 +48,7 @@ public class Game1 : Core
         // Initialize screens
         MainMenuScreen = new MainMenuScreen(this);
         GameplayScreen = new GameplayScreen(this);
+        GameOverScreen = new GameOverScreen(this);
         CurrentScreen = MainMenuScreen;
 
         // Initialize state machine

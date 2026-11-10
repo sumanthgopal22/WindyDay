@@ -36,7 +36,7 @@ namespace ZeldaGame
         private const float ItemSpacing = 40f;
         private const float MarkerOffset = 24f;
 
-        public MainMenuScreen(Game1 game) 
+        public MainMenuScreen(Game1 game)
         {
             this.game = game;
             AddItem("Start Game", new StartGameCommand(this.game));
@@ -120,6 +120,10 @@ namespace ZeldaGame
             {
                 ExecuteSelected();
             }
+            else if (IsKeyPressed(currentKeyboardState, Keys.E))
+            {
+                MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
+            }
 
             _previousKeyboardState = currentKeyboardState;
         }
@@ -143,7 +147,7 @@ namespace ZeldaGame
 
             spriteBatch.Draw(
                 _background,
-                new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight), // game size, Game1 scales it to the window
+                new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight),
                 Color.White
             );
         }

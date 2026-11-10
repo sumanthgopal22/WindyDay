@@ -85,7 +85,7 @@ namespace ZeldaGame.GameScripts.Tilemapping
         // A tile is only passable (non-collidable) if it matches specific floor numbers
         private static bool IsTileCollidable(int tilesetID)
         {
-            if (tilesetID == 1216 || tilesetID == 1217 || tilesetID == 1248 || tilesetID == 1249)
+            if (tilesetID == 1216 || tilesetID == 1217 || tilesetID == 1248 || tilesetID == 1249 || tilesetID == 1226 || tilesetID == 1227 || tilesetID == 1258 || tilesetID == 1259)
             {
                 return false; // nonCollidableObject (Passable floor)
             }

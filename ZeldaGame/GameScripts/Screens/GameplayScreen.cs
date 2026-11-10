@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input; 
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media; 
 using MonoGameLibrary;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace ZeldaGame.GameScripts.Screens
         private string[] levelFiles;
         private int currentLevelIndex = 0;
         private MouseState previousMouseState;
+        private KeyboardState previousKeyboardState; // Added to track keyboard inputs like 'E'
         private readonly Dictionary<string, RoomEntities> entitiesByRoom = new();
         private readonly Random random = new();
 
@@ -88,11 +90,13 @@ namespace ZeldaGame.GameScripts.Screens
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             LoadRoom(LevelFile, device);
+            previousKeyboardState = Keyboard.GetState();
         }
 
         private void LoadRoom(string levelFile, GraphicsDevice device)
         {
             System.Diagnostics.Debug.WriteLine($"Active Room: {levelFile}");
+
 
             LevelFile = levelFile;
             Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
@@ -106,17 +110,7 @@ namespace ZeldaGame.GameScripts.Screens
                 screenBounds.Height - (int)Tilemap.TileHeight * 2
             );
 
-            // Safely reset Link to room center or entrance upon room switch
-            // game.Player.Position = new Vector2(
-            //     screenBounds.Width / 2f - game.Player.BoundingBox.Width / 2f,
-            //     screenBounds.Height * 0.75f
-            // );
             game.Player.Position = GetSafePlayerSpawnPosition();
-
-            // if (entitiesByRoom.Count == 0)
-            // {
-            //     CreateRoomEntities();
-            // }
 
             // Initialize entities for THIS room using ITS OWN Tilemap
             if (!entitiesByRoom.ContainsKey(LevelFile))
@@ -164,72 +158,6 @@ namespace ZeldaGame.GameScripts.Screens
 
             entitiesByRoom.Add(LevelFile, entities);
         }
-
-        // private void CreateRoomEntities()
-        // {
-        //     var rooms = new RoomEntities[levelFiles.Length];
-        //     for (int i = 0; i < rooms.Length; i++)
-        //     {
-        //         rooms[i] = new RoomEntities();
-        //     }
-
-        //     var enemyTypes = new List<Func<Vector2, IEnemy>>
-        //     {
-        //         position => new AquamentusEnemy(position),
-        //         position => new GelEnemy(position),
-        //         position => new GoriyaEnemy(position),
-        //         position => new KeeseEnemy(position),
-        //         position => new StalfosEnemy(position),
-        //         position => new WallMasterEnemy(position)
-        //     };
-
-        //     var itemTypes = new List<Func<Vector2, IItem>>
-        //     {
-        //         position => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), position),
-        //         position => new BluePotionItem(ItemSpriteFactory.Instance.CreateBluePotionSprite(), position),
-        //         position => new BombItem(ItemSpriteFactory.Instance.CreateBombSprite(), position),
-        //         position => new BowItem(ItemSpriteFactory.Instance.CreateBowSprite(), position),
-        //         position => new ClockItem(ItemSpriteFactory.Instance.CreateClockSprite(), position),
-        //         position => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), position),
-        //         position => new FairyItem(ItemSpriteFactory.Instance.CreateFairySprite(), position),
-        //         position => new HeartContainerItem(ItemSpriteFactory.Instance.CreateHeartContainerSprite(), position),
-        //         position => new HeartItem(ItemSpriteFactory.Instance.CreateHeartSprite(), position),
-        //         position => new MapItem(ItemSpriteFactory.Instance.CreateMapSprite(), position),
-        //         position => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), position),
-        //         position => new RupeeItem(ItemSpriteFactory.Instance.CreateRupeeSprite(), position),
-        //         position => new TriforceShardItem(ItemSpriteFactory.Instance.CreateTriforceShardSprite(), position),
-        //         position => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), position),
-        //         position => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), position)
-        //     };
-
-        //     foreach (Func<Vector2, IEnemy> createEnemy in Shuffle(enemyTypes))
-        //     {
-        //         AddEnemy(rooms[random.Next(rooms.Length)], createEnemy);
-        //     }
-
-        //     foreach (Func<Vector2, IItem> createItem in Shuffle(itemTypes))
-        //     {
-        //         AddItem(rooms[random.Next(rooms.Length)], createItem);
-        //     }
-
-        //     foreach (RoomEntities entities in rooms)
-        //     {
-        //         if (entities.Enemies.Count == 0 || random.Next(3) == 0)
-        //         {
-        //             AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
-        //         }
-
-        //         if (entities.Items.Count == 0 || random.Next(3) == 0)
-        //         {
-        //             AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
-        //         }
-        //     }
-
-        //     for (int i = 0; i < rooms.Length; i++)
-        //     {
-        //         entitiesByRoom.Add(levelFiles[i], rooms[i]);
-        //     }
-        // }
 
         private Vector2 GetSafePlayerSpawnPosition()
         {
@@ -420,9 +348,8 @@ namespace ZeldaGame.GameScripts.Screens
                 {
                     PlayerEnemyCollisionHandler.Handle(game.Player, enemy, side);
                 }
-                
             }
-            
+
             // Enemies vs. Blocks
             foreach (IEnemy enemy in entities.Enemies)
             {
@@ -450,6 +377,15 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void Update(GameTime gameTime)
         {
+            KeyboardState currentKeyboardState = Keyboard.GetState();
+
+            // Mute with 'E'
+            if (currentKeyboardState.IsKeyDown(Keys.E) && previousKeyboardState.IsKeyUp(Keys.E))
+            {
+                MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
+            }
+            previousKeyboardState = currentKeyboardState;
+
             RoomEntities entities = entitiesByRoom[LevelFile];
 
             // Update player
