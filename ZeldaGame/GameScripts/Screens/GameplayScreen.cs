@@ -367,6 +367,11 @@ namespace ZeldaGame.GameScripts.Screens
             {
                 foreach (IProjectile projectile in entities.Projectiles)
                 {
+                    if (projectile.isHostile)
+                    {
+                        continue;
+                    }
+
                     if (CollisionDetector.CheckCollision(projectile, enemy, out CollisionSide side, out _))
                     {
                         EnemyProjectileCollisionHandler.Handle(projectile, enemy, side);

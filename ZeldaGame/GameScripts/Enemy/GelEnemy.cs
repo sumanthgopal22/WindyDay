@@ -17,6 +17,7 @@ public class GelEnemy : IEnemy, ICollidable
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)gelSprite.Size.X, (int)gelSprite.Size.Y);
     public bool IsCollidable { get; set; }
     public bool IsAlive { get; set; } = true;
+    public double Health { get; set; } = 1.0;
 
     public GelEnemy(Vector2 startPostion)
     {
@@ -59,10 +60,15 @@ public class GelEnemy : IEnemy, ICollidable
             stepsTaken = 0;
         }
 
-        if (target is IProjectile weapon)
+        if (target is IProjectile weapon && !weapon.isHostile)
         {
-            IsAlive = false;
-            IsCollidable = false;
+            Health = Health - weapon.Damage;
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                IsCollidable = false;
+
+            }
         }
     }
 

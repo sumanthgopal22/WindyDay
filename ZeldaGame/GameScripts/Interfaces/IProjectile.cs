@@ -2,6 +2,7 @@ namespace ZeldaGame;
 
 public interface IProjectile : ICollidable, IGameObject
 {
+    double Damage { get; }
     bool IsActive { get; }
     bool isHostile { get; }
 

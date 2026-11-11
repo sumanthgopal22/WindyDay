@@ -13,10 +13,10 @@ public class Arrow : IProjectile
     private Vector2 velocity;
     public bool hasHitWall = false;
     public bool hasHitEnemy = false;
-
     public bool isHostile { get; }
-
     public bool IsActive => !hasHitWall && !hasHitEnemy;
+    public const double damage = 2.0;
+    public double Damage { get{ return damage; } }
 
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)arrowSprite.Size.X, (int)arrowSprite.Size.Y);
 

@@ -17,6 +17,7 @@ public class WallMasterEnemy : IEnemy
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)wallMasterSprite.Size.X, (int)wallMasterSprite.Size.Y);
     public bool IsCollidable { get; set; }
     public bool IsAlive { get; set; } = true;
+    public double Health { get; set; } = 3.0;
 
     public WallMasterEnemy(Vector2 startPosition)
     {
@@ -60,8 +61,13 @@ public class WallMasterEnemy : IEnemy
 
         if (target is IProjectile weapon)
         {
-            IsAlive = false;
-            IsCollidable = false;
+            Health = Health - weapon.Damage;
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                IsCollidable = false;
+
+            }
         }
     }
 

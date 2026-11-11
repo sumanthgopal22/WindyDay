@@ -17,6 +17,7 @@ public class AquamentusEnemy : IEnemy
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)aquamentusSprite.Size.X, (int)aquamentusSprite.Size.Y);
     public bool IsCollidable { get; set; }
     public bool IsAlive { get; set; } = true;
+    public double Health { get; set; } = 6.0;
 
 
     public AquamentusEnemy(Vector2 startPosition)
@@ -60,8 +61,13 @@ public class AquamentusEnemy : IEnemy
     {
         if (target is IProjectile weapon)
         {
-            IsAlive = false;
-            IsCollidable = false;
+            Health = Health - weapon.Damage;
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                IsCollidable = false;
+
+            }
         }
     }
 

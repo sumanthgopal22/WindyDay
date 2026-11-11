@@ -5,6 +5,7 @@ public interface IEnemy : IGameObject, ICollidable
     event System.Action<IProjectile> ProjectileSpawned;
     bool IsCollidable { get; set; }
     bool IsAlive { get; set; }
+    double Health { get; set; }
 
     void MoveRight();
     void MoveLeft();

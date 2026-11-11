@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using ZeldaGame.GameScripts.Tilemapping;
@@ -18,8 +19,9 @@ public class Boomerang : IProjectile
     public bool HasReturned { get; private set; } = false;
     public bool isHostile { get; }
     public bool hasHitEnemy = false;
-
     public bool IsActive => !HasReturned;
+    public const double damage = 1.0;
+    public double Damage { get{ return damage; } }
 
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)boomerangSprite.Size.X, (int)boomerangSprite.Size.Y);
 
@@ -48,7 +50,7 @@ public class Boomerang : IProjectile
 
     public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
     {
-        if (target is IEnemy enemy && enemy.IsCollidable)
+        if (!isComingBack && target is IEnemy enemy && enemy.IsCollidable)
         {
             hasHitEnemy = true;
             TriggerReturn();

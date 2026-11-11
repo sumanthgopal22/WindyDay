@@ -13,9 +13,10 @@ public class Bomb : IProjectile
     public bool hasExploded;
     private bool isFinished;
     public bool hasHitEnemy = false;
-
     public bool isHostile => false;
     public bool IsActive => !isFinished;
+    public const double damage = 4.0;
+    public double Damage { get{ return damage; } }
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)bombSprite.Size.X, (int)bombSprite.Size.Y);
 
     public Bomb(Vector2 position)
