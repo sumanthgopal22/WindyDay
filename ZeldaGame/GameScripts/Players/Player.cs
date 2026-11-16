@@ -159,6 +159,7 @@ public class Player : IPlayer
         Vector2 throwPosition = new Vector2(position.X + 13, position.Y + 16);
         activeBoomerang = new Boomerang(throwPosition, velocity, BoomerangStepsOut, isHostile: false);
         ProjectileSpawned?.Invoke(activeBoomerang);
+        SoundManager.Instance.Play(Sfx.BoomerangThrow);
     }
 
     private const float ArrowSpeed = 4 * 4;
@@ -209,6 +210,7 @@ public class Player : IPlayer
 
         ChangeState(new DamagedLinkState(this));
         sprite.PlayAction(LinkSpriteAction.Damaged);
+        SoundManager.Instance.Play(Sfx.Hurt);
     }
 
     public void UpdateSprite(GameTime gameTime)

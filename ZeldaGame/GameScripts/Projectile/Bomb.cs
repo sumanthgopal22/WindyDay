@@ -47,6 +47,7 @@ public class Bomb : IProjectile
         if (elapsedTime >= elaspedBombTime && !hasExploded)
         {
             hasExploded = true;
+            SoundManager.Instance.Play(Sfx.BombBlow);
 
             Vector2 bombCenter = position + bombSprite.Size /2;
             position = bombCenter - explosionEffect.Size / 2;

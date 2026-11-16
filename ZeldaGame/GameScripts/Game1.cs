@@ -89,6 +89,9 @@ public class Game1 : Core
         ItemSpriteFactory.Instance.LoadTextures();
         LinkSpriteFactory.Instance.LoadTextures();
 
+        // Sound effects
+        SoundManager.Instance.LoadContent(Content);
+
         // Player
         Player.LoadContent();
 

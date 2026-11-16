@@ -22,6 +22,15 @@ public static class PlayerItemCollisionHandler
         if (IsSpecialItem(item))
         {
             player.PickUpItem(item);
+            SoundManager.Instance.Play(Sfx.Fanfare);
+        }
+        else if (item is HeartItem)
+        {
+            SoundManager.Instance.Play(Sfx.GetHeart);
+        }
+        else
+        {
+            SoundManager.Instance.Play(Sfx.GetItem);
         }
 
         // Mark item collected so the room removes it from its active list
