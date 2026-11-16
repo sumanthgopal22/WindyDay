@@ -22,7 +22,7 @@ public static class PlayerItemCollisionHandler
         if (IsSpecialItem(item))
         {
             player.PickUpItem(item);
-            SoundManager.Instance.Play(Sfx.Fanfare);
+            SoundManager.Instance.Play(Sfx.OverHeadItem);
         }
         else if (item is HeartItem)
         {

@@ -21,7 +21,7 @@ public enum Sfx
     GetRupee,        
     GetKey,         
     Refill,          
-    Fanfare,         
+    OverHeadItem,         
 
     Stairs,         
 }

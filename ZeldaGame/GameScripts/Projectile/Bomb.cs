@@ -7,7 +7,7 @@ public class Bomb : IProjectile
     private ISprite bombSprite;
     private ISprite explosionEffect;
     private Vector2 position;
-    private const double elaspedBombTime = 2.0;
+    private const double elaspedBombTime = 1.0;
     private const double explosionTime = 0.3;
     private double elapsedTime = 0.0;
     public bool hasExploded;
@@ -26,6 +26,8 @@ public class Bomb : IProjectile
         this.position = position - bombSprite.Size / 2;
         hasExploded = false;
         isFinished = false;
+
+        SoundManager.Instance.Play(Sfx.BombBlow);
     }
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
@@ -47,7 +49,6 @@ public class Bomb : IProjectile
         if (elapsedTime >= elaspedBombTime && !hasExploded)
         {
             hasExploded = true;
-            SoundManager.Instance.Play(Sfx.BombBlow);
 
             Vector2 bombCenter = position + bombSprite.Size /2;
             position = bombCenter - explosionEffect.Size / 2;

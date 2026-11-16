@@ -45,7 +45,7 @@ public class SoundManager
                 getItem.Play();
                 break;
 
-            case Sfx.Fanfare:
+            case Sfx.OverHeadItem:
                 fanfare.Play();
                 break;
 
