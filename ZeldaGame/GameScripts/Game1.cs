@@ -115,9 +115,10 @@ public class Game1 : Core
     {
         GraphicsDevice.Clear(new Color(147, 187, 236));
 
-        if (CurrentScreen is GameplayScreen gameplayScreen)
+        // These screens set up their own SpriteBatch camera so they can slide around
+        if (CurrentScreen is GameplayScreen || CurrentScreen is ItemSelectScreen)
         {
-            gameplayScreen.Draw(SpriteBatch, gameTime);
+            CurrentScreen.Draw(SpriteBatch, gameTime);
         }
         else
         {
