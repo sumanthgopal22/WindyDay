@@ -38,9 +38,71 @@ namespace ZeldaGame.GameScripts.Screens
         private readonly Vector2 cursorPos = new Vector2(128, 48);
         private readonly Vector2 mapItemPos = new Vector2(44, 112);
 
+        // Where the inventory sits on screen
+        private sealed class InventoryState
+        {
+            public Vector2 Offset { get; init; }
+        }
+
+        // Same idea as RoomTransition: slide from Source to Destination over a fixed duration
+        private sealed class InventoryTransition
+        {
+            public InventoryState Source { get; init; }
+            public InventoryState Destination { get; init; }
+            public float ElapsedSeconds { get; set; }
+        }
+
+        private const float InventoryTransitionDuration = 0.5f;
+
+        // Closed means parked one full screen above the view, Open means covering the view
+        private static readonly InventoryState ClosedState = new() { Offset = new Vector2(0f, -Game1.GameHeight) };
+        private static readonly InventoryState OpenState = new() { Offset = Vector2.Zero };
+
+        private InventoryState inventoryState = ClosedState;
+        private InventoryTransition transition;
+
+        public bool IsTransitioning => transition != null;
+        public bool IsOpen => transition == null && inventoryState == OpenState;
+        public bool IsClosed => transition == null && inventoryState == ClosedState;
+
         public ItemSelectScreen(Game1 game)
         {
             this.game = game;
+        }
+
+        public void Open() => StartTransition(OpenState);
+
+        public void Close() => StartTransition(ClosedState);
+
+        private void StartTransition(InventoryState destination)
+        {
+            if (transition != null || inventoryState == destination)
+            {
+                return;
+            }
+
+            transition = new InventoryTransition
+            {
+                Source = inventoryState,
+                Destination = destination
+            };
+        }
+
+        private Vector2 GetCurrentOffset()
+        {
+            if (transition == null)
+            {
+                return inventoryState.Offset;
+            }
+
+            float progress = MathHelper.Clamp(
+                transition.ElapsedSeconds / InventoryTransitionDuration,
+                0f,
+                1f
+            );
+            // Start at the source, then move "progress" of the way toward the destination
+            // (progress 0 = at source, 0.5 = halfway, 1 = at destination)
+            return Vector2.Lerp(transition.Source.Offset, transition.Destination.Offset, progress);
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
@@ -70,10 +132,41 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void Update(GameTime gameTime)
         {
+            if (transition != null)
+            {
+                transition.ElapsedSeconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (transition.ElapsedSeconds >= InventoryTransitionDuration)
+                {
+                    inventoryState = transition.Destination;
+                    transition = null;
+                }
+
+                // No cursor input while sliding
+                return;
+            }
+
             // Inventory cursor movement and item selection logic will go here later
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            Vector2 inventoryOffset = GetCurrentOffset();
+
+            // Gameplay sits directly below the inventory, so it gets pushed down as the inventory slides in
+            if (!IsOpen && game.GameplayScreen is GameplayScreen gameplayScreen)
+            {
+                Vector2 gameplayOffset = inventoryOffset + new Vector2(0f, Game1.GameHeight);
+                gameplayScreen.Draw(spriteBatch, gameTime, gameplayOffset);
+            }
+
+            Matrix scale = Matrix.CreateScale(Game1.WindowScale, Game1.WindowScale, 1f);
+            Matrix camera = Matrix.CreateTranslation(inventoryOffset.X, inventoryOffset.Y, 0f) * scale;
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera);
+            DrawInventory(spriteBatch);
+            spriteBatch.End();
+        }
+
+        private void DrawInventory(SpriteBatch spriteBatch)
         {
             // Draw the black backdrop across the screen
             DrawRect(spriteBatch, new Rectangle(0, 0, 256, 176), Color.Black);

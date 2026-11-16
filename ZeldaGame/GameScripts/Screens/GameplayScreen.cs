@@ -80,9 +80,14 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            Draw(spriteBatch, gameTime, Vector2.Zero);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 screenOffset)
+        {
             if (transition == null)
             {
-                DrawRoomWithCamera(spriteBatch, currentRoom, gameTime, Vector2.Zero, drawPlayer: true);
+                DrawRoomWithCamera(spriteBatch, currentRoom, gameTime, screenOffset, drawPlayer: true);
                 return;
             }
 
@@ -91,7 +96,7 @@ namespace ZeldaGame.GameScripts.Screens
                 0f,
                 1f
             );
-            Vector2 sourceOffset = GetTransitionMovement(transition.Door.Direction, progress);
+            Vector2 sourceOffset = GetTransitionMovement(transition.Door.Direction, progress) + screenOffset;
             Vector2 destinationOffset = GetTransitionStartOffset(transition.Door.Direction) + sourceOffset;
 
             DrawRoomWithCamera(spriteBatch, currentRoom, gameTime, sourceOffset, drawPlayer: true);
