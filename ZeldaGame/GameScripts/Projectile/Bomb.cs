@@ -2,20 +2,21 @@ using Microsoft.Xna.Framework;
 
 namespace ZeldaGame;
 
-//Goriya and Link both use this class
 public class Bomb : IProjectile
 {
     private ISprite bombSprite;
     private ISprite explosionEffect;
     private Vector2 position;
-    private const double elaspedBombTime = 2.0;
+    private const double elaspedBombTime = 1.0;
     private const double explosionTime = 0.3;
     private double elapsedTime = 0.0;
     public bool hasExploded;
     private bool isFinished;
-
+    public bool hasHitEnemy = false;
     public bool isHostile => false;
     public bool IsActive => !isFinished;
+    public const double damage = 4.0;
+    public double Damage { get{ return damage; } }
     public Rectangle BoundingBox => new Rectangle((int)position.X, (int)position.Y, (int)bombSprite.Size.X, (int)bombSprite.Size.Y);
 
     public Bomb(Vector2 position)
@@ -25,11 +26,20 @@ public class Bomb : IProjectile
         this.position = position - bombSprite.Size / 2;
         hasExploded = false;
         isFinished = false;
+
+        SoundManager.Instance.Play(Sfx.BombBlow);
     }
 
     public void OnCollideWithObject(ICollidable target, CollisionSide side)
     {
         
+    }
+    public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
+    {
+        if (target is IEnemy enemy && enemy.IsCollidable)
+        {
+            hasHitEnemy = true;
+        }
     }
 
 

@@ -52,6 +52,55 @@
 /processorParam:Version=3.8.5.1
 /build:MIDELTANK_Demo.otf
 
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Bomb Apearance and Selfdrestruction.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Bomb Apearance and Selfdrestruction.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Health Heart.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Health Heart.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Item Obtained.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Item Obtained.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Item Received.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Item Received.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Magical Boomerang Thrown.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Magical Boomerang Thrown.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Player Hurt.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Player Hurt.wav
+
+#begin sounds/The Legend of Zelda Cartoon Sound Effects Shield Deflecting.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sounds/The Legend of Zelda Cartoon Sound Effects Shield Deflecting.wav
+
 #begin spritesheets/BlocksSheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

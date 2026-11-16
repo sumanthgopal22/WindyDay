@@ -3,16 +3,16 @@ namespace ZeldaGame;
 public class UseItemCommand : ICommand
 {
     private readonly IPlayer player;
-    private readonly WeaponType weaponType;
+    private readonly ProjectileType projectileType;
 
-    public UseItemCommand(IPlayer player, WeaponType weaponType)
+    public UseItemCommand(IPlayer player, ProjectileType projectileType)
     {
         this.player = player;
-        this.weaponType = weaponType;
+        this.projectileType = projectileType;
     }
 
     public void Execute()
     {
-        player.UseItem(weaponType);
+        player.UseItem(projectileType);
     }
 }

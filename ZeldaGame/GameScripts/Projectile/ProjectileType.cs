@@ -1,6 +1,6 @@
 namespace ZeldaGame;
 
-public enum WeaponType
+public enum ProjectileType
 {
     Boomerang,
     Arrow,
