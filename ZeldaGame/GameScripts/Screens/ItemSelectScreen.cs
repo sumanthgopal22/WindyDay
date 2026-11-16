@@ -8,31 +8,35 @@ namespace ZeldaGame.GameScripts.Screens
     public class ItemSelectScreen : IScreen
     {
         private readonly Game1 game;
-        private Texture2D _hudSpriteSheet;
-        private Texture2D _pixel;
+        private Texture2D hudSpriteSheet;
+        private Texture2D pixel;
 
         private const float Scale = 4f;
 
-        private readonly Rectangle _topInventoryTemplateSrc = new Rectangle(1, 11, 256, 88);
-        private readonly Rectangle _bottomDungeonTemplateSrc = new Rectangle(258, 112, 256, 88);
+        // Background Template Source Rectangles
+        private readonly Rectangle topInventoryTemplate = new Rectangle(1, 11, 256, 88);
+        private readonly Rectangle bottomDungeonTemplate = new Rectangle(258, 112, 256, 88);
 
-        private readonly Rectangle _equippedSlotMask = new Rectangle(68, 24, 8, 16);
-        private readonly Rectangle _topCyanGuidesMask = new Rectangle(124, 10, 96, 12);
-        private readonly Rectangle _inventoryGridMask = new Rectangle(126, 24, 92, 32);
-        private readonly Rectangle _mapIconMask = new Rectangle(44, 112, 8, 16);
-        private readonly Rectangle _compassIconMask = new Rectangle(40, 152, 16, 16);
-        private readonly Rectangle _dungeonMapGridMask = new Rectangle(128, 96, 64, 64);
+        // Placeholder Guide Masks
+        private readonly Rectangle equippedSlotMask = new Rectangle(64, 48, 16, 16);
+        private readonly Rectangle topCyanGuidesMask = new Rectangle(124, 24, 96, 20);
+        private readonly Rectangle inventoryGridMask = new Rectangle(128, 48, 92, 32);
+        private readonly Rectangle mapIconMask = new Rectangle(40, 112, 16, 16);
+        private readonly Rectangle compassIconMask = new Rectangle(40, 152, 16, 16);
+        private readonly Rectangle dungeonMapGridMask = new Rectangle(128, 96, 64, 64);
 
-        private readonly Rectangle _boomerangSrc = new Rectangle(584, 137, 8, 16);
-        private readonly Rectangle _bombSrc = new Rectangle(604, 137, 8, 16);
-        private readonly Rectangle _mapItemSrc = new Rectangle(601, 156, 8, 16);
-        private readonly Rectangle _selectionCursorSrc = new Rectangle(519, 137, 16, 16);
+        // Item & UI Sprite Source Rectangles
+        private readonly Rectangle boomerang = new Rectangle(584, 137, 8, 16);
+        private readonly Rectangle bomb = new Rectangle(604, 137, 8, 16);
+        private readonly Rectangle mapItem = new Rectangle(601, 156, 8, 16);
+        private readonly Rectangle selectionCursor = new Rectangle(519, 137, 16, 16);
 
-        private readonly Vector2 _equippedItemPos = new Vector2(68, 24);
-        private readonly Vector2 _slot0ItemPos = new Vector2(128, 24);
-        private readonly Vector2 _slot1ItemPos = new Vector2(152, 24);
-        private readonly Vector2 _cursorPos = new Vector2(124, 24);
-        private readonly Vector2 _mapItemPos = new Vector2(44, 112);
+        // Destination Positions
+        private readonly Vector2 equippedItemPos = new Vector2(68, 48);
+        private readonly Vector2 slot0ItemPos = new Vector2(132, 48);
+        private readonly Vector2 slot1ItemPos = new Vector2(156, 48);
+        private readonly Vector2 cursorPos = new Vector2(128, 48);
+        private readonly Vector2 mapItemPos = new Vector2(44, 112);
 
         public ItemSelectScreen(Game1 game)
         {
@@ -41,11 +45,27 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
-            _hudSpriteSheet = content.Load<Texture2D>("HUDandPause");
+            Texture2D rawSheet = content.Load<Texture2D>("spritesheets/HUDandPause");
 
-            // 1x1 white texture used for drawing solid background masks and dungeon rooms
-            _pixel = new Texture2D(device, 1, 1);
-            _pixel.SetData(new[] { Color.White });
+            // Strip the gray icon background from the sprite sheet
+            // so items and the selection cursor have transparent backgrounds
+            Color[] pixels = new Color[rawSheet.Width * rawSheet.Height];
+            rawSheet.GetData(pixels);
+            Color iconSheetGray = new Color(116, 116, 116);
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                if (pixels[i] == iconSheetGray)
+                {
+                    pixels[i] = Color.Transparent;
+                }
+            }
+
+            hudSpriteSheet = new Texture2D(device, rawSheet.Width, rawSheet.Height);
+            hudSpriteSheet.SetData(pixels);
+
+            pixel = new Texture2D(device, 1, 1);
+            pixel.SetData(new[] { Color.White });
         }
 
         public void Update(GameTime gameTime)
@@ -55,68 +75,70 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            // Draw the black backdrop across the full 1024x704 virtual screen
+            // Draw the black backdrop across the screen
             DrawRect(spriteBatch, new Rectangle(0, 0, 256, 176), Color.Black);
 
-            // Draw Top Half (INVENTORY, B-Button Box, Item Grid) & Bottom Half (MAP, COMPASS, Parchment)
-            DrawSprite(spriteBatch, _topInventoryTemplateSrc, Vector2.Zero);
-            DrawSprite(spriteBatch, _bottomDungeonTemplateSrc, new Vector2(0, 88));
+            // Draw top half (inventory, B-Button box, item grid) and bottom half (map, compass, parchment)
+            DrawSprite(spriteBatch, topInventoryTemplate, Vector2.Zero);
+            DrawSprite(spriteBatch, bottomDungeonTemplate, new Vector2(0, 88));
 
             // Mask out the bright template placeholder rectangles with pure black
-            DrawRect(spriteBatch, _equippedSlotMask, Color.Black);
-            DrawRect(spriteBatch, _topCyanGuidesMask, Color.Black);
-            DrawRect(spriteBatch, _inventoryGridMask, Color.Black);
-            DrawRect(spriteBatch, _mapIconMask, Color.Black);
-            DrawRect(spriteBatch, _compassIconMask, Color.Black);
+            DrawRect(spriteBatch, equippedSlotMask, Color.Black);
+            DrawRect(spriteBatch, topCyanGuidesMask, Color.Black);
+            DrawRect(spriteBatch, inventoryGridMask, Color.Black);
+            DrawRect(spriteBatch, mapIconMask, Color.Black);
+            DrawRect(spriteBatch, compassIconMask, Color.Black);
 
-            // Mask out the blue/yellow checkerboard on the parchment with the exact parchment orange
+            // Mask out the checkerboard on the map with the actual map color
             Color parchmentOrange = new Color(252, 152, 56);
-            DrawRect(spriteBatch, _dungeonMapGridMask, parchmentOrange);
+            DrawRect(spriteBatch, dungeonMapGridMask, parchmentOrange);
 
-            // Draw the placeholder items & selection cursor
-            DrawSprite(spriteBatch, _boomerangSrc, _equippedItemPos); // Equipped in B slot
-            DrawSprite(spriteBatch, _boomerangSrc, _slot0ItemPos);    // Inventory Slot 1
-            DrawSprite(spriteBatch, _bombSrc, _slot1ItemPos);         // Inventory Slot 2
-            DrawSprite(spriteBatch, _selectionCursorSrc, _cursorPos); // Red corner brackets
-            DrawSprite(spriteBatch, _mapItemSrc, _mapItemPos);        // Map scroll under MAP
+            // Draw the placeholder items and selection cursor
+            DrawSprite(spriteBatch, boomerang, equippedItemPos); // Equipped in B slot
+            DrawSprite(spriteBatch, boomerang, slot0ItemPos);    // Inventory slot 1
+            DrawSprite(spriteBatch, bomb, slot1ItemPos);         // Inventory slot 2
+            DrawSprite(spriteBatch, selectionCursor, cursorPos); // Red corner brackets
+            DrawSprite(spriteBatch, mapItem, mapItemPos);        // Map item
 
-            // Draw the dungeon room layout on the parchment
+            // Draw the dungeon room layout centered on the parchment
             DrawDungeonMinimap(spriteBatch);
         }
 
         private void DrawDungeonMinimap(SpriteBatch spriteBatch)
         {
+            const int offsetX = 6;
+            const int offsetY = 3;
+
             Point[] rooms = new[]
             {
-                new Point(144, 112),
-                new Point(144, 120),
-                new Point(128, 128), new Point(136, 128), new Point(144, 128),
-                new Point(152, 128), new Point(160, 128), new Point(160, 120),
-                new Point(136, 136), new Point(144, 136),
-                new Point(144, 144),
-                new Point(136, 152), new Point(144, 152), new Point(152, 152)
+                new Point(144 + offsetX, 112 + offsetY), // Top room (green marker)
+                new Point(144 + offsetX, 120 + offsetY),
+                new Point(128 + offsetX, 128 + offsetY), new Point(136 + offsetX, 128 + offsetY), new Point(144 + offsetX, 128 + offsetY),
+                new Point(152 + offsetX, 128 + offsetY), new Point(160 + offsetX, 128 + offsetY), new Point(160 + offsetX, 120 + offsetY),
+                new Point(136 + offsetX, 136 + offsetY), new Point(144 + offsetX, 136 + offsetY),
+                new Point(144 + offsetX, 144 + offsetY),
+                new Point(136 + offsetX, 152 + offsetY), new Point(144 + offsetX, 152 + offsetY), new Point(152 + offsetX, 152 + offsetY)
             };
 
             foreach (Point room in rooms)
             {
-                // Draw 7x7 room square with 1px spacing for hallways/connections
                 DrawRect(spriteBatch, new Rectangle(room.X, room.Y, 7, 7), Color.Black);
             }
 
             // Connect horizontal/vertical hallways between rooms
-            DrawRect(spriteBatch, new Rectangle(135, 131, 26, 2), Color.Black); // Main horizontal corridor
-            DrawRect(spriteBatch, new Rectangle(147, 119, 2, 34), Color.Black); // Main vertical spine
-            DrawRect(spriteBatch, new Rectangle(163, 127, 2, 2), Color.Black);  // Right branch connector
-            DrawRect(spriteBatch, new Rectangle(143, 155, 10, 2), Color.Black); // Bottom entrance connectors
+            DrawRect(spriteBatch, new Rectangle(135 + offsetX, 131 + offsetY, 26, 2), Color.Black); // Main horizontal corridor
+            DrawRect(spriteBatch, new Rectangle(147 + offsetX, 119 + offsetY, 2, 34), Color.Black); // Main vertical spine
+            DrawRect(spriteBatch, new Rectangle(163 + offsetX, 127 + offsetY, 2, 2), Color.Black);  // Right branch connector
+            DrawRect(spriteBatch, new Rectangle(143 + offsetX, 155 + offsetY, 10, 2), Color.Black); // Bottom entrance connectors
 
-            // Green Triforce/Goal indicator in the top room
-            DrawRect(spriteBatch, new Rectangle(146, 114, 3, 3), new Color(0, 168, 0));
+            // Green marker in the top room
+            DrawRect(spriteBatch, new Rectangle(146 + offsetX, 114 + offsetY, 3, 3), new Color(0, 168, 0));
         }
 
         private void DrawSprite(SpriteBatch spriteBatch, Rectangle sourceRect, Vector2 nativePosition)
         {
             spriteBatch.Draw(
-                _hudSpriteSheet,
+                hudSpriteSheet,
                 nativePosition * Scale,
                 sourceRect,
                 Color.White,
@@ -136,7 +158,7 @@ namespace ZeldaGame.GameScripts.Screens
                 (int)(nativeRect.Width * Scale),
                 (int)(nativeRect.Height * Scale)
             );
-            spriteBatch.Draw(_pixel, scaledRect, color);
+            spriteBatch.Draw(pixel, scaledRect, color);
         }
     }
 }
