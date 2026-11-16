@@ -7,7 +7,7 @@ namespace ZeldaGame.GameScripts.Screens
 {
     public class ItemSelectScreen : IScreen
     {
-        private readonly Game1 _game;
+        private readonly Game1 game;
         private Texture2D _hudSpriteSheet;
         private Texture2D _pixel;
 
@@ -36,7 +36,7 @@ namespace ZeldaGame.GameScripts.Screens
 
         public ItemSelectScreen(Game1 game)
         {
-            _game = game;
+            this.game = game;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
