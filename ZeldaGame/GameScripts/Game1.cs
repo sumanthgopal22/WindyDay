@@ -35,6 +35,7 @@ public class Game1 : Core
     public const int GameHeight = 704;
     private const int WindowWidth = 768;
     private const int WindowHeight = 528;
+    public const float WindowScale = (float)WindowWidth / GameWidth;
 
     public Game1() : base("Sprint 0 Game", WindowWidth, WindowHeight, false)
     {
@@ -110,14 +111,19 @@ public class Game1 : Core
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(new Color(147, 187, 236));
-        
-        // Shrink the 1024x704 game down to the window size
-        Matrix scale = Matrix.CreateScale((float)WindowWidth / GameWidth);
-        SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: scale);
 
-        CurrentScreen.Draw(SpriteBatch, gameTime);
+        if (CurrentScreen is GameplayScreen gameplayScreen)
+        {
+            gameplayScreen.Draw(SpriteBatch, gameTime);
+        }
+        else
+        {
+            Matrix scale = Matrix.CreateScale(WindowScale);
+            SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: scale);
+            CurrentScreen.Draw(SpriteBatch, gameTime);
+            SpriteBatch.End();
+        }
 
-        SpriteBatch.End();
         base.Draw(gameTime);
     }
 

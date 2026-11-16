@@ -21,108 +21,233 @@ namespace ZeldaGame.GameScripts.Screens
             public List<Vector2> SpawnPositions { get; } = new();
         }
 
-        private Game1 game;
+        private sealed class RoomState
+        {
+            public string LevelFile { get; init; }
+            public Tilemap Tilemap { get; init; }
+            public Rectangle Bounds { get; init; }
+            public RoomEntities Entities { get; init; }
+        }
 
-        public Tilemap Tilemap { get; set; }
-        public Rectangle RoomBounds { get; set; }
-        public string LevelFile { get; set; }
+        private sealed class RoomTransition
+        {
+            public RoomState Source { get; init; }
+            public RoomState Destination { get; init; }
+            public RoomDoor Door { get; init; }
+            public float ElapsedSeconds { get; set; }
+        }
 
-        // Array holding all room file paths
-        private string[] levelFiles;
-        private int currentLevelIndex = 0;
-        private MouseState previousMouseState;
-        private KeyboardState previousKeyboardState; // Added to track keyboard inputs like 'E'
-        private readonly Dictionary<string, RoomEntities> entitiesByRoom = new();
+        private const float RoomTransitionDuration = 0.35f;
+        private const float DoorReturnCooldownDuration = 0.75f;
+        private readonly string[] roomFiles =
+        {
+            "levels/d01r03.xml", "levels/d01r04.xml", "levels/d01r05.xml",
+            "levels/d01r06.xml", "levels/d01r07.xml", "levels/d01r08.xml",
+            "levels/d01r09.xml", "levels/d01r11.xml", "levels/d01r12.xml",
+            "levels/d01r13.xml", "levels/d01r14.xml", "levels/d01r15.xml",
+            "levels/d01r17.xml", "levels/d01r18.xml", "levels/d01r19.xml",
+            "levels/d01r20.xml"
+        };
+        private readonly Game1 game;
+        private readonly Dictionary<string, RoomState> roomsByFile = new();
         private readonly Random random = new();
+        private RoomState currentRoom;
+        private RoomTransition transition;
+        private string blockedDoorDestination;
+        private DoorDirection? blockedDoorDirection;
+        private float doorReturnCooldownRemaining;
+
+        public Tilemap Tilemap { get; private set; }
+        public Rectangle RoomBounds { get; private set; }
+        public string LevelFile { get; private set; }
+
+        private KeyboardState previousKeyboardState;
 
         public GameplayScreen(Game1 game)
         {
             this.game = game;
-
-            levelFiles = new string[]
-            {
-                "levels/d01r03.xml", "levels/d01r04.xml", "levels/d01r05.xml",
-                "levels/d01r06.xml", "levels/d01r07.xml", "levels/d01r08.xml",
-                "levels/d01r09.xml", "levels/d01r11.xml", "levels/d01r12.xml",
-                "levels/d01r13.xml", "levels/d01r14.xml", "levels/d01r15.xml",
-                "levels/d01r16.xml", "levels/d01r17.xml", "levels/d01r18.xml",
-                "levels/d01r19.xml", "levels/d01r20.xml"
-            };
-
-            // Set default starting level to the first item in our array
-            currentLevelIndex = 0;
-            LevelFile = levelFiles[currentLevelIndex];
+            LevelFile = roomFiles[0];
 
             // Listen for spawned projectiles, route them to active room
             game.Player.ProjectileSpawned += projectile =>
             {
-                if (entitiesByRoom.TryGetValue(LevelFile, out RoomEntities entities))
+                if (currentRoom != null)
                 {
-                    entities.Projectiles.Add(projectile);
+                    currentRoom.Entities.Projectiles.Add(projectile);
                 }
             };
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            Tilemap.Draw(spriteBatch);
+            if (transition == null)
+            {
+                DrawRoomWithCamera(spriteBatch, currentRoom, gameTime, Vector2.Zero, drawPlayer: true);
+                return;
+            }
 
-            RoomEntities entities = entitiesByRoom[LevelFile];
+            float progress = MathHelper.Clamp(
+                transition.ElapsedSeconds / RoomTransitionDuration,
+                0f,
+                1f
+            );
+            Vector2 sourceOffset = GetTransitionMovement(transition.Door.Direction, progress);
+            Vector2 destinationOffset = GetTransitionStartOffset(transition.Door.Direction) + sourceOffset;
 
-            foreach (IProjectile projectile in entities.Projectiles)
+            DrawRoomWithCamera(spriteBatch, currentRoom, gameTime, sourceOffset, drawPlayer: true);
+            DrawRoomWithCamera(spriteBatch, transition.Destination, gameTime, destinationOffset, drawPlayer: false);
+        }
+
+        private void DrawRoomWithCamera(
+            SpriteBatch spriteBatch,
+            RoomState room,
+            GameTime gameTime,
+            Vector2 offset,
+            bool drawPlayer
+        )
+        {
+            Matrix scale = Matrix.CreateScale(Game1.WindowScale, Game1.WindowScale, 1f);
+            Matrix camera = Matrix.CreateTranslation(offset.X, offset.Y, 0f) * scale;
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera);
+            DrawRoom(spriteBatch, room, gameTime, drawPlayer);
+            spriteBatch.End();
+        }
+
+        private void DrawRoom(SpriteBatch spriteBatch, RoomState room, GameTime gameTime, bool drawPlayer)
+        {
+            room.Tilemap.Draw(spriteBatch);
+
+            foreach (IProjectile projectile in room.Entities.Projectiles)
             {
                 projectile.Draw(gameTime);
             }
 
-            foreach (IEnemy enemy in entities.Enemies)
+            foreach (IEnemy enemy in room.Entities.Enemies)
             {
                 enemy.Draw(gameTime);
             }
 
-            foreach (IItem item in entities.Items)
+            foreach (IItem item in room.Entities.Items)
             {
                 item.Draw(gameTime);
             }
 
-            game.Player.Draw(gameTime);
+            if (drawPlayer)
+            {
+                game.Player.Draw(gameTime);
+            }
+        }
+
+        private static Vector2 GetTransitionMovement(DoorDirection direction, float progress)
+        {
+            return direction switch
+            {
+                DoorDirection.Left => new Vector2(progress * Game1.GameWidth, 0f),
+                DoorDirection.Right => new Vector2(-progress * Game1.GameWidth, 0f),
+                DoorDirection.Up => new Vector2(0f, progress * Game1.GameHeight),
+                DoorDirection.Down => new Vector2(0f, -progress * Game1.GameHeight),
+                _ => Vector2.Zero
+            };
+        }
+
+        private static Vector2 GetTransitionStartOffset(DoorDirection direction)
+        {
+            return direction switch
+            {
+                DoorDirection.Left => new Vector2(-Game1.GameWidth, 0f),
+                DoorDirection.Right => new Vector2(Game1.GameWidth, 0f),
+                DoorDirection.Up => new Vector2(0f, -Game1.GameHeight),
+                DoorDirection.Down => new Vector2(0f, Game1.GameHeight),
+                _ => Vector2.Zero
+            };
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
-            LoadRoom(LevelFile, device);
+            LoadRoom(LevelFile);
             previousKeyboardState = Keyboard.GetState();
         }
 
-        private void LoadRoom(string levelFile, GraphicsDevice device)
+        private void LoadRoom(string levelFile)
         {
             System.Diagnostics.Debug.WriteLine($"Active Room: {levelFile}");
 
-
-            LevelFile = levelFile;
-            Tilemap = Tilemap.FromFile(Core.Content, LevelFile, new Vector2(4.0f, 4.0f));
-
-            Rectangle screenBounds = new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight);
-
-            RoomBounds = new Rectangle(
-                (int)Tilemap.TileWidth,
-                (int)Tilemap.TileHeight,
-                screenBounds.Width - (int)Tilemap.TileWidth * 2,
-                screenBounds.Height - (int)Tilemap.TileHeight * 2
-            );
-
-            game.Player.Position = GetSafePlayerSpawnPosition();
-
-            // Initialize entities for THIS room using ITS OWN Tilemap
-            if (!entitiesByRoom.ContainsKey(LevelFile))
-            {
-                CreateEntitiesForCurrentRoom();
-            }
+            ClearDoorReturnLock();
+            currentRoom = GetOrCreateRoom(levelFile);
+            ActivateRoom(currentRoom);
+            game.Player.Position = GetSafePlayerSpawnPosition(currentRoom);
         }
 
-        private void CreateEntitiesForCurrentRoom()
+        private RoomState GetOrCreateRoom(string levelFile)
+        {
+            if (roomsByFile.TryGetValue(levelFile, out RoomState room))
+            {
+                return room;
+            }
+
+            Tilemap tilemap = Tilemap.FromFile(Core.Content, levelFile, new Vector2(4.0f, 4.0f));
+
+            Rectangle screenBounds = new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight);
+            Rectangle bounds = new Rectangle(
+                (int)tilemap.TileWidth,
+                (int)tilemap.TileHeight,
+                screenBounds.Width - (int)tilemap.TileWidth * 2,
+                screenBounds.Height - (int)tilemap.TileHeight * 2
+            );
+
+            room = new RoomState
+            {
+                LevelFile = levelFile,
+                Tilemap = tilemap,
+                Bounds = bounds,
+                Entities = CreateEntitiesForRoom(levelFile, tilemap, bounds)
+            };
+            roomsByFile.Add(levelFile, room);
+
+            return room;
+        }
+
+        private void ActivateRoom(RoomState room)
+        {
+            currentRoom = room;
+            LevelFile = room.LevelFile;
+            Tilemap = room.Tilemap;
+            RoomBounds = room.Bounds;
+        }
+
+        private RoomEntities CreateEntitiesForRoom(string levelFile, Tilemap tilemap, Rectangle bounds)
         {
             RoomEntities entities = new RoomEntities();
+            if (tilemap.HasItemConfiguration)
+            {
+                foreach (ItemSpawn spawn in tilemap.ItemSpawns)
+                {
+                    AddConfiguredItem(entities, spawn, levelFile);
+                }
+            }
+            else
+            {
+                AddRandomItem(entities, tilemap, bounds);
+            }
 
+            if (tilemap.HasEnemyConfiguration)
+            {
+                foreach (EnemySpawn spawn in tilemap.EnemySpawns)
+                {
+                    AddConfiguredEnemy(entities, spawn, tilemap, levelFile);
+                }
+            }
+            else
+            {
+                AddRandomEnemy(entities, tilemap, bounds);
+            }
+
+            return entities;
+        }
+
+        private void AddRandomItem(RoomEntities entities, Tilemap tilemap, Rectangle bounds)
+        {
+            Vector2 position = GetSpawnPosition(entities, tilemap, bounds);
             var itemTypes = new List<Func<Vector2, IItem>>
             {
                 pos => new BlueCandleItem(ItemSpriteFactory.Instance.CreateBlueCandleSprite(), pos),
@@ -141,27 +266,39 @@ namespace ZeldaGame.GameScripts.Screens
                 pos => new WoodenArrowItem(ItemSpriteFactory.Instance.CreateWoodenArrowSprite(), pos),
                 pos => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), pos)
             };
-
-            var enemyTypes = new List<Func<Vector2, IEnemy>>
-            {
-                pos => new AquamentusEnemy(pos),
-                pos => new GelEnemy(pos),
-                pos => new GoriyaEnemy(pos),
-                pos => new KeeseEnemy(pos),
-                pos => new StalfosEnemy(pos),
-                pos => new WallMasterEnemy(pos)
-            };
-
-            // Pick 1-2 random items and 1-2 random enemies for this specific room
-            AddItem(entities, itemTypes[random.Next(itemTypes.Count)]);
-            AddEnemy(entities, enemyTypes[random.Next(enemyTypes.Count)]);
-
-            entitiesByRoom.Add(LevelFile, entities);
+            entities.Items.Add(itemTypes[random.Next(itemTypes.Count)](position));
         }
 
-        private Vector2 GetSafePlayerSpawnPosition()
+        private void AddRandomEnemy(RoomEntities entities, Tilemap tilemap, Rectangle bounds)
         {
-            if (Tilemap == null || Tilemap.Blocks == null)
+            Vector2 position = GetSpawnPosition(entities, tilemap, bounds);
+            IEnemy enemy = random.Next(6) switch
+            {
+                0 => new AquamentusEnemy(position),
+                1 => new GelEnemy(position),
+                2 => new GoriyaEnemy(position),
+                3 => new KeeseEnemy(position),
+                4 => new StalfosEnemy(position),
+                _ => new WallMasterEnemy(position)
+            };
+            LoadEnemy(entities, enemy);
+        }
+
+        private void AddConfiguredItem(RoomEntities entities, ItemSpawn spawn, string levelFile)
+        {
+            IItem item = spawn.Type.ToLowerInvariant() switch
+            {
+                "key" => new NormalKeyItem(ItemSpriteFactory.Instance.CreateNormalKeySprite(), spawn.Position),
+                "compass" => new CompassItem(ItemSpriteFactory.Instance.CreateCompassSprite(), spawn.Position),
+                "boomerang" => new WoodenBoomerangItem(ItemSpriteFactory.Instance.CreateWoodenBoomerangSprite(), spawn.Position),
+                _ => throw new InvalidOperationException($"Unknown item type '{spawn.Type}' in room '{levelFile}'.")
+            };
+            entities.Items.Add(item);
+        }
+
+        private Vector2 GetSafePlayerSpawnPosition(RoomState room)
+        {
+            if (room.Tilemap == null || room.Tilemap.Blocks == null)
             {
                 return new Vector2(Game1.GameWidth / 2f - 32, Game1.GameHeight / 2f - 32);
             }
@@ -170,18 +307,18 @@ namespace ZeldaGame.GameScripts.Screens
             float pHeight = game.Player.BoundingBox.Height > 0 ? game.Player.BoundingBox.Height : 64f;
 
             // Scan candidate floor tiles starting from the lower half of the room upwards
-            for (int row = Tilemap.Rows - 5; row >= 1; row--)
+            for (int row = room.Tilemap.Rows - 5; row >= 1; row--)
             {
-                for (int col = 1; col < Tilemap.Columns - 1; col++)
+                for (int col = 1; col < room.Tilemap.Columns - 1; col++)
                 {
-                    TileBlock candidate = Tilemap.GetBlock(col, row);
+                    TileBlock candidate = room.Tilemap.GetBlock(col, row);
                     if (candidate == null || candidate.IsCollidable) continue;
 
                     // Verify a full player bounding box at this spot does not intersect ANY solid tile
                     Rectangle proposedBox = new Rectangle((int)candidate.Position.X, (int)candidate.Position.Y, (int)pWidth, (int)pHeight);
                     bool overlapsSolid = false;
 
-                    foreach (TileBlock block in Tilemap.Blocks)
+                    foreach (TileBlock block in room.Tilemap.Blocks)
                     {
                         if (block.IsCollidable && block.BoundingBox.Intersects(proposedBox))
                         {
@@ -198,12 +335,106 @@ namespace ZeldaGame.GameScripts.Screens
             }
 
             // Fallback: room center
-            return new Vector2(RoomBounds.Center.X - pWidth / 2f, RoomBounds.Center.Y - pHeight / 2f);
+            return new Vector2(room.Bounds.Center.X - pWidth / 2f, room.Bounds.Center.Y - pHeight / 2f);
         }
 
-        private void AddEnemy(RoomEntities entities, Func<Vector2, IEnemy> createEnemy)
+        private void AddEnemy(
+            RoomEntities entities,
+            Func<Vector2, IEnemy> createEnemy,
+            Tilemap tilemap,
+            Rectangle bounds
+        )
         {
-            IEnemy enemy = createEnemy(GetSpawnPosition(entities));
+            IEnemy enemy = createEnemy(GetSpawnPosition(entities, tilemap, bounds));
+            LoadEnemy(entities, enemy);
+        }
+
+        private void AddConfiguredEnemy(RoomEntities entities, EnemySpawn spawn, Tilemap tilemap, string levelFile)
+        {
+            Func<Vector2, IEnemy> createEnemy = spawn.Type.ToLowerInvariant() switch
+            {
+                "aquamentus" => position => new AquamentusEnemy(position),
+                "gel" => position => new GelEnemy(position),
+                "goriya" => position => new GoriyaEnemy(position),
+                "keese" => position => new KeeseEnemy(position),
+                "stalfos" => position => new StalfosEnemy(position),
+                "wallmaster" => position => new WallMasterEnemy(position),
+                _ => throw new InvalidOperationException($"Unknown enemy type '{spawn.Type}' in room '{levelFile}'.")
+            };
+
+            Vector2 position = spawn.Type.Equals("Aquamentus", StringComparison.OrdinalIgnoreCase)
+                ? spawn.Position
+                : GetRandomizedEnemyPosition(entities, tilemap, spawn);
+            LoadEnemy(entities, createEnemy(position));
+        }
+
+        private Vector2 GetRandomizedEnemyPosition(RoomEntities entities, Tilemap tilemap, EnemySpawn spawn)
+        {
+            (int width, int height) = spawn.Type.ToLowerInvariant() switch
+            {
+                "gel" => (32, 64),
+                "goriya" => (52, 64),
+                "keese" => (64, 64),
+                "stalfos" => (60, 64),
+                "wallmaster" => (64, 64),
+                _ => throw new InvalidOperationException($"Cannot randomize spawn for enemy type '{spawn.Type}'.")
+            };
+
+            List<Vector2> candidates = new();
+            for (int offsetY = -64; offsetY <= 64; offsetY += 32)
+            {
+                for (int offsetX = -64; offsetX <= 64; offsetX += 32)
+                {
+                    candidates.Add(spawn.Position + new Vector2(offsetX, offsetY));
+                }
+            }
+
+            foreach (Vector2 candidate in Shuffle(candidates))
+            {
+                Rectangle proposedBounds = new Rectangle(
+                    (int)candidate.X,
+                    (int)candidate.Y,
+                    width,
+                    height
+                );
+                if (proposedBounds.Left < 0
+                    || proposedBounds.Top < 0
+                    || proposedBounds.Right > tilemap.Columns * tilemap.TileWidth
+                    || proposedBounds.Bottom > tilemap.Rows * tilemap.TileHeight)
+                {
+                    continue;
+                }
+
+                bool overlapsSolidTile = false;
+                foreach (TileBlock block in tilemap.Blocks)
+                {
+                    if (block.IsCollidable && block.BoundingBox.Intersects(proposedBounds))
+                    {
+                        overlapsSolidTile = true;
+                        break;
+                    }
+                }
+
+                if (overlapsSolidTile)
+                {
+                    continue;
+                }
+
+                bool overlapsEntity = entities.Enemies.Exists(enemy => enemy.BoundingBox.Intersects(proposedBounds))
+                    || entities.Items.Exists(item => item.BoundingBox.Intersects(proposedBounds));
+                if (!overlapsEntity)
+                {
+                    return candidate;
+                }
+            }
+
+            throw new InvalidOperationException(
+                $"No clear randomized spawn position found near ({spawn.Position.X}, {spawn.Position.Y}) for {spawn.Type}."
+            );
+        }
+
+        private static void LoadEnemy(RoomEntities entities, IEnemy enemy)
+        {
             enemy.LoadContent();
 
             // Route projectiles created by this enemy to the room's projectile list
@@ -215,19 +446,14 @@ namespace ZeldaGame.GameScripts.Screens
             entities.Enemies.Add(enemy);
         }
 
-        private void AddItem(RoomEntities entities, Func<Vector2, IItem> createItem)
-        {
-            entities.Items.Add(createItem(GetSpawnPosition(entities)));
-        }
-
-        private Vector2 GetSpawnPosition(RoomEntities entities)
+        private Vector2 GetSpawnPosition(RoomEntities entities, Tilemap tilemap, Rectangle bounds)
         {
             var roomCenter = new Vector2(
-                (RoomBounds.Left + RoomBounds.Right) / 2f,
-                (RoomBounds.Top + RoomBounds.Bottom) / 2f
+                (bounds.Left + bounds.Right) / 2f,
+                (bounds.Top + bounds.Bottom) / 2f
             );
-            int horizontalRange = RoomBounds.Width / 4;
-            int verticalRange = RoomBounds.Height / 4;
+            int horizontalRange = bounds.Width / 4;
+            int verticalRange = bounds.Height / 4;
             int minX = (int)roomCenter.X - horizontalRange;
             int maxX = (int)roomCenter.X + horizontalRange;
             int minY = (int)roomCenter.Y - verticalRange;
@@ -245,9 +471,9 @@ namespace ZeldaGame.GameScripts.Screens
                 Rectangle proposedBounds = new Rectangle((int)position.X, (int)position.Y, 32, 32);
                 bool insideSolidBlock = false;
 
-                if (Tilemap != null && Tilemap.Blocks != null)
+                if (tilemap != null && tilemap.Blocks != null)
                 {
-                    foreach (TileBlock block in Tilemap.Blocks)
+                    foreach (TileBlock block in tilemap.Blocks)
                     {
                         if (block.IsCollidable && block.BoundingBox.Intersects(proposedBounds))
                         {
@@ -391,10 +617,36 @@ namespace ZeldaGame.GameScripts.Screens
             }
             previousKeyboardState = currentKeyboardState;
 
-            RoomEntities entities = entitiesByRoom[LevelFile];
+            if (transition != null)
+            {
+                game.Player.CancelMovement();
+                transition.ElapsedSeconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (transition.ElapsedSeconds >= RoomTransitionDuration)
+                {
+                    blockedDoorDestination = transition.Source.LevelFile;
+                    blockedDoorDirection = GetOppositeDirection(transition.Door.Direction);
+                    doorReturnCooldownRemaining = DoorReturnCooldownDuration;
+                    ActivateRoom(transition.Destination);
+                    game.Player.Position = transition.Door.ArrivalPosition;
+                    transition = null;
+                }
+
+                return;
+            }
+
+            doorReturnCooldownRemaining = Math.Max(
+                0f,
+                doorReturnCooldownRemaining - (float)gameTime.ElapsedGameTime.TotalSeconds
+            );
 
             // Update player
             game.Player.Update(gameTime);
+            if (TryStartRoomTransition())
+            {
+                return;
+            }
+
+            RoomEntities entities = currentRoom.Entities;
 
             foreach (IEnemy enemy in entities.Enemies)
             {
@@ -425,15 +677,67 @@ namespace ZeldaGame.GameScripts.Screens
             // Prune collected items
             entities.Items.RemoveAll(item => !item.IsActive);
 
-            MouseState currentMouseState = Mouse.GetState();
+        }
 
-            if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
+        private bool TryStartRoomTransition()
+        {
+            foreach (RoomDoor door in currentRoom.Tilemap.Doors)
             {
-                currentLevelIndex = (currentLevelIndex + 1) % levelFiles.Length;
-                LoadRoom(levelFiles[currentLevelIndex], Core.Graphics.GraphicsDevice);
+                bool playerAtDoor = IsPlayerCenteredInDoorway(door);
+                bool isBlockedReturnDoor = door.Destination == blockedDoorDestination
+                    && door.Direction == blockedDoorDirection;
+
+                if (isBlockedReturnDoor)
+                {
+                    if (doorReturnCooldownRemaining > 0f || playerAtDoor)
+                    {
+                        continue;
+                    }
+
+                    ClearDoorReturnLock();
+                }
+
+                if (!playerAtDoor)
+                {
+                    continue;
+                }
+
+                transition = new RoomTransition
+                {
+                    Source = currentRoom,
+                    Destination = GetOrCreateRoom(door.Destination),
+                    Door = door
+                };
+                return true;
             }
 
-            previousMouseState = currentMouseState;
+            return false;
+        }
+
+        private bool IsPlayerCenteredInDoorway(RoomDoor door)
+        {
+            Rectangle activationBounds = door.TriggerBounds;
+            activationBounds.Inflate(-16, -16);
+            return activationBounds.Contains(game.Player.BoundingBox.Center);
+        }
+
+        private static DoorDirection GetOppositeDirection(DoorDirection direction)
+        {
+            return direction switch
+            {
+                DoorDirection.Left => DoorDirection.Right,
+                DoorDirection.Right => DoorDirection.Left,
+                DoorDirection.Up => DoorDirection.Down,
+                DoorDirection.Down => DoorDirection.Up,
+                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+            };
+        }
+
+        private void ClearDoorReturnLock()
+        {
+            blockedDoorDestination = null;
+            blockedDoorDirection = null;
+            doorReturnCooldownRemaining = 0f;
         }
     }
 }

@@ -25,4 +25,13 @@
 		0640 0641 0642 0643 0644 0645 0646 0647 0648 0649 0650 0651 0652 0653 1160 1161 1162 1163 0658 0659 0660 0661 0662 0663 0664 0665 0666 0667 0668 0669 0670 0671
 		0672 0673 0674 0675 0676 0677 0678 0679 0680 0681 0682 0683 0684 0685 1192 1193 1194 1195 0690 0691 0692 0693 0694 0695 0696 0697 0698 0699 0700 0701 0702 0703
 	</Tiles>
+	<Enemies>
+		<Enemy type="Gel" x="256" y="256" />
+		<Enemy type="Gel" x="480" y="256" />
+		<Enemy type="Gel" x="704" y="256" />
+	</Enemies>
+	<Items />
+	<Doors>
+		<Door direction="Right" destination="levels/d01r12.xml" triggerX="832" triggerY="320" triggerWidth="64" triggerHeight="64" arrivalX="160" arrivalY="320" />
+	</Doors>
 </Tilemap>

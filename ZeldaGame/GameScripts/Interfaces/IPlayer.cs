@@ -18,6 +18,7 @@ public interface IPlayer : ICollidable
     new Rectangle BoundingBox { get; }
     Vector2 Position { get; set; }
     
+    void CancelMovement();
     void MoveRight();
     void MoveLeft();
     void MoveUp();

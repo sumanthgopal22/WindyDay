@@ -32,6 +32,11 @@ public class Player : IPlayer
         set => position = value;
     }
 
+    public void CancelMovement()
+    {
+        movement = Vector2.Zero;
+    }
+
     private SpriteDirection finalDirection;
     private Boomerang activeBoomerang;
     private Arrow activeArrow;

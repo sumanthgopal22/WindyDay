@@ -25,4 +25,16 @@
 		0640 0641 0642 0643 0644 0645 0646 0647 0648 0649 0650 0651 0652 0653 1156 1157 1158 1159 0658 0659 0660 0661 0662 0663 0664 0665 0666 0667 0668 0669 0670 0671
 		0672 0673 0674 0675 0676 0677 0678 0679 0680 0681 0682 0683 0684 0685 1188 1189 1190 1191 0690 0691 0692 0693 0694 0695 0696 0697 0698 0699 0700 0701 0702 0703
 	</Tiles>
+	<Enemies>
+		<Enemy type="Goriya" x="160" y="160" />
+		<Enemy type="Goriya" x="704" y="160" />
+		<Enemy type="Goriya" x="704" y="480" />
+	</Enemies>
+	<Items>
+		<Item type="Key" x="448" y="480" />
+	</Items>
+	<Doors>
+		<Door direction="Right" destination="levels/d01r14.xml" triggerX="832" triggerY="320" triggerWidth="64" triggerHeight="64" arrivalX="160" arrivalY="320" />
+		<Door direction="Up" destination="levels/d01r16.xml" triggerX="512" triggerY="320" triggerWidth="64" triggerHeight="64" arrivalX="128" arrivalY="416" />
+	</Doors>
 </Tilemap>

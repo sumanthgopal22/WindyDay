@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -10,6 +12,25 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ZeldaGame.GameScripts.Tilemapping
 {
+    public enum DoorDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
+    public sealed record EnemySpawn(string Type, Vector2 Position);
+
+    public sealed record ItemSpawn(string Type, Vector2 Position);
+
+    public sealed record RoomDoor(
+        DoorDirection Direction,
+        string Destination,
+        Rectangle TriggerBounds,
+        Vector2 ArrivalPosition
+    );
+
     public class Tilemap
     {
         private readonly Tileset tileset;
@@ -18,6 +39,11 @@ namespace ZeldaGame.GameScripts.Tilemapping
 
         // Expose blocks for collisions
         public TileBlock[] Blocks => blocks;
+        public List<EnemySpawn> EnemySpawns { get; } = new();
+        public List<ItemSpawn> ItemSpawns { get; } = new();
+        public List<RoomDoor> Doors { get; } = new();
+        public bool HasEnemyConfiguration { get; private set; }
+        public bool HasItemConfiguration { get; private set; }
 
         public int Rows { get; }
         public int Columns { get; }
@@ -142,6 +168,69 @@ namespace ZeldaGame.GameScripts.Tilemapping
                     Tilemap tilemap = new Tilemap(tileset, columnCount, rows.Length);
                     tilemap.Scale = scale;
 
+                    XElement enemiesElement = root.Element("Enemies");
+                    tilemap.HasEnemyConfiguration = enemiesElement != null;
+                    if (enemiesElement != null)
+                    {
+                        foreach (XElement enemyElement in enemiesElement.Elements("Enemy"))
+                        {
+                            string type = (string)enemyElement.Attribute("type")
+                                ?? throw new InvalidDataException("Enemy entries must have a type.");
+                            float enemyX = ParseFloat(enemyElement, "x");
+                            float enemyY = ParseFloat(enemyElement, "y");
+                            tilemap.EnemySpawns.Add(new EnemySpawn(type, new Vector2(enemyX, enemyY)));
+                        }
+                    }
+
+                    XElement itemsElement = root.Element("Items");
+                    tilemap.HasItemConfiguration = itemsElement != null;
+                    if (itemsElement != null)
+                    {
+                        foreach (XElement itemElement in itemsElement.Elements("Item"))
+                        {
+                            string type = (string)itemElement.Attribute("type")
+                                ?? throw new InvalidDataException("Item entries must have a type.");
+                            float itemX = ParseFloat(itemElement, "x");
+                            float itemY = ParseFloat(itemElement, "y");
+                            tilemap.ItemSpawns.Add(new ItemSpawn(type, new Vector2(itemX, itemY)));
+                        }
+                    }
+
+                    XElement doorsElement = root.Element("Doors");
+                    if (doorsElement != null)
+                    {
+                        foreach (XElement doorElement in doorsElement.Elements("Door"))
+                        {
+                            string directionText = (string)doorElement.Attribute("direction")
+                                ?? throw new InvalidDataException("Door entries must have a direction.");
+                            if (!Enum.TryParse(directionText, ignoreCase: true, out DoorDirection direction)
+                                || !Enum.IsDefined(typeof(DoorDirection), direction))
+                            {
+                                throw new InvalidDataException($"Unknown door direction '{directionText}'.");
+                            }
+
+                            string destination = (string)doorElement.Attribute("destination")
+                                ?? throw new InvalidDataException("Door entries must have a destination.");
+                            int triggerX = ParseInt(doorElement, "triggerX");
+                            int triggerY = ParseInt(doorElement, "triggerY");
+                            int triggerWidth = ParseInt(doorElement, "triggerWidth");
+                            int triggerHeight = ParseInt(doorElement, "triggerHeight");
+                            if (triggerWidth <= 0 || triggerHeight <= 0)
+                            {
+                                throw new InvalidDataException("Door trigger dimensions must be positive.");
+                            }
+
+                            float arrivalX = ParseFloat(doorElement, "arrivalX");
+                            float arrivalY = ParseFloat(doorElement, "arrivalY");
+                            tilemap.Doors.Add(new RoomDoor(
+                                direction,
+                                destination,
+                                new Rectangle(triggerX, triggerY, triggerWidth, triggerHeight),
+                                new Vector2(arrivalX, arrivalY)
+                            ));
+                        }
+                    }
+
                     for (int row = 0; row < rows.Length; row++)
                     {
                         string[] columns = rows[row].Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
@@ -167,6 +256,20 @@ namespace ZeldaGame.GameScripts.Tilemapping
                     return tilemap;
                 }
             }
+        }
+
+        private static int ParseInt(XElement element, string attributeName)
+        {
+            string value = (string)element.Attribute(attributeName)
+                ?? throw new InvalidDataException($"Missing '{attributeName}' attribute on {element.Name}.");
+            return int.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        private static float ParseFloat(XElement element, string attributeName)
+        {
+            string value = (string)element.Attribute(attributeName)
+                ?? throw new InvalidDataException($"Missing '{attributeName}' attribute on {element.Name}.");
+            return float.Parse(value, CultureInfo.InvariantCulture);
         }
     }
 }
