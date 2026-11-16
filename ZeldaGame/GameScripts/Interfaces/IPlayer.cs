@@ -14,6 +14,10 @@ public interface IPlayer : ICollidable
     bool IsUsingItem { get; set; }
     bool IsSwingingSword { get; set; }
     bool IsDamaged { get; set; }
+    bool IsDead { get; set; }
+    bool IsDeathAnimationComplete { get; }
+    int Health { get; set; }
+    int MaxHealth { get; }
 
     new Rectangle BoundingBox { get; }
     Vector2 Position { get; set; }
@@ -23,11 +27,9 @@ public interface IPlayer : ICollidable
     void MoveLeft();
     void MoveUp();
     void MoveDown();
-
     void UseItem(ProjectileType projectileType);
     void PickUpItem(IItem item);
     void DropHeldItem();
-
 
     void SwingSword();
     void UpdateSprite(GameTime gameTime);
@@ -36,6 +38,6 @@ public interface IPlayer : ICollidable
     void Draw(GameTime gameTime);
     void Update(GameTime gameTime);
     void ChangeState(IState state);
-
     void OnCollideWithEnemy(ICollidable target, CollisionSide side);
+    void Reset();
 }

@@ -21,6 +21,11 @@ public class Player : IPlayer
     public bool IsUsingItem { get; set; }
     public bool IsSwingingSword { get; set; }
     public bool IsDamaged { get; set; }
+    public bool IsDead { get; set; }
+    public int MaxHealth { get; } = 6;
+    public int Health { get; set; } = 6;
+    public bool IsDeathAnimationComplete => 
+        stateMachine.CurrentState is DeadLinkState deadState && deadState.IsDeathSequenceComplete;
 
     public Rectangle BoundingBox => sprite != null 
     ? new Rectangle((int)position.X, (int)position.Y, (int)sprite.Size.X, (int)sprite.Size.Y)
@@ -45,7 +50,7 @@ public class Player : IPlayer
 
     public void MoveRight()
     {
-        if (IsUsingItem || IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword || IsDead)
         {
             return;
         }
@@ -62,7 +67,7 @@ public class Player : IPlayer
 
     public void MoveLeft()
     {
-        if (IsUsingItem || IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword || IsDead)
         {
             return;
         }
@@ -79,7 +84,7 @@ public class Player : IPlayer
 
     public void MoveUp()
     {
-        if (IsUsingItem || IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword || IsDead)
         {
             return;
         }
@@ -96,7 +101,7 @@ public class Player : IPlayer
 
     public void MoveDown()
     {
-        if (IsUsingItem || IsSwingingSword)
+        if (IsUsingItem || IsSwingingSword || IsDead)
         {
             return;
         }
@@ -113,7 +118,7 @@ public class Player : IPlayer
 
     public void UseItem(ProjectileType projectileType)
     {
-        if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive) || IsDamaged)
+        if (IsUsingItem || IsSwingingSword || (activeBoomerang != null && activeBoomerang.IsActive) || (activeArrow != null && activeArrow.IsActive) || IsDamaged || IsDead)
         {
             return;
         }
@@ -197,7 +202,7 @@ public class Player : IPlayer
 
     public void SwingSword()
     {
-        if (IsUsingItem || IsSwingingSword || IsDamaged)
+        if (IsUsingItem || IsSwingingSword || IsDamaged || IsDead)
         {
             return;
         }
@@ -208,8 +213,17 @@ public class Player : IPlayer
 
     public void OnCollideWithEnemy(ICollidable target, CollisionSide side)
     {
-        if (IsDamaged)
+        if (IsDamaged || IsDead)
         {
+            return;
+        }
+
+        Health--;
+        if (Health <= 0)
+        {
+            ChangeState(new DeadLinkState(this));
+            sprite.PlayAction(LinkSpriteAction.Damaged);
+            SoundManager.Instance.Play(Sfx.Hurt);
             return;
         }
 
@@ -277,5 +291,26 @@ public class Player : IPlayer
     public void ChangeState(IState state)
     {
         stateMachine.ChangeState(state);
+    }
+
+    public void Reset()
+    {
+        Health = MaxHealth;
+        IsDead = false;
+        IsDamaged = false;
+        IsWalking = false;
+        IsUsingItem = false;
+        IsSwingingSword = false;
+        IsIdle = true;
+        heldItem = null;
+        activeBoomerang = null;
+        activeArrow = null;
+        bomb = null;
+        movement = Vector2.Zero;
+        finalDirection = SpriteDirection.Down;
+
+        sprite.SetDirection(finalDirection);
+        sprite.Reset();
+        ChangeState(new IdleLinkState(this));
     }
 }
