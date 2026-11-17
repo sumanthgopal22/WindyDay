@@ -27,7 +27,7 @@ namespace ZeldaGame.GameScripts.Screens
             {
                 spriteBatch.Draw(
                     background,
-                    new Rectangle(0, 0, background.Width, background.Height),
+                    new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight),
                     Color.White
                 );
             }

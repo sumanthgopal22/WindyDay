@@ -12,6 +12,10 @@ namespace ZeldaGame.GameScripts.Commands
             _game = game ?? throw new ArgumentNullException(nameof(game));
         }
 
-        public void Execute() => _game.ChangeState(new GameplayState(_game));
+        public void Execute()
+        {
+            _game.ResetLevel();
+            _game.ChangeState(new GameplayState(_game));
+        }
     }
 }

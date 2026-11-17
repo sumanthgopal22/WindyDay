@@ -2,7 +2,7 @@ namespace ZeldaGame;
 
 public static class PlayerItemCollisionHandler
 {
-    public static void Handle(IPlayer player, IItem item)
+    public static bool Handle(IPlayer player, IItem item)
     {
         // Concrete items apply their effects
         switch (item)
@@ -35,6 +35,9 @@ public static class PlayerItemCollisionHandler
 
         // Mark item collected so the room removes it from its active list
         item.IsActive = false;
+
+        // So the game can end
+        return item is TriforceShardItem;
     }
 
     private static bool IsSpecialItem(IItem item)

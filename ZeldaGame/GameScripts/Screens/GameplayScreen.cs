@@ -7,6 +7,7 @@ using MonoGameLibrary;
 using System;
 using System.Collections.Generic;
 using ZeldaGame.GameScripts.Interfaces;
+using ZeldaGame.GameScripts.StateMachine.GameStates;
 using ZeldaGame.GameScripts.Tilemapping;
 
 namespace ZeldaGame.GameScripts.Screens
@@ -541,7 +542,14 @@ namespace ZeldaGame.GameScripts.Screens
             {
                 if (CollisionDetector.CheckCollision(game.Player, item, out CollisionSide side, out _))
                 {
-                    PlayerItemCollisionHandler.Handle(game.Player, item);
+                    bool collectedTriforce = PlayerItemCollisionHandler.Handle(game.Player, item);
+
+                    // Win game condition
+                    if (collectedTriforce)
+                    {
+                        game.ChangeState(new GameWinState(game));
+                        return;
+                    }
                 }
             }
 

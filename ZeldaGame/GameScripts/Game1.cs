@@ -22,6 +22,7 @@ public class Game1 : Core
     public IScreen MainMenuScreen { get; private set; }
     public IScreen GameplayScreen { get; private set; }
     public IScreen GameOverScreen { get; private set; }
+    public IScreen GameWinScreen { get; private set; }
     public IScreen ItemSelectScreen { get; private set; }
 
     // State machine
@@ -51,6 +52,7 @@ public class Game1 : Core
         MainMenuScreen = new MainMenuScreen(this);
         GameplayScreen = new GameplayScreen(this);
         GameOverScreen = new GameOverScreen(this);
+        GameWinScreen = new GameWinScreen(this);
         ItemSelectScreen = new ItemSelectScreen(this);
         CurrentScreen = MainMenuScreen;
 
@@ -103,6 +105,7 @@ public class Game1 : Core
         GameplayScreen.LoadContent(Content, GraphicsDevice);
         ItemSelectScreen.LoadContent(Content, GraphicsDevice);
         GameOverScreen.LoadContent(Content, GraphicsDevice);
+        GameWinScreen.LoadContent(Content, GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)
