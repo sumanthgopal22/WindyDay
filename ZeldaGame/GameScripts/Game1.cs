@@ -102,6 +102,7 @@ public class Game1 : Core
         MainMenuScreen.LoadContent(Content, GraphicsDevice);
         GameplayScreen.LoadContent(Content, GraphicsDevice);
         ItemSelectScreen.LoadContent(Content, GraphicsDevice);
+        GameOverScreen.LoadContent(Content, GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)

@@ -25,6 +25,15 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
+            // Pause game
+            if (currentKeyboardState.IsKeyDown(Keys.P) &&
+                previousKeyboardState.IsKeyUp(Keys.P))
+            {
+                previousKeyboardState = currentKeyboardState;
+                game.ChangeState(new PauseGameState(game));
+                return;
+            }
+
             // Open Item Selection screen on single key press
             if ((currentKeyboardState.IsKeyDown(Keys.Enter) && previousKeyboardState.IsKeyUp(Keys.Enter)) ||
                 (currentKeyboardState.IsKeyDown(Keys.Tab) && previousKeyboardState.IsKeyUp(Keys.Tab)) ||
@@ -44,9 +53,7 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
 
             if (game.Player.IsDeathAnimationComplete)
             {
-                game.ResetLevel();
-                // When Matthias finishes GameOverScreen, just swap this line to:
-                // game.ChangeState(new GameOverState(game));
+                game.ChangeState(new GameOverState(game));
                 return;
             }
 
