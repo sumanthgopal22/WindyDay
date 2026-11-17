@@ -135,4 +135,12 @@ public class Game1 : Core
     {
         GameStateMachine.ChangeState(state);
     }
+
+    public void ResetLevel()
+    {
+        if (GameplayScreen is GameplayScreen gameplayScreen)
+        {
+            gameplayScreen.Reset();
+        }
+    }
 }

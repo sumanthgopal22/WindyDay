@@ -11,6 +11,7 @@ public class ResetGameCommand : ICommand
     }
     public void Execute()
     {
+        game.ResetLevel();
         game.ChangeState(new MainMenuState(game));
     }
 }

@@ -5,6 +5,7 @@
         UseItem,
         SwingSword,
         PickUpItem,
-        Damaged
+        Damaged,
+        Death
     }
 }

@@ -530,6 +530,12 @@ namespace ZeldaGame.GameScripts.Screens
 
         private void DetectCollisions(RoomEntities entities)
         {
+            // If Link is dead, entities will not collide with him
+            if (game.Player.IsDead)
+            {
+                return;
+            }
+
             // Link vs. Items
             foreach (IItem item in entities.Items)
             {
@@ -743,6 +749,18 @@ namespace ZeldaGame.GameScripts.Screens
             blockedDoorDestination = null;
             blockedDoorDirection = null;
             doorReturnCooldownRemaining = 0f;
+        }
+
+        public void Reset()
+        {
+            transition = null;
+            ClearDoorReturnLock();
+            roomsByFile.Clear();
+
+            game.Player.Reset();
+
+            LevelFile = roomFiles[0];
+            LoadRoom(LevelFile);
         }
     }
 }
