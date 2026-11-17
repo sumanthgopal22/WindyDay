@@ -33,7 +33,7 @@ namespace ZeldaGame.GameScripts.Screens
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             string message = "You win!";
-            string instructions = "Press SPACE to return to the main menu";
+            string instructions = "Press SPACE to return";
 
             float scale = 3.0f;
 
