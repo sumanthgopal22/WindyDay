@@ -1,7 +1,7 @@
 Sumanth Gopal
 11/16/2026
 Sprint 4
-ItemSelectScreen, Sam Van Oss, Maintainability Review, 10 minutes
+ItemSelectScreen, Sam Van Oss, Quality Review
 As far as maintainability goes it's good in my opinion, the code is long so we may need to break up some blocks. The class is
 tailored towards just the inventory so there's only so much modularlity needed. Most of the code is just formating the sprites 
 so makes sense why it is long.

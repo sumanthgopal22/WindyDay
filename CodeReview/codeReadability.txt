@@ -48,6 +48,14 @@ Code is simple and is easy to update, making future changes easy. More Link spri
 
 Sumanth Gopal
 11/16/2026
+Sprint 4
 ItemSelectScreen, Sam Van Oss, Readability Review, 10 minutes
 For readabilty I found it fine to read through the code. There weren't any moments where syntax confused me or any moments where
 code didn't make sense. Overall great work!
+
+Yaswanth Ruddarraju
+11/16/2026
+Sprint 4
+ItemSelectState, Sumanth Gopal, Readability Review, 7 minutes
+Had a clean implementation of the state pattern and correctly used previousKeyboardState to get single frame presses.
+An issue is that GameplayState(game) allocates memory every time the menu closes. Also try not hardcoding Keys.Enter, Keys.Tab, and Keys.I.
