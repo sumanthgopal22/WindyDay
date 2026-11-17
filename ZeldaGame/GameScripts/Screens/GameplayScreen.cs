@@ -63,6 +63,8 @@ namespace ZeldaGame.GameScripts.Screens
         public string LevelFile { get; private set; }
 
         private KeyboardState previousKeyboardState;
+        private HUD hud;
+        private const int HUDHeight = 256;
 
         public GameplayScreen(Game1 game)
         {
@@ -82,6 +84,10 @@ namespace ZeldaGame.GameScripts.Screens
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Draw(spriteBatch, gameTime, Vector2.Zero);
+            Matrix scale = Matrix.CreateScale(Game1.WindowScale);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: scale);
+            hud.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 screenOffset)
@@ -113,7 +119,7 @@ namespace ZeldaGame.GameScripts.Screens
         )
         {
             Matrix scale = Matrix.CreateScale(Game1.WindowScale, Game1.WindowScale, 1f);
-            Matrix camera = Matrix.CreateTranslation(offset.X, offset.Y, 0f) * scale;
+            Matrix camera = Matrix.CreateTranslation(offset.X, offset.Y + HUDHeight, 0f) * scale;
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera);
             DrawRoom(spriteBatch, room, gameTime, drawPlayer);
             spriteBatch.End();
@@ -172,6 +178,8 @@ namespace ZeldaGame.GameScripts.Screens
         {
             LoadRoom(LevelFile);
             previousKeyboardState = Keyboard.GetState();
+            hud = new HUD();
+            hud.LoadContent(device);
         }
 
         private void LoadRoom(string levelFile)

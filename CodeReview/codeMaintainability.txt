@@ -15,3 +15,19 @@ branches, and repeated timing logic. Each enemy method embeds raw sheets updates
 asset knowledge with direction logic in a way that is hard to extend safely.  A better approach would be to centralize sprite 
 data into configuration objects or constants and reduce the conditional branching with a directional mapping strategy. 
 This would make the class easier to read, update, and scale.
+
+Sam Van Oss
+11/16/2026
+Sprint 4
+SoundManager.cs, Sumanth Gopal, Quality Review
+This is very maintainable code, as it would be super easy to add more sound effects using LoadContent(), as well as playing
+each different sound. The switch-case in Play() allows for new sound effects to be played with the addition of only a few
+simple lines of code.
+
+Andrew Dome
+11/16/2026 
+Sprint 4
+GameplayScreen, specifically addition of configured layout and transitions, Max Nabring, Quality Review
+Max made very meaningful and maintainable additions to this file. He made it so each room of the dungeon had a set layout
+and so certain enemies and items spawned in certain locations. He also added the transition between rooms in the dungeon, which 
+despite seeming very complicated, seems well coded. Max's code is modular and easy to update, especially when looking for any bugs.

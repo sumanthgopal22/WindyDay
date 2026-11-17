@@ -59,3 +59,10 @@ Sprint 4
 ItemSelectState, Sumanth Gopal, Readability Review, 7 minutes
 Had a clean implementation of the state pattern and correctly used previousKeyboardState to get single frame presses.
 An issue is that GameplayState(game) allocates memory every time the menu closes. Also try not hardcoding Keys.Enter, Keys.Tab, and Keys.I.
+
+Andrew Dome
+11/16/2026 
+Sprint 4
+GameplayScreen, specifically addition of configured layout and transitions, Max Nabring, Readability Review, 5 minutes
+Max's additions to this file are very readable, with great variable names and descriptive function names. Could benefit from 
+some extra comments, but overall very strong.
