@@ -6,7 +6,8 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
 {
     public class GameOverState : IState
     {
-        private Game1 game;
+        private readonly Game1 game;
+        private KeyboardState previousKeyboardState;
 
         public GameOverState(Game1 game)
         {
@@ -16,18 +17,37 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
         public void Enter()
         {
             System.Diagnostics.Debug.WriteLine("Entering GameOverState.");
+
             game.CurrentScreen = game.GameOverScreen;
+            previousKeyboardState = Keyboard.GetState();
         }
 
         public void Update(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
+            KeyboardState currentKeyboardState = Keyboard.GetState();
 
-            // lowkey placeholder, maybe replace with a timer,
-            // like after 3 seconds it exits
-            if (keyboardState.IsKeyDown(Keys.Space)) {
-                Exit();
-            }   //idk if this works rn
+            bool spacePressed =
+                currentKeyboardState.IsKeyDown(Keys.Space) &&
+                previousKeyboardState.IsKeyUp(Keys.Space);
+
+            bool rPressed =
+                currentKeyboardState.IsKeyDown(Keys.R) &&
+                previousKeyboardState.IsKeyUp(Keys.R);
+
+            if (spacePressed)
+            {
+                game.ResetLevel();
+                game.ChangeState(new GameplayState(game));
+                return;
+            }
+
+            if (rPressed)
+            {
+                game.ChangeState(new MainMenuState(game));
+                return;
+            }
+
+            previousKeyboardState = currentKeyboardState;
         }
 
         public void Exit()

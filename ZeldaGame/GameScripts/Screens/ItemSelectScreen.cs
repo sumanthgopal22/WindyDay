@@ -10,6 +10,8 @@ namespace ZeldaGame.GameScripts.Screens
         private readonly Game1 game;
         private Texture2D hudSpriteSheet;
         private Texture2D pixel;
+        private Texture2D background;
+        private HUD hud;
 
         private const float Scale = 4f;
 
@@ -108,6 +110,8 @@ namespace ZeldaGame.GameScripts.Screens
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
             Texture2D rawSheet = content.Load<Texture2D>("spritesheets/HUDandPause");
+            background = new Texture2D(device, 1, 1);
+            background.SetData(new[] {Color.Black});
 
             // Strip the gray icon background from the sprite sheet
             // so items and the selection cursor have transparent backgrounds
@@ -128,6 +132,8 @@ namespace ZeldaGame.GameScripts.Screens
 
             pixel = new Texture2D(device, 1, 1);
             pixel.SetData(new[] { Color.White });
+            hud = new HUD();
+            hud.LoadContent(device);
         }
 
         public void Update(GameTime gameTime)
@@ -163,6 +169,7 @@ namespace ZeldaGame.GameScripts.Screens
             Matrix camera = Matrix.CreateTranslation(inventoryOffset.X, inventoryOffset.Y, 0f) * scale;
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera);
             DrawInventory(spriteBatch);
+            spriteBatch.Draw(background, new Rectangle(0, Game1.GameHeight, Game1.GameWidth, 256), Color.White);
             spriteBatch.End();
         }
 

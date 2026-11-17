@@ -35,7 +35,7 @@ public class Game1 : Core
     public const int GameWidth = 1024;
     public const int GameHeight = 704;
     private const int WindowWidth = 768;
-    private const int WindowHeight = 528;
+    private const int WindowHeight = 720;
     public const float WindowScale = (float)WindowWidth / GameWidth;
 
     public Game1() : base("Sprint 0 Game", WindowWidth, WindowHeight, false)
@@ -102,6 +102,7 @@ public class Game1 : Core
         MainMenuScreen.LoadContent(Content, GraphicsDevice);
         GameplayScreen.LoadContent(Content, GraphicsDevice);
         ItemSelectScreen.LoadContent(Content, GraphicsDevice);
+        GameOverScreen.LoadContent(Content, GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)

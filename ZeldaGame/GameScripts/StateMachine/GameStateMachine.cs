@@ -7,12 +7,12 @@ namespace ZeldaGame.GameScripts.StateMachine
 {
     public class GameStateMachine : IStateMachine
     {
-        private IState currentState;
+        public IState CurrentState { get; private set; }
 
         public GameStateMachine(Game1 game)
         {
-            currentState = new MainMenuState(game);
-            currentState.Enter();
+            CurrentState = new MainMenuState(game);
+            CurrentState.Enter();
         }
 
         public void ChangeState(IState newState)
@@ -20,14 +20,14 @@ namespace ZeldaGame.GameScripts.StateMachine
             // null check
             ArgumentNullException.ThrowIfNull(newState);
 
-            currentState.Exit();
-            currentState = newState;
-            currentState.Enter();
+            CurrentState.Exit();
+            CurrentState = newState;
+            CurrentState.Enter();
         }
 
         public void Update(GameTime gameTime)
         {
-            currentState.Update(gameTime);
+            CurrentState.Update(gameTime);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace ZeldaGame.GameScripts.Screens
 
         public void LoadContent(ContentManager content, GraphicsDevice device)
         {
-            background = content.Load<Texture2D>("TLoZ_Game_Over.png");
+            background = content.Load<Texture2D>("TLoZ_Game_Over");
         }
 
         public void Update(GameTime gameTime)
