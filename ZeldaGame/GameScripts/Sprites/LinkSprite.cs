@@ -28,6 +28,15 @@ public class LinkSprite : IActionSprite
     private int currentFrame;
     private SpriteDirection currentDirection;
     private LinkSpriteAction? currentAction;
+    private const double DeathDuration = 1.5;
+    private const double DeathSpinFrameDuration = 0.08;
+    private static readonly SpriteDirection[] SpinOrder =
+    [
+        SpriteDirection.Down,
+        SpriteDirection.Right,
+        SpriteDirection.Up,
+        SpriteDirection.Left
+    ];
 
     public Vector2 Size { get;}
     public bool IsActionPlaying => currentAction.HasValue;
@@ -80,6 +89,8 @@ public class LinkSprite : IActionSprite
 
     public void Reset()
     {
+        currentAction = null;
+        actionElapsedTime = 0;
         currentFrame = 0;
         elapsedTime = 0;
     }
@@ -96,6 +107,11 @@ public class LinkSprite : IActionSprite
             return damageDuration;
         }
 
+        if (currentAction == LinkSpriteAction.Death)
+        {
+            return DeathDuration;
+        }
+
         return actionDuration;
     }
 
@@ -108,6 +124,7 @@ public class LinkSprite : IActionSprite
             LinkSpriteAction.UseItem => itemUseFrames[directionIndex],
             LinkSpriteAction.PickUpItem => pickedUpItemFrame,
             LinkSpriteAction.Damaged => damagedLinkFrames[directionIndex][currentFrame],
+            LinkSpriteAction.Death => walkingFrames[directionIndex][0],
             _ => walkingFrames[directionIndex][currentFrame]
         };
 
@@ -165,6 +182,17 @@ public class LinkSprite : IActionSprite
                 {
                     elapsedTime -= DamageFlashFrameDuration;
                     currentFrame = (currentFrame + 1) % damagedLinkFrames[GetDirectionIndex(currentDirection)].Length;
+                }
+            }
+
+            if (currentAction == LinkSpriteAction.Death)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (elapsedTime > DeathSpinFrameDuration)
+                {
+                    elapsedTime -= DeathSpinFrameDuration;
+                    currentFrame = (currentFrame + 1) % SpinOrder.Length;
+                    currentDirection = SpinOrder[currentFrame];
                 }
             }
 

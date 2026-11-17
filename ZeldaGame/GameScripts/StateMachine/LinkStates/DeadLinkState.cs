@@ -26,7 +26,7 @@ namespace ZeldaGame.GameScripts.StateMachine.LinkStates
             deathTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public bool IsDeathSequenceComplete => !link.IsActionPlaying && deathTimer <= 0f;
+        public bool IsDeathSequenceComplete => !link.IsActionPlaying;
 
         public void Exit()
         {

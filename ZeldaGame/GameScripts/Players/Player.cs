@@ -222,7 +222,7 @@ public class Player : IPlayer
         if (Health <= 0)
         {
             ChangeState(new DeadLinkState(this));
-            sprite.PlayAction(LinkSpriteAction.Damaged);
+            sprite.PlayAction(LinkSpriteAction.Death);
             SoundManager.Instance.Play(Sfx.Hurt);
             return;
         }

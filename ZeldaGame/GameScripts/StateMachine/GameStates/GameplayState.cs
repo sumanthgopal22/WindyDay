@@ -41,6 +41,15 @@ namespace ZeldaGame.GameScripts.StateMachine.GameStates
             }
 
             game.CurrentScreen.Update(gameTime);
+
+            if (game.Player.IsDeathAnimationComplete)
+            {
+                game.ResetLevel();
+                // When Matthias finishes GameOverScreen, just swap this line to:
+                // game.ChangeState(new GameOverState(game));
+                return;
+            }
+
             previousKeyboardState = currentKeyboardState;
         }
 
