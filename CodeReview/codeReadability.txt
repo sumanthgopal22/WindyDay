@@ -48,13 +48,6 @@ Code is simple and is easy to update, making future changes easy. More Link spri
 
 Sumanth Gopal
 11/16/2026
-Sprint 4
-ItemSelectScreen, Sam Van Oss, Maintainability Review, 5 minutes
-As far as maintainability goes it's good in my opinion, the code is long so we may need to break up some blocks. The class is
-tailors towards the inventory so there's only so much modularlity needed. Overall a good job!
-
-Sumanth Gopal
-11/16/2026
 ItemSelectScreen, Sam Van Oss, Readability Review, 10 minutes
 For readabilty I found it fine to read through the code. There weren't any moments where syntax confused me or any moments where
 code didn't make sense. Overall great work!
