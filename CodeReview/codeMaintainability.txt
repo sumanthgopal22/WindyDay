@@ -5,3 +5,13 @@ ItemSelectScreen, Sam Van Oss, Quality Review
 As far as maintainability goes it's good in my opinion, the code is long so we may need to break up some blocks. The class is
 tailored towards just the inventory so there's only so much modularlity needed. Most of the code is just formating the sprites 
 so makes sense why it is long.
+
+Max Nabring
+11/16/2026
+Sprint 4
+EnemySpriteFactory, Sumanth Gopal, Quality Review
+This is a solid factory pattern, but the maintainability is a little weak because of the hard-coded sprite rectangles, direction
+branches, and repeated timing logic. Each enemy method embeds raw sheets updates. The Goriya method specifically especially mixes
+asset knowledge with direction logic in a way that is hard to extend safely.  A better approach would be to centralize sprite 
+data into configuration objects or constants and reduce the conditional branching with a directional mapping strategy. 
+This would make the class easier to read, update, and scale.
